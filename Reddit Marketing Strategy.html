@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reddit Strategy — The Invoice App</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1814;
+    --ink2: #3d3a34;
+    --ink3: #6b6760;
+    --muted: #9c9894;
+    --rule: #e4e0d8;
+    --bg: #faf9f6;
+    --card: #fff;
+    --accent: #e05c2e;
+    --accent2: #1f7a4d;
+    --accent3: #2563a8;
+    --gold: #c8891e;
+    --orange: #e05c2e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 40px 100px;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 2.5px solid var(--ink);
+    padding-bottom: 32px;
+    margin-bottom: 52px;
+  }
+  .header-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 54px;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-sub {
+    font-size: 17px;
+    color: var(--ink2);
+    max-width: 620px;
+    font-weight: 300;
+  }
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+  }
+  .header-meta span {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .header-meta span strong {
+    color: var(--accent);
+    font-size: 20px;
+    display: block;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 600;
+  }
+
+  /* STRATEGY INTRO */
+  .intro-strip {
+    background: var(--ink);
+    color: #fff;
+    padding: 28px 36px;
+    border-radius: 4px;
+    margin-bottom: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .intro-strip .tip h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .intro-strip .tip p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .section-header .section-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .section-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--ink);
+  }
+  .section-header .badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .badge-hot { background: #fde8de; color: #a83d15; }
+  .badge-niche { background: #dff0e8; color: #1a5e3a; }
+  .badge-build { background: #dde9f7; color: #1a4a7a; }
+
+  /* SUBREDDIT CARDS */
+  .sub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 56px;
+  }
+  .sub-card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 24px 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sub-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .sub-card.tier-a::before { background: var(--accent); }
+  .sub-card.tier-b::before { background: var(--accent2); }
+  .sub-card.tier-c::before { background: var(--accent3); }
+  .sub-card.tier-d::before { background: var(--gold); }
+
+  .sub-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .sub-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .sub-name a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .sub-name a:hover { color: var(--accent); }
+  .sub-members {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .sub-pitch {
+    font-size: 13.5px;
+    color: var(--ink2);
+    margin-bottom: 14px;
+    font-weight: 300;
+    line-height: 1.55;
+  }
+  .sub-strategy-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .sub-strategy {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .sub-strategy strong {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .sub-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .sub-tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    font-weight: 500;
+    background: var(--bg);
+    color: var(--ink3);
+    border: 1px solid var(--rule);
+  }
+  .tag-warn { background: #fff7ed; color: #9a4b0f; border-color: #f5cba5; }
+  .tag-ok { background: #ecf9f2; color: #1a6640; border-color: #b3e5c9; }
+  .tag-caution { background: #fff3e0; color: #7a4f00; border-color: #f5d99a; }
+  .rule-block {
+    margin-top: 12px;
+    border-left: 2px solid var(--rule);
+    padding-left: 12px;
+    font-size: 12.5px;
+    color: var(--ink3);
+    line-height: 1.55;
+  }
+  .rule-block em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* OFFER SECTION */
+  .offer-box {
+    background: var(--ink);
+    color: #fff;
+    padding: 36px;
+    border-radius: 6px;
+    margin-bottom: 56px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .offer-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .offer-box h3 em { color: var(--accent); font-style: italic; }
+  .offer-box p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+  .offer-highlight {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+  }
+  .offer-highlight .price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .offer-highlight .price-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .offer-highlight .url {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    word-break: break-all;
+  }
+
+  /* POST TEMPLATES */
+  .template-section {
+    margin-bottom: 56px;
+  }
+  .template-card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .template-header {
+    padding: 14px 20px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .template-header .subreddit-tag {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    background: #fde8de;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .template-header .post-type {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .template-body {
+    padding: 20px 24px;
+  }
+  .post-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .post-body {
+    font-size: 13.5px;
+    color: var(--ink2);
+    line-height: 1.7;
+    font-weight: 300;
+    white-space: pre-line;
+  }
+  .post-body .link {
+    color: var(--accent3);
+    font-weight: 500;
+  }
+  .post-body .note {
+    display: block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    margin-bottom: 56px;
+  }
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0;
+    margin-bottom: 0;
+  }
+  .timeline-week {
+    padding: 16px 20px 16px 0;
+    border-right: 2px solid var(--rule);
+    text-align: right;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    position: relative;
+  }
+  .timeline-week::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .timeline-content {
+    padding: 16px 0 16px 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .timeline-content h4 {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .timeline-content ul {
+    list-style: none;
+    font-size: 13.5px;
+    color: var(--ink2);
+    line-height: 1.8;
+  }
+  .timeline-content ul li::before {
+    content: '→ ';
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .timeline-row:last-child .timeline-content { border-bottom: none; }
+
+  /* RULES TABLE */
+  .rules-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 56px;
+    font-size: 13.5px;
+  }
+  .rules-table th {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--ink);
+    background: var(--bg);
+  }
+  .rules-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: var(--ink2);
+    line-height: 1.55;
+  }
+  .rules-table tr:nth-child(even) td { background: #faf9f699; }
+  .rules-table td:first-child {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .ok { color: #1a6640; font-weight: 600; }
+  .warn { color: #9a4b0f; font-weight: 600; }
+
+  /* FOOTER */
+  .footer {
+    border-top: 2px solid var(--ink);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-left {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .footer-right {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+  }
+  @media (max-width: 700px) {
+    .sub-grid { grid-template-columns: 1fr; }
+    .intro-strip { grid-template-columns: 1fr; }
+    .offer-box { grid-template-columns: 1fr; }
+    .page { padding: 32px 20px 60px; }
+    .header h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-label">Growth Playbook · Reddit Strategy</div>
+    <h1>Get <em>early users</em> from<br>Reddit — the right way.</h1>
+    <p class="header-sub">20 hand-picked subreddits for The Invoice App, each with community-specific strategy, post tone, and rules to avoid bans.</p>
+    <div class="header-meta">
+      <span><strong>20</strong>Subreddits</span>
+      <span><strong>$1/mo</strong>Offer to leverage</span>
+      <span><strong>4 weeks</strong>Ramp timeline</span>
+      <span><strong>3 niches</strong>Contractors, Photographers, Freelancers</span>
+    </div>
+  </div>
+
+  <!-- GOLDEN RULES -->
+  <div class="intro-strip">
+    <div class="tip">
+      <h4>The #1 Reddit Rule</h4>
+      <p>Be a person, not a brand. Your account must have history and post like a founder sharing a journey — not a company pushing a product. Reddit bans pitch posts on sight.</p>
+    </div>
+    <div class="tip">
+      <h4>Value First, Link Later</h4>
+      <p>In many subs, never link in your first comment. Post genuinely useful content. Mention the app casually in context. Put the link only in your bio or if someone asks.</p>
+    </div>
+    <div class="tip">
+      <h4>Your Offer is Gold</h4>
+      <p>$1/month for 3 months is unusual enough to generate discussion. Lead with the problem being solved, not the price. Use the price as a "you have nothing to lose" closer.</p>
+    </div>
+  </div>
+
+  <!-- TIER A: HIGH INTENT FREELANCERS -->
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>High-Intent User Communities</h2>
+    <span class="badge badge-hot">Best ROI</span>
+  </div>
+  <div class="sub-grid">
+
+    <div class="sub-card tier-a">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/freelance" target="_blank">r/freelance</a></div>
+        <div class="sub-members">~550K members</div>
+      </div>
+      <p class="sub-pitch">Freelancers discuss getting clients, pricing, and admin. Invoicing comes up constantly. This is your #1 community.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Search "<strong>invoice</strong>" in the sub — find recent threads about invoicing problems. Post helpful replies about best practices, and at the end add: <em>"I actually built a quick app for this — happy to share if useful."</em><br><br>
+        Also post your own thread: "I was sick of converting handwritten quotes, so I built a scanner-to-invoice tool — here's what I learned about freelance billing..."
+      </div>
+      <div class="rule-block"><em>No spam. No direct promotion posts. Engage authentically for 1 week before any link drops. Use the weekly thread for tools.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Comment first</span>
+        <span class="sub-tag tag-ok">Reply to pain threads</span>
+        <span class="sub-tag tag-warn">No cold promos</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-a">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/smallbusiness" target="_blank">r/smallbusiness</a></div>
+        <div class="sub-members">~2.6M members</div>
+      </div>
+      <p class="sub-pitch">Small business owners talking about exactly your user's pain: payments, professional image, admin overhead.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Search "invoice" and "getting paid" — reply in active threads. For your own post, angle it as a <strong>"I built something for small biz owners"</strong> story post. Talk about why you built it, show a before/after (handwritten note → clean PDF invoice). The launch offer ($1/mo) works well here as a trust signal.
+      </div>
+      <div class="rule-block"><em>Very large sub — moderators watch for spam aggressively. Never post links without prior community history. Story-style posts outperform product announcements.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Story post</span>
+        <span class="sub-tag tag-caution">Build history first</span>
+        <span class="sub-tag tag-warn">Strict on spam</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-a">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/photography" target="_blank">r/photography</a></div>
+        <div class="sub-members">~4.8M members</div>
+      </div>
+      <p class="sub-pitch">Photographers frequently ask about business admin — pricing, contracts, getting paid. Huge audience, niche pain.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Post a discussion: <strong>"Photographers — how do you handle on-site quotes and invoicing? I used to write them by hand..."</strong> Share your journey, get engagement. Mention the app as something you built to solve your own problem. Photographers love tools that eliminate admin so they can focus on shooting.
+      </div>
+      <div class="rule-block"><em>Huge sub — non-photography content can get removed. Frame everything through the photographer's lens. "I'm a photographer who also codes" works well.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Discussion thread</span>
+        <span class="sub-tag tag-ok">Photographer persona</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-a">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/Entrepreneur" target="_blank">r/Entrepreneur</a></div>
+        <div class="sub-members">~4.2M members</div>
+      </div>
+      <p class="sub-pitch">Broad audience of builders and operators who appreciate tools that solve real problems. Receptive to founder stories.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Post an AMA-style or transparent build story: <strong>"I built an invoice scanner app to solve my own problem — here's what I learned shipping a mobile tool for service businesses."</strong> Share real numbers, real struggles. Include the app naturally. The entrepreneurial community rewards authenticity.
+      </div>
+      <div class="rule-block"><em>Allow inspirational/story content. Don't lead with the product — lead with the journey. Product mention should feel incidental to the story.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Founder story</span>
+        <span class="sub-tag tag-ok">Build in public</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-b">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/contractors" target="_blank">r/contractors</a></div>
+        <div class="sub-members">~290K members</div>
+      </div>
+      <p class="sub-pitch">Contractors write quotes on-site constantly. This is the most literal match for your "scribble to invoice" pitch.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Ask a genuine question first: <strong>"Contractors — do you still write quotes by hand on site? What's your process for getting that into a real invoice?"</strong> Once the thread is active, drop the app naturally. The hook: "From scribble to invoice in 10 seconds" is literally made for this audience.
+      </div>
+      <div class="rule-block"><em>Trade-specific community. Talk their language — "on-site quotes," "change orders," "customer deposits." Avoid startup jargon.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Ask question first</span>
+        <span class="sub-tag tag-ok">Trade language</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-b">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/graphic_design" target="_blank">r/graphic_design</a></div>
+        <div class="sub-members">~890K members</div>
+      </div>
+      <p class="sub-pitch">Designers working freelance hate admin. Invoicing is a shared pain point often discussed in business threads.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Look for "how do you invoice clients?" type threads. Reply with practical advice, then mention the app. Or post: <strong>"Designer freelancers — what's your invoicing setup? I built a quick scan-to-invoice tool and wondering if others have this problem."</strong>
+      </div>
+      <div class="rule-block"><em>Design-focused community. If you post, design quality of your screenshots matters. Make sure the invoice output looks polished in your visuals.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Polish screenshots</span>
+        <span class="sub-tag tag-caution">Design quality matters</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TIER B: INDIE/BUILDER COMMUNITIES -->
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Indie Maker &amp; Startup Communities</h2>
+    <span class="badge badge-build">Build in Public</span>
+  </div>
+  <div class="sub-grid">
+
+    <div class="sub-card tier-c">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/indiehackers" target="_blank">r/indiehackers</a></div>
+        <div class="sub-members">~200K members</div>
+      </div>
+      <p class="sub-pitch">Bootstrapped founders sharing transparent revenue and growth stories. They celebrate small wins and real metrics.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Share your launch story with <strong>real numbers</strong>: users, signups, conversion rate on the $1 offer. The community rewards radical transparency. Post: "Launched my invoice scanner app — here's week 1 metrics and what I'd do differently." Update weekly if possible.
+      </div>
+      <div class="rule-block"><em>Revenue and user counts are required for high engagement. Post without metrics and it gets ignored. Honesty about struggles gets more upvotes than success posts.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Share real numbers</span>
+        <span class="sub-tag tag-ok">Transparent journey</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-c">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/SideProject" target="_blank">r/SideProject</a></div>
+        <div class="sub-members">~280K members</div>
+      </div>
+      <p class="sub-pitch">Purpose-built for sharing what you've made. Very creator-friendly, minimal gatekeeping. Good first post destination.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Directly post: <strong>"Built an app that scans handwritten quotes and turns them into professional invoices instantly — would love your feedback."</strong> Include screenshots of the scan → invoice flow. This is one of the few subs where a direct product post is expected and welcomed.
+      </div>
+      <div class="rule-block"><em>Direct product posts welcome. No affiliate/referral links. Active Reddit account required — no brand-new accounts.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Direct post OK</span>
+        <span class="sub-tag tag-ok">Screenshots encouraged</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-c">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/startups" target="_blank">r/startups</a></div>
+        <div class="sub-members">~1.2M members</div>
+      </div>
+      <p class="sub-pitch">Technical founders and operators. They respond to market thesis posts — "why this problem is bigger than people think."</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Write a thesis post: <strong>"There are 76M+ freelancers in the US alone — most still invoice manually. Here's why I'm betting on closing the handwritten quote gap."</strong> Mention the app as your execution, not the headline. Ask for feedback on the thesis and the offer structure.
+      </div>
+      <div class="rule-block"><em>Technical discussions preferred. Avoid pure promotion. The market angle and "why now?" question resonates better than a feature list.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Market thesis post</span>
+        <span class="sub-tag tag-caution">Not a pitch sub</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-c">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/roastmystartup" target="_blank">r/roastmystartup</a></div>
+        <div class="sub-members">~45K members</div>
+      </div>
+      <p class="sub-pitch">Honest (sometimes brutal) feedback community. High signal, earns credibility across Reddit when engaged authentically.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Post your website and app for roasting. Say: <strong>"Built invoice-app.store — turns handwritten quotes into professional invoices. Be brutal."</strong> This gets you real product feedback AND drives genuine traffic. The community respects founders who take criticism well.
+      </div>
+      <div class="rule-block"><em>Expect harsh critique — that's the point. Respond graciously, take notes. Never get defensive. Founders who engage positively with roasts get upvoted.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Direct post OK</span>
+        <span class="sub-tag tag-warn">Expect criticism</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-c">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/buildinpublic" target="_blank">r/buildinpublic</a></div>
+        <div class="sub-members">~65K members</div>
+      </div>
+      <p class="sub-pitch">Dedicated build-in-public community. They celebrate launches, milestones, and transparent growth numbers.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Post a weekly or launch update: <strong>"Day 1: just launched The Invoice App — here's the landing page, the scan-to-invoice flow, and my goals for the $1 promo."</strong> Keep posting weekly updates. The community loves following a journey from launch to traction.
+      </div>
+      <div class="rule-block"><em>Regular updates expected. One-off posts get less traction than consistent build-in-public threads. Commit to posting weekly.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Weekly updates</span>
+        <span class="sub-tag tag-ok">Metrics welcome</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-c">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/SaaS" target="_blank">r/SaaS</a></div>
+        <div class="sub-members">~180K members</div>
+      </div>
+      <p class="sub-pitch">SaaS founders and early adopters. Good for distribution advice AND picking up founder-users who may recommend it to clients.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Ask for distribution advice framed around your problem: <strong>"Launched a mobile invoice tool for contractors and freelancers — looking for feedback on the $1 intro pricing strategy and how to reach trades workers on Reddit specifically."</strong>
+      </div>
+      <div class="rule-block"><em>100K+ members, well-moderated. Post about your SaaS journey, not just the product. Asking genuine questions beats announcing a launch.</em></div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Ask for advice</span>
+        <span class="sub-tag tag-caution">Not a promo sub</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TIER C: NICHE PROFESSIONAL COMMUNITIES -->
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Niche Professional Communities</h2>
+    <span class="badge badge-niche">High Conversion</span>
+  </div>
+  <div class="sub-grid">
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/videography" target="_blank">r/videography</a></div>
+        <div class="sub-members">~180K members</div>
+      </div>
+      <p class="sub-pitch">Videographers and cinematographers who work freelance — exact same pain point as photographers. Underserved by invoice tools.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Post: <strong>"Videographers — how do you handle invoicing on location? I write quotes on my phone notes and it's a mess..."</strong> Engage in the discussion, then drop the app. Use the hook: "Quote on site. Invoice before you drive away."
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Discussion first</span><span class="sub-tag tag-ok">Location angle</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/lawncare" target="_blank">r/lawncare</a></div>
+        <div class="sub-members">~460K members</div>
+      </div>
+      <p class="sub-pitch">Lawn care operators are among the heaviest on-site quote writers. Very low tech adoption = easy win.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Very casual community. Speak plainly: <strong>"Anyone else still writing job quotes on paper? I made an app that takes a photo of your handwritten quote and sends the customer a real invoice in seconds."</strong> Keep it simple — no startup language.
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Plain language</span><span class="sub-tag tag-ok">No startup jargon</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/Plumbing" target="_blank">r/Plumbing</a></div>
+        <div class="sub-members">~340K members</div>
+      </div>
+      <p class="sub-pitch">Plumbers write estimates on-site by hand. Getting paid promptly is a major community topic. Perfect audience.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Search for "estimate" or "invoice" threads. Reply helpfully. Then post a simple demo-style post: <strong>"Built something for tradespeople who write estimates by hand — snap a photo and it turns into a pro invoice with a payment link."</strong>
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Demo post OK</span><span class="sub-tag tag-ok">Trades language</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/handyman" target="_blank">r/handyman</a></div>
+        <div class="sub-members">~120K members</div>
+      </div>
+      <p class="sub-pitch">Handymen are almost entirely small operators — exactly your demographic. High handwritten-quote usage.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Post a question + reveal: <strong>"Handymen — what do you use for quoting jobs on site? I used to write them on a notepad. Now I scan the note and a professional invoice goes out in 10 seconds."</strong>
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Question + reveal</span><span class="sub-tag tag-ok">Relatable angle</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/weddingphotography" target="_blank">r/weddingphotography</a></div>
+        <div class="sub-members">~75K members</div>
+      </div>
+      <p class="sub-pitch">Wedding photographers handle high-value invoices and often quote on-site at venue visits. Professional image matters enormously.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Post about the professional credibility angle: <strong>"Wedding photographers — do you send a formal invoice same-day after venue visits? Curious how people handle the quote-to-invoice gap."</strong> The output's clean look matters — share a clean invoice screenshot.
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Professionalism angle</span><span class="sub-tag tag-ok">Show output quality</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/malegrooming" target="_blank">r/freelanceWriters</a></div>
+        <div class="sub-members">~90K members</div>
+      </div>
+      <p class="sub-pitch">Content writers and copywriters who work independently. Invoicing late payments is a constant thread topic.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Reply in "late payment" or "invoice tools" threads. Writers care about looking professional. Angle: <strong>"I used to send Google Docs invoices. Now I send a PDF with a payment link — clients pay faster when it looks real."</strong>
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Reply to late payment threads</span><span class="sub-tag tag-ok">Professionalism</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/digitalnomad" target="_blank">r/digitalnomad</a></div>
+        <div class="sub-members">~1.1M members</div>
+      </div>
+      <p class="sub-pitch">Digital nomads are mobile-first freelancers. A mobile invoice tool that works from anywhere is a perfect pitch.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Lead with the mobility angle: <strong>"Mobile-first invoice tool — built for people who don't have a desk but still need to get paid professionally. Works from your phone, anywhere."</strong> The payment link feature resonates hard with international/remote workers.
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Mobile angle</span><span class="sub-tag tag-ok">Payment link feature</span>
+      </div>
+    </div>
+
+    <div class="sub-card tier-d">
+      <div class="sub-header">
+        <div class="sub-name"><a href="https://reddit.com/r/housecleaning" target="_blank">r/housecleaning</a></div>
+        <div class="sub-members">~70K members</div>
+      </div>
+      <p class="sub-pitch">House cleaners running small operations — often sole proprietors who quote and invoice manually. Low-tech audience = easy conversion.</p>
+      <div class="sub-strategy-label">Strategy</div>
+      <div class="sub-strategy">
+        Very relatable angle: <strong>"Do you use an app to invoice clients, or still text/email a number? I made something simple — take a photo of your job note, it turns into a proper invoice your client can pay online."</strong>
+      </div>
+      <div class="sub-tags">
+        <span class="sub-tag tag-ok">Simple language</span><span class="sub-tag tag-ok">Online payment angle</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OFFER CALLOUT -->
+  <div class="offer-box">
+    <div>
+      <h3>Your secret weapon:<br>the <em>$1/month</em> offer.</h3>
+      <p>Most subreddits ban direct promotion. But sharing a genuine founding story where a crazy-low introductory price is mentioned in passing is very different from an ad. Use this offer as the "you have absolutely nothing to lose" moment — after you've already delivered value in the post or comment.</p>
+      <p style="margin-top: 12px;">Frame it as: <em>"For anyone who wants to try it — I'm doing a one-day $1/month offer for the first 3 months. link in bio / invoice-app.store."</em></p>
+    </div>
+    <div class="offer-highlight">
+      <span class="price">$1</span>
+      <span class="price-sub">per month · first 3 months</span>
+      <span class="price-sub">one-time · one-day offer</span>
+      <div class="url">invoice-app.store</div>
+    </div>
+  </div>
+
+  <!-- READY-TO-USE POST TEMPLATES -->
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>Ready-to-Use Post Templates</h2>
+  </div>
+  <div class="template-section">
+
+    <div class="template-card">
+      <div class="template-header">
+        <span class="subreddit-tag">r/SideProject · r/buildinpublic</span>
+        <span class="post-type">Direct Launch Post</span>
+      </div>
+      <div class="template-body">
+        <div class="post-title">I built an app that turns handwritten quotes into professional invoices in seconds</div>
+        <div class="post-body">I kept seeing the same problem: contractors, photographers, and freelancers would write quotes by hand on site — then go home and spend 20 minutes turning them into a proper invoice.
+
+So I built The Invoice App. Point your camera at any handwritten quote. It reads it, turns it into a clean PDF invoice, and generates a payment link you can send to the client immediately.
+
+You can also just type in the details manually if you prefer.
+
+The whole flow takes about 10 seconds.
+
+I'm running a one-day offer: $1/month for the first 3 months for early users.
+
+<span class="link">invoice-app.store</span>
+
+Would love feedback — especially from anyone who does on-site quotes regularly. What would make this genuinely useful for you?<span class="note">Works well: r/SideProject, r/buildinpublic, r/roastmystartup (without the offer line)</span></div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-header">
+        <span class="subreddit-tag">r/freelance · r/contractors</span>
+        <span class="post-type">Discussion / Question Post</span>
+      </div>
+      <div class="template-body">
+        <div class="post-title">How do you handle the gap between writing a quote on-site and sending a proper invoice?</div>
+        <div class="post-body">Genuinely curious how people handle this.
+
+I work with a lot of small contractors and tradespeople who write quotes by hand on site — in a notepad, on the back of a card, on their phone notes app. Then they have to go home and convert that into something that looks professional enough to actually send.
+
+For photographers it's the same: you quote at a venue visit, and by the time you're home you've lost momentum.
+
+What's your workflow? Do you use any specific tools? Have you ever lost a job because the invoice process was too slow?
+
+(I've been working on a solution to this if people are interested, happy to share — but mostly want to understand how widespread this pain is.)<span class="note">Works for: r/freelance, r/contractors, r/Plumbing, r/lawncare, r/weddingphotography — adapt the opening to mention relevant trades</span></div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-header">
+        <span class="subreddit-tag">r/Entrepreneur · r/indiehackers</span>
+        <span class="post-type">Founder Story / Build Journey</span>
+      </div>
+      <div class="template-body">
+        <div class="post-title">Launched a mobile invoice app — here's what I learned about building for tradespeople and freelancers</div>
+        <div class="post-body">TL;DR: I noticed contractors and freelancers were losing money and credibility by not having a fast way to go from handwritten quote to professional invoice. I built something to fix that.
+
+The core insight: most invoicing apps are designed for accountants, not people who write quotes on a napkin while standing in a client's kitchen.
+
+The Invoice App lets you scan a handwritten quote or type details in, and it generates a clean PDF invoice with a payment link immediately. The whole thing takes under 10 seconds.
+
+What I learned:
+— Trades workers don't want features. They want speed and something that looks professional.
+— The payment link is more valuable than the PDF. Getting paid same-day vs. net-30 matters.
+— The "scan your handwritten note" feature is the magic demo moment.
+
+I'm doing a $1/month introductory offer for early users (3 months).
+
+Happy to answer questions about the build or the problem space.
+
+<span class="link">invoice-app.store</span><span class="note">Best for: r/Entrepreneur, r/indiehackers, r/SaaS, r/startups</span></div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-header">
+        <span class="subreddit-tag">r/photography · r/weddingphotography</span>
+        <span class="post-type">Niche-Specific Post</span>
+      </div>
+      <div class="template-body">
+        <div class="post-title">Photographers — do you invoice on-site or wait until you're back at your desk?</div>
+        <div class="post-body">Something I've been thinking about: the window between a venue visit or client consultation and when they actually get an invoice from you.
+
+Every hour that passes after a quote, the client gets a little colder. But pulling out a laptop or opening a complex app on-site feels awkward.
+
+I ended up building a small tool for exactly this: you note down your quote details on the spot (or scan something you wrote), and it generates a professional invoice + payment link right there. Client gets it before you leave.
+
+Has anyone else found this gap annoying? What's your current process?
+
+(Sharing more about the tool in comments if people are curious — don't want to make this a promo post.)<span class="note">Tip: Post this genuinely — don't mention the app name or link in the post itself. Only share in comments when asked.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 4-WEEK TIMELINE -->
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>4-Week Reddit Ramp Plan</h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-row">
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-content">
+        <h4>Build credibility — no links, just comments</h4>
+        <ul>
+          <li>Post 15–20 genuine helpful comments across r/freelance, r/smallbusiness, r/Entrepreneur on non-invoicing topics</li>
+          <li>Search "invoice" in r/freelance, r/contractors, r/photography — reply helpfully to existing threads</li>
+          <li>Set up a Reddit profile with a short bio mentioning you "built tools for freelancers" and link in bio only</li>
+        </ul>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-content">
+        <h4>Soft launch — discussion posts with incidental mention</h4>
+        <ul>
+          <li>Post the discussion template ("How do you handle the quote-to-invoice gap?") in r/freelance and r/contractors</li>
+          <li>Post to r/SideProject and r/buildinpublic with the direct launch post</li>
+          <li>Post to r/roastmystartup for feedback and visibility</li>
+          <li>Respond to EVERY comment on your posts within 2 hours</li>
+        </ul>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-content">
+        <h4>Niche communities — trade-specific posts</h4>
+        <ul>
+          <li>Post to r/Plumbing, r/lawncare, r/handyman, r/weddingphotography with niche-adapted versions</li>
+          <li>Post the founder story template to r/Entrepreneur and r/indiehackers with real Week 1–2 numbers</li>
+          <li>Post to r/digitalnomad with the mobile-first angle</li>
+          <li>Reply in r/SaaS to threads about pricing or distribution</li>
+        </ul>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-content">
+        <h4>Amplify what worked — double down</h4>
+        <ul>
+          <li>Identify which subreddits drove actual signups — post there again with a user testimonial or new angle</li>
+          <li>Post a build-in-public update with real numbers to r/buildinpublic and r/indiehackers</li>
+          <li>Drop into 5 more niche communities (r/housecleaning, r/videography, r/graphic_design, r/freelanceWriters)</li>
+          <li>Engage in any active comment threads from your Week 2–3 posts</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIVERSAL RULES TABLE -->
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Universal Reddit Rules</h2>
+  </div>
+  <table class="rules-table">
+    <tr>
+      <th>Rule</th>
+      <th>Do this</th>
+      <th>Never do this</th>
+    </tr>
+    <tr>
+      <td>Account history</td>
+      <td class="ok">Use an account with 1+ month history and 100+ karma</td>
+      <td class="warn">Post with a brand-new account — instant ban signal</td>
+    </tr>
+    <tr>
+      <td>Promotional language</td>
+      <td class="ok">Tell your story, describe the problem you solved, invite questions</td>
+      <td class="warn">"Check out my app!" / "Limited time offer!" / "Sign up now!"</td>
+    </tr>
+    <tr>
+      <td>Linking</td>
+      <td class="ok">Link only in bio, in comments when asked, or in approved promo threads</td>
+      <td class="warn">Leading with a link in a post or first comment on a thread</td>
+    </tr>
+    <tr>
+      <td>Cross-posting</td>
+      <td class="ok">Adapt the post to each subreddit's culture and audience</td>
+      <td class="warn">Copy-paste the exact same post to 10 subreddits in one day</td>
+    </tr>
+    <tr>
+      <td>Responding</td>
+      <td class="ok">Reply to every comment, thank critics, take all feedback seriously</td>
+      <td class="warn">Ignore comments, get defensive, delete negative feedback</td>
+    </tr>
+    <tr>
+      <td>Frequency</td>
+      <td class="ok">Max 1 post per subreddit per week. Comment freely, post sparingly.</td>
+      <td class="warn">Multiple posts to same sub in 24 hours — triggers spam filters</td>
+    </tr>
+    <tr>
+      <td>Authenticity</td>
+      <td class="ok">Share real struggles, real numbers, real feedback you've received</td>
+      <td class="warn">Fake metrics, invented testimonials, exaggerated claims</td>
+    </tr>
+  </table>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">The Invoice App<br><span style="font-size:14px;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--ink3)">invoice-app.store</span></div>
+    <div class="footer-right">
+      Reddit Growth Strategy<br>
+      20 subreddits · 4-week plan<br>
+      Offer: $1/mo for 3 months
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
