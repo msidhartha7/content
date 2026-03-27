@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reddit Lead-Gen Strategy — IT Audit Tooling</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #2a2a2a;
+    --accent: #ff4500;
+    --accent2: #ff6534;
+    --accent-glow: rgba(255,69,0,0.15);
+    --text: #e8e6e1;
+    --muted: #888;
+    --faint: #444;
+    --gold: #e8b44b;
+    --green: #3ecf8e;
+    --blue: #4a9eff;
+    --tag-bg: rgba(255,69,0,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 48px;
+    margin-bottom: 60px;
+    position: relative;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 120px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .eyebrow::before {
+    content: '▶';
+    font-size: 9px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  h1 span {
+    color: var(--accent);
+  }
+
+  .header-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 64px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section:nth-child(2) { animation-delay: 0.05s; }
+  .section:nth-child(3) { animation-delay: 0.1s; }
+  .section:nth-child(4) { animation-delay: 0.15s; }
+  .section:nth-child(5) { animation-delay: 0.2s; }
+  .section:nth-child(6) { animation-delay: 0.25s; }
+  .section:nth-child(7) { animation-delay: 0.3s; }
+  .section:nth-child(8) { animation-delay: 0.35s; }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+
+  p { color: #c8c4bb; margin-bottom: 14px; }
+
+  /* SUBREDDIT CARDS */
+  .subreddit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 600px) { .subreddit-grid { grid-template-columns: 1fr; } }
+
+  .sub-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .sub-card:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+
+  .sub-card.primary { border-left: 3px solid var(--accent); }
+  .sub-card.secondary { border-left: 3px solid var(--gold); }
+  .sub-card.tertiary { border-left: 3px solid var(--blue); }
+
+  .sub-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .sub-card.secondary .sub-name { color: var(--gold); }
+  .sub-card.tertiary .sub-name { color: var(--blue); }
+
+  .sub-priority {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: var(--tag-bg);
+    color: var(--accent);
+  }
+
+  .sub-card.secondary .sub-priority { background: rgba(232,180,75,0.1); color: var(--gold); }
+  .sub-card.tertiary .sub-priority { background: rgba(74,158,255,0.1); color: var(--blue); }
+
+  .sub-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .sub-members { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--faint); margin-top: 10px; }
+
+  .sub-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+  }
+
+  /* PLAYBOOK STEPS */
+  .playbook {
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .playbook::before {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 28px;
+    bottom: 28px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    counter-increment: step;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    flex-shrink: 0;
+    background: var(--bg);
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-content h3 { margin-top: 6px; margin-bottom: 8px; }
+  .step-content p { font-size: 14px; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #0a0a0a;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #a8e6a3;
+    line-height: 1.8;
+    overflow-x: auto;
+    margin: 12px 0;
+    white-space: pre-wrap;
+  }
+
+  /* WEEK PLAN */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 700px) { .week-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 420px) { .week-grid { grid-template-columns: 1fr; } }
+
+  .week-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px;
+  }
+
+  .week-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .week-tasks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .week-tasks li {
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .week-tasks li::before {
+    content: '→';
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 11px;
+  }
+
+  /* OUTREACH MESSAGES */
+  .message-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+
+  .message-header {
+    background: var(--surface2);
+    padding: 10px 18px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .message-header .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .message-body {
+    padding: 18px 20px;
+    font-size: 13.5px;
+    color: #c8c4bb;
+    line-height: 1.75;
+    white-space: pre-line;
+  }
+
+  /* QUALIFIER TABLE */
+  .qual-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  .qual-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .qual-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #1e1e1e;
+    color: #bbb;
+    vertical-align: top;
+  }
+
+  .qual-table tr:hover td { background: var(--surface); }
+
+  .score-high { color: var(--green); font-weight: 600; }
+  .score-med { color: var(--gold); font-weight: 600; }
+  .score-low { color: var(--muted); }
+
+  /* PIPELINE TABLE */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 700px) { .pipeline { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 420px) { .pipeline { grid-template-columns: repeat(2, 1fr); } }
+
+  .pipe-stage {
+    padding: 16px 14px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    text-align: center;
+  }
+
+  .pipe-stage:last-child { border-right: none; }
+
+  .pipe-icon { font-size: 20px; margin-bottom: 8px; }
+
+  .pipe-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .pipe-desc { font-size: 11px; color: var(--faint); line-height: 1.5; }
+
+  /* CALLOUT */
+  .callout {
+    background: rgba(255,69,0,0.06);
+    border: 1px solid rgba(255,69,0,0.25);
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .callout-text { font-size: 13.5px; color: #c8c4bb; }
+  .callout-text strong { color: var(--accent); }
+
+  /* SEARCH STRINGS */
+  .search-strings { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+  .search-str {
+    background: #0a0a0a;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: #a8e6a3;
+    line-height: 1.7;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--faint);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-brand { color: var(--accent); }
+
+  /* PRINT */
+  @media print {
+    body { background: white; color: #111; }
+    .sub-card, .week-card, .message-box, .callout { border-color: #ccc; background: #f9f9f9; }
+    .code-block, .search-str { background: #f0f0f0; color: #222; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="eyebrow">Reddit Lead-Gen Playbook · IT Audit Tooling</div>
+    <h1>Find Senior IT Auditors<br>Who Want to <span>Build</span> With You</h1>
+    <div class="header-meta">
+      <span>📅 Strategy as of March 2026</span>
+      <span>🎯 Target: Senior / Lead IT Auditors</span>
+      <span>🔧 Goal: Design Collaborators</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: WHY REDDIT -->
+  <div class="section">
+    <div class="section-label">01 · Context</div>
+    <h2>Why Reddit Works for This</h2>
+    <p>LinkedIn gets you polished personas. Reddit gets you honest ones. Senior IT auditors — especially those frustrated with tooling, Big4 culture, or manual drudgery — vent, ask, and share candidly in subreddits they trust. They won't respond to cold outreach on LinkedIn, but they'll engage with someone who genuinely understands their pain in a thread.</p>
+    <p>Your edge: you're not recruiting them into a job. You're inviting them to <em>shape a product that eliminates their worst work</em>. That framing resonates deeply on Reddit, where "I have a thing I'm building and need your expertise" reads as authentic, not corporate.</p>
+    <div class="callout">
+      <div class="callout-icon">⚡</div>
+      <div class="callout-text"><strong>Key principle:</strong> Never pitch on Reddit. Become a credible presence first — 3 to 5 genuine, valuable contributions — then DM selectively. One cold promo post will tank your credibility in a community of 50k+ specialists who talk to each other.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: SUBREDDIT MAP -->
+  <div class="section">
+    <div class="section-label">02 · Target Subreddits</div>
+    <h2>Your Subreddit Map</h2>
+    <p>These communities are ranked by fit and immediacy of access to senior IT auditors. Work them in order — don't spread thin.</p>
+
+    <div class="subreddit-grid">
+
+      <div class="sub-card primary">
+        <div class="sub-priority">TIER 1</div>
+        <div class="sub-name">r/InternalAudit</div>
+        <div class="sub-desc">Your primary target. Active community of in-house auditors who own audit programs end-to-end. High density of SOX, ITGC, and SOC 2 practitioners. Threads regularly surface complaints about workpapers, tooling, and manual evidence collection — exactly the pain you solve.</div>
+        <div class="sub-members">~50k members · High signal</div>
+        <div class="sub-tags">
+          <span class="tag">SOX</span><span class="tag">ITGC</span><span class="tag">workpapers</span><span class="tag">GRC</span><span class="tag">tooling rants</span>
+        </div>
+      </div>
+
+      <div class="sub-card primary">
+        <div class="sub-priority">TIER 1</div>
+        <div class="sub-name">r/ITCareerQuestions</div>
+        <div class="sub-desc">Catches IT auditors in active transition — considering roles, evaluating paths, thinking about side projects. These are your warmest leads: high openness signals, already questioning the status quo. Filter for threads mentioning CISA, IT audit, or compliance.
+        </div>
+        <div class="sub-members">~300k members · High openness</div>
+        <div class="sub-tags">
+          <span class="tag">CISA</span><span class="tag">career pivot</span><span class="tag">IT audit</span><span class="tag">side projects</span>
+        </div>
+      </div>
+
+      <div class="sub-card secondary">
+        <div class="sub-priority">TIER 2</div>
+        <div class="sub-name">r/Accounting</div>
+        <div class="sub-desc">Broad, but IT audit and compliance threads are common — especially around Big4 exits, automation, and SOX. Use it to identify people who recently left firm life and are re-evaluating. Post informational content that demonstrates domain credibility.</div>
+        <div class="sub-members">~375k members · Medium signal</div>
+        <div class="sub-tags">
+          <span class="tag">Big4 exit</span><span class="tag">SOX</span><span class="tag">automation</span><span class="tag">compliance</span>
+        </div>
+      </div>
+
+      <div class="sub-card secondary">
+        <div class="sub-priority">TIER 2</div>
+        <div class="sub-name">r/cybersecurity</div>
+        <div class="sub-desc">IT auditors with security backgrounds congregate here — especially around SOC 2, ISO 27001, and cloud controls. Good for CISA/CRISC holders who straddle audit and infosec. Look for threads about compliance fatigue or "is SOC 2 worth it" debates.</div>
+        <div class="sub-members">~500k members · Niche signal</div>
+        <div class="sub-tags">
+          <span class="tag">SOC 2</span><span class="tag">ISO 27001</span><span class="tag">CISA</span><span class="tag">cloud controls</span>
+        </div>
+      </div>
+
+      <div class="sub-card tertiary">
+        <div class="sub-priority">TIER 3</div>
+        <div class="sub-name">r/sysadmin</div>
+        <div class="sub-desc">Mostly IT ops, but SOC 2 / audit crossover surfaces regularly — especially when companies prep for compliance. Find people who've been "voluntold" to handle audit evidence gathering; they're often burned and receptive. Great for identifying the operational pain.</div>
+        <div class="sub-members">~600k members · Low-medium signal</div>
+        <div class="sub-tags">
+          <span class="tag">compliance prep</span><span class="tag">evidence</span><span class="tag">SOC 2 readiness</span>
+        </div>
+      </div>
+
+      <div class="sub-card tertiary">
+        <div class="sub-priority">TIER 3</div>
+        <div class="sub-name">r/dataanalysis</div>
+        <div class="sub-desc">Auditors who use data analytics (SQL, Python, Power BI, ACL) to modernise their testing workflows gather here. These are your ideal collaborators — technically curious, domain-expert, and already thinking about automation. Search "audit" within the sub.</div>
+        <div class="sub-members">~100k members · High-quality signal</div>
+        <div class="sub-tags">
+          <span class="tag">SQL</span><span class="tag">Python</span><span class="tag">Power BI</span><span class="tag">ACL</span><span class="tag">audit analytics</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3: SEARCH STRINGS -->
+  <div class="section">
+    <div class="section-label">03 · Discovery</div>
+    <h2>Reddit Search & Monitoring Strings</h2>
+    <p>Use these directly in Reddit search or via Google with <code>site:reddit.com</code>. Run them weekly. Screenshot or bookmark threads to revisit.</p>
+
+    <h3>Google-powered Reddit search (most powerful)</h3>
+    <div class="search-strings">
+      <div class="search-str">site:reddit.com/r/InternalAudit "audit software" OR "audit tools" OR "workpapers"</div>
+      <div class="search-str">site:reddit.com/r/InternalAudit "manual" OR "tedious" OR "automate" OR "hate my tools"</div>
+      <div class="search-str">site:reddit.com "IT auditor" "CISA" "automation" OR "python" OR "SQL"</div>
+      <div class="search-str">site:reddit.com/r/Accounting "IT audit" "Big4" "exit" OR "in-house" OR "industry"</div>
+      <div class="search-str">site:reddit.com "SOC 2" "audit evidence" OR "evidence collection" OR "painful"</div>
+      <div class="search-str">site:reddit.com/r/ITCareerQuestions "CISA" OR "IT audit" "worth it" OR "side project"</div>
+    </div>
+
+    <h3 style="margin-top: 24px;">Native Reddit search (use in-app filters)</h3>
+    <div class="search-strings">
+      <div class="search-str">audit automation → filter: r/InternalAudit, sort: Top, Time: All</div>
+      <div class="search-str">workpaper pain → filter: r/InternalAudit, sort: New</div>
+      <div class="search-str">CISA career → filter: r/ITCareerQuestions, sort: Top</div>
+      <div class="search-str">GRC tools → filter: r/cybersecurity + r/InternalAudit</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: ENGAGEMENT PLAYBOOK -->
+  <div class="section">
+    <div class="section-label">04 · Engagement Playbook</div>
+    <h2>How to Show Up Without Getting Banned</h2>
+    <p>Reddit communities have long memories. A single promotional post will follow your account. The following sequence builds credibility before you ever ask for anything.</p>
+
+    <div class="playbook">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Lurk & Map the Language (Week 1)</h3>
+          <p>Read 20–30 top posts in r/InternalAudit and r/ITCareerQuestions. Note exact language: what do auditors call the painful parts? "Evidence collection"? "Populating workpapers"? "Client requests"? You'll use their words, not your product language, when you engage.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>First 5 Comments: Pure Value, Zero Agenda</h3>
+          <p>Answer questions you actually know the answer to. Validate a frustration with a specific follow-up ("Yep, and it gets worse when you have 20 controls to test in 2 days"). Don't mention what you're building. Just be a knowledgeable peer.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Post a Research Question (Week 2)</h3>
+          <p>Post this as a genuine question — not a survey, not a pitch. Frame as curiosity, not product validation. Good examples that work well in r/InternalAudit:</p>
+          <div class="code-block">
+"For those doing ITGC or SOC 2 testing — what's the most manually intensive
+part of your evidence collection process? Asking because I'm genuinely trying
+to understand where auditors lose the most time."
+          </div>
+          <div class="code-block">
+"Senior auditors: if you had 10 hours back per audit cycle, what would you
+actually do with them? Trying to understand what 'better tooling' would
+really unlock."
+          </div>
+          <p>Let the thread run 48–72 hours. The most detailed, frustrated replies are your highest-priority DM targets.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Identify Your Top 5–10 Targets Per Thread</h3>
+          <p>Look for replies that are: specific (not generic), frustrated (but constructive), technically curious (mention tools, scripts, or workarounds they built themselves). Check their post history — do they engage regularly? Do they have relevant credentials in their flair or bio?</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>DM After Establishing Presence</h3>
+          <p>Only DM after at least 2–3 interactions where they've seen your username — either in a thread they participated in, or because you replied to their comment. First-contact cold DMs rarely convert. See the outreach templates below.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: OUTREACH TEMPLATES -->
+  <div class="section">
+    <div class="section-label">05 · Outreach Templates</div>
+    <h2>Reddit DM Scripts</h2>
+    <p>These are designed for Reddit specifically — shorter, less formal, more peer-to-peer than LinkedIn. Personalise the bracketed fields every time.</p>
+
+    <h3>Template A — After They Replied to Your Thread</h3>
+    <div class="message-box">
+      <div class="message-header"><div class="dot"></div>Reddit DM · Warm (They Engaged Your Post)</div>
+      <div class="message-body">Hey [username] — thanks for the response in that thread, genuinely helpful.
+
+Your point about [specific thing they said] is exactly the kind of friction I was trying to understand.
+
+I'm actually building tooling to address this — specifically around [evidence collection / workpaper automation / ITGC testing]. Early stage, more R&D than product right now.
+
+Would you be open to a 20-minute call? Not a pitch — I'd mostly be asking questions and listening. Your context would be genuinely valuable.</div>
+    </div>
+
+    <h3>Template B — After You've Been in the Same Thread</h3>
+    <div class="message-box">
+      <div class="message-header"><div class="dot"></div>Reddit DM · Semi-Warm (Shared Thread)</div>
+      <div class="message-body">Hey — saw your comment in [thread name], and it stuck with me.
+
+The [manual testing / client request / evidence review] thing you described is the exact problem I've been trying to map. I'm building something in that space and talking to senior auditors who actually feel the friction.
+
+Would you be up for a quick call? 20 minutes, no agenda beyond your perspective.</div>
+    </div>
+
+    <h3>Template C — Cold DM (Use Sparingly)</h3>
+    <div class="message-box">
+      <div class="message-header"><div class="dot"></div>Reddit DM · Cold (Profile Research)</div>
+      <div class="message-body">Hey [username] — found your posts on [r/InternalAudit] when searching for people who've written about [workpaper pain / ITGC tools / audit automation].
+
+I'm building audit tooling to eliminate the most repetitive parts of IT audit — specifically [evidence collection / control testing docs]. Very early stage, looking for senior auditors to co-design with, not just beta test.
+
+If that's at all interesting, I'd love 20 minutes of your time. Happy to share what I'm working on in return.
+
+Either way — appreciate the candid posts in the sub. Rare to find people who actually say what audit tools are missing.</div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-icon">🚫</div>
+      <div class="callout-text"><strong>Never say:</strong> "startup", "user research", "beta tester", "looking for advisors", "equity opportunity" in a first message. These are instant pattern-matches for spam. Lead with their pain and your curiosity. The ask should be small: a conversation, not a commitment.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: QUALIFIER -->
+  <div class="section">
+    <div class="section-label">06 · Qualification</div>
+    <h2>Quick-Score Before You Invest Time</h2>
+    <p>Before scheduling a call with anyone who replies, run them through this 8-point scorer. Only invest significant time in 5+ scores.</p>
+
+    <table class="qual-table">
+      <thead>
+        <tr>
+          <th>Signal</th>
+          <th>What to Look For on Reddit</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>IT/IS audit domain</td>
+          <td>Mentions ITGC, SOX, SOC 2, IT controls, CISA flair or bio</td>
+          <td><span class="score-high">+2</span></td>
+        </tr>
+        <tr>
+          <td>In-house / internal role</td>
+          <td>Works at a company (not a firm) — "our audit team", "my company"</td>
+          <td><span class="score-high">+1</span></td>
+        </tr>
+        <tr>
+          <td>Tech curiosity</td>
+          <td>Mentions SQL, Python, Power BI, ACL, or built their own scripts</td>
+          <td><span class="score-high">+2</span></td>
+        </tr>
+        <tr>
+          <td>Pain awareness</td>
+          <td>Specific, detailed complaints about tools, workpapers, manual work</td>
+          <td><span class="score-high">+1</span></td>
+        </tr>
+        <tr>
+          <td>Seniority signals</td>
+          <td>3–10 years experience, manages others, or leads audit programs</td>
+          <td><span class="score-med">+1</span></td>
+        </tr>
+        <tr>
+          <td>Openness signals</td>
+          <td>Side projects, consulting, "open to new things", or career transition language</td>
+          <td><span class="score-med">+1</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top: 14px; font-size: 13px;">
+      <span class="score-high">6–8 pts → DM immediately</span> &nbsp;|&nbsp;
+      <span class="score-med">3–5 pts → Warm up first (2–3 interactions)</span> &nbsp;|&nbsp;
+      <span class="score-low">1–2 pts → Monitor, don't invest yet</span>
+    </p>
+  </div>
+
+  <!-- SECTION 7: WEEKLY CADENCE -->
+  <div class="section">
+    <div class="section-label">07 · 30-Day Plan</div>
+    <h2>Week-by-Week Action Plan</h2>
+
+    <div class="week-grid">
+      <div class="week-card">
+        <div class="week-label">Week 1 · Groundwork</div>
+        <ul class="week-tasks">
+          <li>Set up a clean Reddit account (ideally your name or a real handle)</li>
+          <li>Subscribe: r/InternalAudit, r/ITCareerQuestions, r/Accounting, r/cybersecurity</li>
+          <li>Read top 30 posts in r/InternalAudit, bookmark 10 threads with high-signal comments</li>
+          <li>Run all 6 search strings, save results</li>
+          <li>Make 3–5 genuine, value-first comments. No agenda.</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 2 · Activate</div>
+        <ul class="week-tasks">
+          <li>Post your research question in r/InternalAudit</li>
+          <li>Post a variant in r/ITCareerQuestions</li>
+          <li>Respond to every comment within 4 hours while the thread is warm</li>
+          <li>Score all responders using the qualification table</li>
+          <li>Identify top 5–8 DM candidates</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 3 · Outreach</div>
+        <ul class="week-tasks">
+          <li>Send 5 DMs using Template A (warm thread respondents first)</li>
+          <li>Post a follow-up insight post: "Patterns I noticed from asking auditors about tooling..."</li>
+          <li>Start conversations in r/Accounting and r/cybersecurity</li>
+          <li>Log all DMs in pipeline tracker</li>
+          <li>Book first 2–3 calls</li>
+        </ul>
+      </div>
+      <div class="week-card">
+        <div class="week-label">Week 4 · Compound</div>
+        <ul class="week-tasks">
+          <li>Run calls — use as product discovery + relationship building</li>
+          <li>Ask each call participant if they know 1–2 others who'd be interested</li>
+          <li>Post a follow-up thread summarising (anonymised) findings from your research</li>
+          <li>Send 5 more DMs from your saved thread list</li>
+          <li>Evaluate: which sub drove most responses? Double down there.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8: PIPELINE -->
+  <div class="section">
+    <div class="section-label">08 · Pipeline</div>
+    <h2>Track Every Lead Through This Funnel</h2>
+    <p>Copy this into a spreadsheet (Name | Reddit handle | Subreddit found | Score | Stage | Notes | Date). Update weekly.</p>
+
+    <div class="pipeline">
+      <div class="pipe-stage">
+        <div class="pipe-icon">👀</div>
+        <div class="pipe-label">Spotted</div>
+        <div class="pipe-desc">Found in thread, bookmarked, not yet engaged</div>
+      </div>
+      <div class="pipe-stage">
+        <div class="pipe-icon">💬</div>
+        <div class="pipe-label">Engaged</div>
+        <div class="pipe-desc">Replied to them or they replied to you in thread</div>
+      </div>
+      <div class="pipe-stage">
+        <div class="pipe-icon">📩</div>
+        <div class="pipe-label">DM Sent</div>
+        <div class="pipe-desc">Outreach message delivered, awaiting reply</div>
+      </div>
+      <div class="pipe-stage">
+        <div class="pipe-icon">✉️</div>
+        <div class="pipe-label">Replied</div>
+        <div class="pipe-desc">Responded positively, conversation open</div>
+      </div>
+      <div class="pipe-stage">
+        <div class="pipe-icon">📅</div>
+        <div class="pipe-label">Call Booked</div>
+        <div class="pipe-desc">30-min discovery call scheduled</div>
+      </div>
+      <div class="pipe-stage">
+        <div class="pipe-icon">🤝</div>
+        <div class="pipe-label">Collaborator</div>
+        <div class="pipe-desc">Agreed to co-design; onboarding in progress</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div><span class="footer-brand">Reddit Audit Lead-Gen Strategy</span> · Generated March 2026</div>
+    <div>For internal use · Senior & Lead IT Auditor Collaboration</div>
+  </div>
+
+</div>
+</body>
+</html>
