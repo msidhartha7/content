@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X.com & LinkedIn Lead-Gen — IT Audit Tooling</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --bg2: #edeae3;
+    --surface: #ffffff;
+    --surface2: #faf8f4;
+    --border: #ddd9d0;
+    --border-dark: #c8c3b8;
+    --text: #1a1916;
+    --muted: #7a7469;
+    --faint: #b0aaa0;
+    --x-color: #000000;
+    --li-color: #0077b5;
+    --accent: #c84b00;
+    --accent-light: rgba(200,75,0,0.08);
+    --green: #1a7a4a;
+    --green-bg: rgba(26,122,74,0.08);
+    --gold: #9a6b00;
+    --gold-bg: rgba(154,107,0,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* LAYOUT */
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 28px 100px;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--text);
+    color: #f5f2ec;
+    padding: 10px 28px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0;
+  }
+
+  .topbar-right { color: var(--faint); }
+
+  /* HERO */
+  .hero {
+    padding: 64px 0 56px;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 64px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+  }
+
+  @media (max-width: 640px) { .hero { grid-template-columns: 1fr; } }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(34px, 5vw, 58px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 520px;
+    font-weight: 300;
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 160px;
+  }
+
+  .stat {
+    text-align: right;
+    border-right: 3px solid var(--text);
+    padding-right: 16px;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* SECTION */
+  .section { margin-bottom: 72px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-dark);
+  }
+
+  .section-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--faint);
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .platform-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .badge-x { background: var(--text); color: #fff; }
+  .badge-li { background: var(--li-color); color: #fff; }
+  .badge-both { background: var(--accent); color: #fff; }
+
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    margin-top: 28px;
+  }
+
+  p { color: #4a4640; margin-bottom: 14px; font-weight: 300; }
+
+  /* SPLIT COLUMNS */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+
+  .platform-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 24px;
+    position: relative;
+  }
+
+  .platform-block.x-block { border-top: 3px solid var(--x-color); }
+  .platform-block.li-block { border-top: 3px solid var(--li-color); }
+
+  .platform-block h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .platform-block.x-block h4 { color: var(--x-color); }
+  .platform-block.li-block h4 { color: var(--li-color); }
+
+  .platform-icon { font-size: 16px; }
+
+  /* BOOLEAN STRINGS */
+  .bool-block {
+    background: #1a1916;
+    border-radius: 3px;
+    padding: 14px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #a8e6a3;
+    line-height: 1.8;
+    margin: 10px 0;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* SEARCH HASHTAGS */
+  .hashtag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .hashtag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--border-dark);
+    border-radius: 2px;
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  .hashtag.hot { border-color: var(--x-color); background: var(--text); color: #fff; }
+  .hashtag.li { border-color: var(--li-color); color: var(--li-color); }
+
+  /* ACTION STEPS */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+
+  .action-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .action-step:last-child { border-bottom: none; }
+
+  .step-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .step-circle {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+
+  .step-line {
+    width: 1px;
+    flex: 1;
+    background: var(--border);
+    margin-top: 4px;
+    min-height: 20px;
+  }
+
+  .action-step:last-child .step-line { display: none; }
+
+  .step-body h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    margin-top: 6px;
+  }
+
+  .step-body p { font-size: 14px; margin-bottom: 8px; }
+
+  .step-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+  }
+
+  .tag-x { background: var(--text); color: #fff; }
+  .tag-li { background: var(--li-color); color: #fff; }
+  .tag-both { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent); }
+
+  /* MESSAGE CARDS */
+  .msg-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    margin: 14px 0;
+    overflow: hidden;
+  }
+
+  .msg-top {
+    background: var(--bg2);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .msg-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .msg-char {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--faint);
+  }
+
+  .msg-body {
+    padding: 18px 20px;
+    font-size: 14px;
+    color: #3a3630;
+    line-height: 1.8;
+    white-space: pre-line;
+    font-weight: 300;
+  }
+
+  .msg-note {
+    background: var(--accent-light);
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--accent);
+    font-style: italic;
+    border-top: 1px solid rgba(200,75,0,0.15);
+  }
+
+  /* WEEKLY CALENDAR */
+  .week-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .week-row:first-child {
+    background: var(--text);
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .week-row:last-child { border-bottom: none; }
+
+  .week-cell {
+    padding: 14px 16px;
+    border-right: 1px solid var(--border);
+    font-size: 13px;
+    color: #4a4640;
+    font-weight: 300;
+  }
+
+  .week-cell:last-child { border-right: none; }
+
+  .week-cell.day-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  .week-cell ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .week-cell ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  .week-cell ul li::before {
+    content: '▸';
+    font-size: 10px;
+    color: var(--faint);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .week-table {
+    border: 1px solid var(--border-dark);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+    background: var(--surface);
+  }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-light);
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .callout.green {
+    border-color: var(--green);
+    background: var(--green-bg);
+  }
+
+  .callout.gold {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+  }
+
+  .callout p {
+    color: var(--text);
+    margin: 0;
+    font-size: 13.5px;
+  }
+
+  .callout strong { color: var(--accent); }
+  .callout.green strong { color: var(--green); }
+  .callout.gold strong { color: var(--gold); }
+
+  /* QUALIFIER */
+  .qual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border-dark);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 640px) { .qual-grid { grid-template-columns: 1fr; } }
+
+  .qual-tier {
+    padding: 20px 18px;
+    border-right: 1px solid var(--border);
+  }
+
+  .qual-tier:last-child { border-right: none; }
+
+  .tier-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .tier-1 .tier-score { color: var(--green); }
+  .tier-2 .tier-score { color: var(--gold); }
+  .tier-3 .tier-score { color: var(--faint); }
+
+  .tier-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .tier-action { font-size: 13px; color: var(--text); font-weight: 300; }
+
+  /* SIGNAL LIST */
+  .signal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .signal-item {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 12px;
+    align-items: start;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .signal-item:last-child { border-bottom: none; }
+  .signal-item:nth-child(even) { background: var(--surface2); }
+
+  .signal-icon { font-size: 14px; margin-top: 1px; }
+
+  .signal-text { font-size: 13px; color: #3a3630; font-weight: 300; }
+  .signal-text strong { font-weight: 600; color: var(--text); }
+
+  .signal-pts {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* 30-DAY PLAN */
+  .month-plan {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 700px) { .month-plan { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 420px) { .month-plan { grid-template-columns: 1fr; } }
+
+  .month-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .month-header {
+    background: var(--text);
+    color: #fff;
+    padding: 12px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .month-body {
+    padding: 14px;
+  }
+
+  .month-focus {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .month-tasks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .month-tasks li {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .month-tasks li::before {
+    content: '→';
+    color: var(--border-dark);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* PIPELINE FUNNEL */
+  .funnel {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border: 1px solid var(--border-dark);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 700px) {
+    .funnel { flex-direction: column; }
+    .funnel-stage { border-right: none !important; border-bottom: 1px solid var(--border); }
+  }
+
+  .funnel-stage {
+    flex: 1;
+    background: var(--surface);
+    padding: 18px 14px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+    transition: background 0.15s;
+  }
+
+  .funnel-stage:last-child { border-right: none; }
+  .funnel-stage:hover { background: var(--surface2); }
+
+  .funnel-icon { font-size: 22px; margin-bottom: 8px; }
+
+  .funnel-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .funnel-desc { font-size: 11px; color: var(--faint); line-height: 1.5; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--text);
+    color: #666;
+    padding: 24px 28px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 80px;
+  }
+
+  .footer-brand { color: #fff; }
+
+  @media print {
+    .topbar { display: none; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>IT AUDIT TOOLING · COLLABORATOR LEAD-GEN STRATEGY</span>
+  <span class="topbar-right">X.COM + LINKEDIN · MARCH 2026</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Outreach Playbook · Senior & Lead IT Auditors</div>
+      <h1>Reach the People Who <em>Actually</em> Feel the Pain</h1>
+      <p class="hero-sub">A full-stack strategy to find, warm up, and convert senior IT auditors on X.com and LinkedIn into design collaborators for your audit tooling build.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Channels</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">30</div>
+        <div class="stat-label">Day Plan</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">8pt</div>
+        <div class="stat-label">Qual Score</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 1: PLATFORM OVERVIEW -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Platform Strategy at a Glance</h2>
+      <span class="platform-badge badge-both">BOTH</span>
+    </div>
+
+    <p>X and LinkedIn serve different functions in this outreach. Use them in parallel, not as alternatives. LinkedIn is your precision instrument — structured search, direct professional context, high intent. X is your discovery layer and credibility builder — auditors who are vocal about tooling pain and the future of audit self-select through the hashtags and threads they participate in.</p>
+
+    <div class="split">
+      <div class="platform-block x-block">
+        <h4><span class="platform-icon">𝕏</span> X.com</h4>
+        <p style="font-size: 13px;">Best for finding auditors who are <strong>publicly frustrated</strong> — they tweet about bad tools, manual work, the Big4 grind. Lower barrier to a first reply than LinkedIn. Great for warm DMs after visible engagement.</p>
+        <ul style="list-style: none; font-size: 13px; color: #4a4640; display: flex; flex-direction: column; gap: 6px;">
+          <li>✦ Content-first: post threads, engage publicly</li>
+          <li>✦ DMs after 2–3 visible interactions</li>
+          <li>✦ Hashtag-driven discovery</li>
+          <li>✦ Community via #AuditTwitter niche</li>
+        </ul>
+      </div>
+      <div class="platform-block li-block">
+        <h4><span class="platform-icon">in</span> LinkedIn</h4>
+        <p style="font-size: 13px;">Best for <strong>precision targeting</strong> by title, certification, and company type. Boolean search + Sales Navigator unlocks exact profiles. More formal — needs more personalisation before a cold message lands.</p>
+        <ul style="list-style: none; font-size: 13px; color: #4a4640; display: flex; flex-direction: column; gap: 6px;">
+          <li>✦ Boolean search + Sales Navigator</li>
+          <li>✦ Comment before connecting</li>
+          <li>✦ 300-char connection note matters a lot</li>
+          <li>✦ Group membership for community play</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 2: TARGET PROFILES -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Who You're Looking For</h2>
+      <span class="platform-badge badge-both">BOTH</span>
+    </div>
+
+    <p>Three tiers of priority. Work top-down — don't scatter. Each tier has a different pain profile and needs a slightly different message.</p>
+
+    <h3>Priority 1 — IT / IS Auditors (Highest Fit)</h3>
+    <div class="callout green">
+      <p><strong>Titles:</strong> Senior IT Auditor, IT Audit Manager, Lead IT Auditor, IS Auditor, Technology Risk Analyst<br>
+      <strong>Certs:</strong> CISA, CRISC, CISSP &nbsp;·&nbsp; <strong>Context:</strong> SOX ITGC, SOC 1/2, cloud controls, ITGC testing<br>
+      <strong>Why they're ideal:</strong> They own the exact workflows you're automating. In-house at tech firms, fintechs, banks.</p>
+    </div>
+
+    <h3>Priority 2 — Internal Audit Managers</h3>
+    <div class="callout gold">
+      <p><strong>Titles:</strong> Internal Audit Manager, VP Internal Audit, Senior Internal Auditor<br>
+      <strong>Industries:</strong> SaaS, fintech, banking, insurance, healthcare<br>
+      <strong>Why they fit:</strong> They run audit programs end-to-end and feel every tool gap. Have bandwidth and autonomy for a side collaboration.</p>
+    </div>
+
+    <h3>Priority 3 — GRC / Compliance Leads</h3>
+    <div class="callout">
+      <p><strong>Titles:</strong> GRC Specialist, SOC 2 Lead, Compliance Manager, IT Risk Manager, ISO 27001 Lead Auditor<br>
+      <strong>Why include them:</strong> Manage audit-adjacent workflows — evidence gathering, control testing, questionnaire cycles. High automation upside, often louder about tool pain on X.</p>
+    </div>
+
+    <div class="callout gold" style="margin-top: 4px;">
+      <p><strong>Deprioritise:</strong> Current Big4 / mid-tier firm staff (RSM, Grant Thornton, BDO). Harder to pull mid-tenure. Target them post-exit or when they signal "I'm thinking about industry."</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 3: X.COM STRATEGY -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>X.com — Full Strategy</h2>
+      <span class="platform-badge badge-x">𝕏</span>
+    </div>
+
+    <h3>Step A — Profile Setup (Do First)</h3>
+    <p>Your X profile is your credibility signal before you say a word. Auditors will click it before they reply. Make it read as a builder, not a marketer.</p>
+    <div class="callout green">
+      <p>
+        <strong>Bio formula:</strong> [What you're building] + [who it's for] + [honest signal you know the domain]<br><br>
+        Example: <em>"Building tools to automate the manual grind in IT audit — ITGC, SOC 2, evidence collection. Talking to auditors who've lived it. DMs open."</em><br><br>
+        <strong>Pinned tweet:</strong> Your best public research question or insight about audit tooling. Something that makes an auditor think "this person actually understands."
+      </p>
+    </div>
+
+    <h3>Step B — Discovery: Hashtags & Search Strings</h3>
+    <p>X search is where you find people who are already talking about the pain. Run these searches daily in the first two weeks.</p>
+
+    <div class="hashtag-cloud">
+      <span class="hashtag hot">#InternalAudit</span>
+      <span class="hashtag hot">#ITAudit</span>
+      <span class="hashtag hot">#CISA</span>
+      <span class="hashtag hot">#AuditTech</span>
+      <span class="hashtag">#GRC</span>
+      <span class="hashtag">#SOX</span>
+      <span class="hashtag">#SOC2</span>
+      <span class="hashtag">#AuditAutomation</span>
+      <span class="hashtag">#ITGC</span>
+      <span class="hashtag">#Compliance</span>
+      <span class="hashtag">#RiskManagement</span>
+      <span class="hashtag">#ISO27001</span>
+    </div>
+
+    <p style="margin-top: 4px; font-size: 13px; color: var(--muted);">Bold = highest signal density. Run all of them, but prioritise the bold ones for daily monitoring.</p>
+
+    <h3>X Advanced Search Strings</h3>
+    <div class="bool-block">(#InternalAudit OR #ITAudit) (tools OR software OR workpapers OR manual OR tedious)</div>
+    <div class="bool-block">(CISA OR "IT auditor" OR "internal audit") (hate OR broken OR outdated OR painful OR inefficient)</div>
+    <div class="bool-block">("audit evidence" OR "control testing" OR "workpaper") lang:en -is:retweet</div>
+    <div class="bool-block">(#SOC2 OR #SOX OR #ITGC) (automate OR automation OR "wish there was") -is:retweet</div>
+
+    <h3>Step C — Content Strategy (Build Credibility Before Asking)</h3>
+    <p>Post 3–4 times per week for 3 weeks before you DM anyone. The goal: when an auditor sees your DM, they already recognise your name. Content types that work:</p>
+
+    <div class="steps">
+      <div class="action-step">
+        <div class="step-marker"><div class="step-circle">T1</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <span class="step-tag tag-x">THREAD</span>
+          <h4>Pain-Validation Thread</h4>
+          <p>"5 things IT auditors told me they hate about their tools" — write from real knowledge of the domain. No pitch. Ends with: "What did I miss? What's your #1 painful part?" This surfaces commenters who self-qualify as high-pain targets.</p>
+        </div>
+      </div>
+      <div class="action-step">
+        <div class="step-marker"><div class="step-circle">T2</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <span class="step-tag tag-x">THREAD</span>
+          <h4>Domain Insight Thread</h4>
+          <p>"Why ITGC testing is still mostly done in spreadsheets in 2026 — a breakdown." Show you understand the structural reasons for the problem. This signals expertise and attracts senior auditors who think in systems.</p>
+        </div>
+      </div>
+      <div class="action-step">
+        <div class="step-marker"><div class="step-circle">T3</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <span class="step-tag tag-x">REPLY</span>
+          <h4>Strategic Replies</h4>
+          <p>Find 3–5 auditors with 500+ followers who post about audit tooling or process frustration. Reply with something substantive — not "great point!" but an actual extension of their idea, a question, or a counter-perspective. Do this consistently for 2 weeks.</p>
+        </div>
+      </div>
+      <div class="action-step">
+        <div class="step-marker"><div class="step-circle">T4</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <span class="step-tag tag-x">POLL</span>
+          <h4>Research Poll</h4>
+          <p>Post: "Senior auditors — what kills the most time in a typical audit cycle? (Evidence collection / Workpaper docs / Status reporting / Client coordination)" Let it run 48h. DM the most engaged respondents.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Step D — X DM Templates</h3>
+
+    <div class="msg-card">
+      <div class="msg-top">
+        <span class="msg-type">𝕏 DM · After They Replied to Your Thread</span>
+        <span class="msg-char">Warm</span>
+      </div>
+      <div class="msg-body">Hey [handle] — your reply on the ITGC thread stuck with me. The [specific thing they said] is exactly the problem I'm trying to map.
+
+I'm building tooling to automate that part of the process. Early stage — I'm in the "talk to people who actually live this" phase, not the "have a product to pitch" phase.
+
+Would you be up for 20 minutes? No deck, mostly me asking questions.</div>
+      <div class="msg-note">Personalise [handle] and [specific thing they said] every time. Generic DMs get ignored.</div>
+    </div>
+
+    <div class="msg-card">
+      <div class="msg-top">
+        <span class="msg-type">𝕏 DM · After Strategic Reply Engagement</span>
+        <span class="msg-char">Semi-Warm</span>
+      </div>
+      <div class="msg-body">Hey — I've been lurking your posts on [audit automation / SOC 2 / ITGC tooling] for a bit and you clearly think about this differently from most people I see posting.
+
+I'm building in this space. Specifically trying to eliminate the [workpaper / evidence collection / manual testing] loop that eats time in every audit cycle.
+
+Would you be open to a 20-minute call? I'd mostly be listening.</div>
+    </div>
+
+    <div class="msg-card">
+      <div class="msg-top">
+        <span class="msg-type">𝕏 DM · Cold (Research-Led)</span>
+        <span class="msg-char">Cold — Use Sparingly</span>
+      </div>
+      <div class="msg-body">Hi [handle] — found your account through #InternalAudit / #ITAudit. Your post about [specific post topic] was the most candid thing I've read about [tooling / evidence gathering] in months.
+
+I'm trying to build something in that space and I'm in full discovery mode — talking to senior auditors who have opinions about what's broken.
+
+20 minutes of your time would be genuinely valuable. Happy to share what I'm working on in return.</div>
+      <div class="msg-note">Only use cold DMs after posting content for ≥2 weeks. Your profile needs to be credible when they check it.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 4: LINKEDIN STRATEGY -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>LinkedIn — Full Strategy</h2>
+      <span class="platform-badge badge-li">in</span>
+    </div>
+
+    <h3>Step A — Profile Optimisation (Do Before Any Outreach)</h3>
+    <div class="callout green">
+      <p>
+        <strong>Headline:</strong> "Building audit automation tools · Talking to IT auditors who've felt the tooling gap"<br><br>
+        <strong>About section opener:</strong> Lead with the problem you're solving, not your background. Start with: "IT audit has a tools problem. I'm building the thing I wish existed..." — this filters in the right people immediately.<br><br>
+        <strong>Featured section:</strong> Pin a post, article, or document that shows domain credibility — a framework, a breakdown of ITGC pain points, or a short case for why audit automation matters.
+      </p>
+    </div>
+
+    <h3>Step B — Boolean Search Strings</h3>
+    <p>Use in LinkedIn People Search (free) or Sales Navigator (recommended for 3+ searches/week). Combine with location, company size, and industry filters.</p>
+
+    <div class="bool-block">("IT auditor" OR "IS auditor" OR "IT audit manager") AND ("CISA" OR "SOX" OR "ITGC" OR "SOC 2")</div>
+    <div class="bool-block">("senior IT auditor" OR "lead IT auditor" OR "IT audit lead") AND ("internal" OR "in-house")</div>
+    <div class="bool-block">("internal audit") AND ("Python" OR "SQL" OR "Power BI" OR "Alteryx" OR "data analytics")</div>
+    <div class="bool-block">("GRC" OR "compliance") AND ("CRISC" OR "ISO 27001" OR "SOC 2") AND ("manager" OR "lead" OR "specialist")</div>
+    <div class="bool-block">("internal auditor" OR "audit manager") AND ("fintech" OR "SaaS" OR "technology") AND ("automation" OR "process improvement")</div>
+
+    <h3>Fit Signals to Look for on Profiles</h3>
+    <div class="signal-list">
+      <div class="signal-item">
+        <span class="signal-icon">🔧</span>
+        <span class="signal-text"><strong>Data tools in Skills or About:</strong> Power BI, ACL/Galvanize, IDEA, SQL, Python, Alteryx — signals tech curiosity</span>
+        <span class="signal-pts">+2 pts</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">📝</span>
+        <span class="signal-text"><strong>Posts about audit tooling, process pain, or "future of audit"</strong> — they're thinking about the problem publicly</span>
+        <span class="signal-pts">+2 pts</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">🏢</span>
+        <span class="signal-text"><strong>In-house at a company</strong> (not a firm) — more autonomy, more available bandwidth for collaboration</span>
+        <span class="signal-pts">+1 pt</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">📅</span>
+        <span class="signal-text"><strong>3–10 years of experience</strong> — enough domain depth, not yet too institutional to collaborate</span>
+        <span class="signal-pts">+1 pt</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">🎓</span>
+        <span class="signal-text"><strong>CISA, CRISC, CIA, CISM, ISO 27001 Lead Auditor</strong> in certifications</span>
+        <span class="signal-pts">+1 pt</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">🚪</span>
+        <span class="signal-text"><strong>Openness signals:</strong> "Open to opportunities", consulting / freelance history, side project mentions, recent career transition</span>
+        <span class="signal-pts">+1 pt</span>
+      </div>
+    </div>
+
+    <h3>Step C — Warm-Up Before Connecting</h3>
+    <div class="callout gold">
+      <p><strong>Rule:</strong> Never send a connection request cold to a high-value lead without at least one visible interaction first. Like or leave a substantive comment on 1–2 of their posts. Auditors are a small professional world — being a familiar face raises response rates significantly. Wait 3–5 days after commenting, then connect.</p>
+    </div>
+
+    <h3>Step D — LinkedIn Message Sequence</h3>
+    <p>A 3-message sequence per lead. Never skip steps for high-priority targets.</p>
+
+    <div class="msg-card">
+      <div class="msg-top">
+        <span class="msg-type">LinkedIn · Connection Request Note (300 char max)</span>
+        <span class="msg-char">Message 1</span>
+      </div>
+      <div class="msg-body">Hi [Name] — building audit automation tools and your [CISA / SOX ITGC / IT audit] background is exactly the expertise I need to make sure it solves real problems. Would love to pick your brain for 20 min. No pitch, just listening.</div>
+      <div class="msg-note">Count characters. 300 max. Every word earns its place. Reference something specific from their profile.</div>
+    </div>
+
+    <div class="msg-card">
+      <div class="msg-top">
+        <span class="msg-type">LinkedIn · Follow-Up After Connection Accepted (Day 2–3)</span>
+        <span class="msg-char">Message 2</span>
+      </div>
+      <div class="msg-body">Thanks for connecting, [Name].
+
+I'm building tooling to automate the parts of IT audit that eat the most time — workpaper prep, control testing documentation, evidence collection.
+
+Given your [X years] in [SOX / SOC 2 / IT audit at Company], I'd love 15 minutes to ask where the real friction is. No agenda beyond learning from someone who actually does this work.
+
+Open to a quick call this week or next?</div>
+      <div class="msg-note">Don't pitch the product here. You're asking for their expertise, not their time to hear your idea.</div>
+    </div>
+
+    <div class="msg-card">
+      <div class="msg-top">
+        <span class="msg-type">LinkedIn · Follow-Up If No Reply (Day 7–10)</span>
+        <span class="msg-char">Message 3 · Final</span>
+      </div>
+      <div class="msg-body">Hey [Name] — just following up in case my last message got buried.
+
+I'm asking one specific question: in your audit cycles, what's the single most manual, time-consuming step that you wish you could eliminate?
+
+Even a one-line reply would help me a lot. No call required.</div>
+      <div class="msg-note">Lower the ask to a single reply. One-line answer to one question is much easier to say yes to than a calendar invite.</div>
+    </div>
+
+    <h3>LinkedIn Groups to Join and Monitor</h3>
+    <div class="hashtag-cloud">
+      <span class="hashtag li">Internal Audit Professionals (~50k)</span>
+      <span class="hashtag li">IT Audit Network</span>
+      <span class="hashtag li">GRC Professionals</span>
+      <span class="hashtag li">ISACA Members</span>
+      <span class="hashtag li">IIA (Inst. of Internal Auditors)</span>
+      <span class="hashtag li">SOX Professionals</span>
+    </div>
+    <p style="font-size: 13px; margin-top: 4px;">Post a research question in groups before connecting with members. Being visible in the group conversation makes your connection note feel warm, not cold.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 5: QUALIFICATION -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Lead Qualification Scorer</h2>
+      <span class="platform-badge badge-both">BOTH</span>
+    </div>
+    <p>Score every lead before investing time in a call. Max 8 points. Run this in 2 minutes from their LinkedIn profile + X feed.</p>
+
+    <div class="signal-list" style="margin-bottom: 20px;">
+      <div class="signal-item">
+        <span class="signal-icon">✅</span>
+        <span class="signal-text"><strong>IT/IS Audit domain confirmed</strong> — ITGC, SOX, SOC 2, IT controls mentioned</span>
+        <span class="signal-pts">+2</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">🏢</span>
+        <span class="signal-text"><strong>In-house role at a company</strong> (not a Big4 or advisory firm)</span>
+        <span class="signal-pts">+1</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">💻</span>
+        <span class="signal-text"><strong>Tech curiosity</strong> — uses or mentions SQL, Python, Power BI, ACL, Alteryx, IDEA</span>
+        <span class="signal-pts">+2</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">😤</span>
+        <span class="signal-text"><strong>Pain awareness</strong> — specific public complaints about manual work or tooling (not generic)</span>
+        <span class="signal-pts">+1</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">🎓</span>
+        <span class="signal-text"><strong>Cert confirmed:</strong> CISA, CRISC, CIA, CISM, or ISO 27001 Lead Auditor</span>
+        <span class="signal-pts">+1</span>
+      </div>
+      <div class="signal-item">
+        <span class="signal-icon">🚪</span>
+        <span class="signal-text"><strong>Openness signal</strong> — side projects, freelance, "open to opportunities", or transition language</span>
+        <span class="signal-pts">+1</span>
+      </div>
+    </div>
+
+    <div class="qual-grid">
+      <div class="qual-tier tier-1">
+        <div class="tier-score">6–8</div>
+        <div class="tier-label">Priority 1</div>
+        <div class="tier-action">DM immediately. Personalise every word. This is a high-value lead — don't send a template.</div>
+      </div>
+      <div class="qual-tier tier-2">
+        <div class="tier-score">3–5</div>
+        <div class="tier-label">Priority 2</div>
+        <div class="tier-action">Warm up first. Engage their content 2–3 times, then connect. Don't rush the ask.</div>
+      </div>
+      <div class="qual-tier tier-3">
+        <div class="tier-score">1–2</div>
+        <div class="tier-label">Monitor</div>
+        <div class="tier-action">Follow / connect passively. Don't invest outreach time yet. Revisit in 30 days.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 6: WEEKLY CADENCE -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Weekly Operating Cadence</h2>
+      <span class="platform-badge badge-both">BOTH</span>
+    </div>
+    <p>A repeatable weekly routine. Budget: ~90 minutes/day. This is what consistent compound outreach looks like.</p>
+
+    <div class="week-table">
+      <div class="week-row">
+        <div class="week-cell" style="color: #fff; font-size: 10px;">DAY</div>
+        <div class="week-cell" style="color: #fff; font-size: 10px;">𝕏 X.COM ACTIONS</div>
+        <div class="week-cell" style="color: #fff; font-size: 10px;">in LINKEDIN ACTIONS</div>
+      </div>
+      <div class="week-row">
+        <div class="week-cell day-label">MON</div>
+        <div class="week-cell"><ul>
+          <li>Run hashtag searches, bookmark 5 high-signal accounts</li>
+          <li>Leave 3 substantive replies on audit pain threads</li>
+        </ul></div>
+        <div class="week-cell"><ul>
+          <li>Run 2 Boolean searches, save 10 profiles</li>
+          <li>Like / comment on posts from target list</li>
+        </ul></div>
+      </div>
+      <div class="week-row">
+        <div class="week-cell day-label">TUE</div>
+        <div class="week-cell"><ul>
+          <li>Post a content tweet / thread (pain-validation or insight)</li>
+          <li>Engage reply notifications from yesterday</li>
+        </ul></div>
+        <div class="week-cell"><ul>
+          <li>Send 5 connection requests (warm leads only)</li>
+          <li>Follow up on pending accepted connections</li>
+        </ul></div>
+      </div>
+      <div class="week-row">
+        <div class="week-cell day-label">WED</div>
+        <div class="week-cell"><ul>
+          <li>Send 3–5 DMs to accounts you've engaged ≥2× this week</li>
+          <li>Reply to any DM responses, keep conversations moving</li>
+        </ul></div>
+        <div class="week-cell"><ul>
+          <li>Send follow-up Message 2 to new connections (from Mon–Tue)</li>
+          <li>Post once in a LinkedIn Group (research question)</li>
+        </ul></div>
+      </div>
+      <div class="week-row">
+        <div class="week-cell day-label">THU</div>
+        <div class="week-cell"><ul>
+          <li>Search advanced strings for new thread activity</li>
+          <li>Repost / quote-tweet a high-signal audit pain post with your perspective</li>
+        </ul></div>
+        <div class="week-cell"><ul>
+          <li>Run another Boolean search batch — 10 new profiles</li>
+          <li>Qualify all saved profiles using the scorer</li>
+        </ul></div>
+      </div>
+      <div class="week-row">
+        <div class="week-cell day-label">FRI</div>
+        <div class="week-cell"><ul>
+          <li>Update pipeline tracker with new X leads</li>
+          <li>Note which content drove most engagement this week</li>
+        </ul></div>
+        <div class="week-cell"><ul>
+          <li>Send final follow-up (Message 3) to non-responders from 7–10 days ago</li>
+          <li>Update pipeline tracker</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 7: 30-DAY PLAN -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>30-Day Action Plan</h2>
+      <span class="platform-badge badge-both">BOTH</span>
+    </div>
+
+    <div class="month-plan">
+      <div class="month-card">
+        <div class="month-header">Week 1 · Setup</div>
+        <div class="month-body">
+          <div class="month-focus">Build the foundation</div>
+          <ul class="month-tasks">
+            <li>Optimise LinkedIn profile + X bio using the formulas above</li>
+            <li>Pin credibility content to X profile</li>
+            <li>Run all 6 Boolean strings on LinkedIn, save 30 profiles</li>
+            <li>Subscribe to all target hashtags on X</li>
+            <li>Identify 5 high-follower auditors to engage with on X</li>
+            <li>Join all 6 LinkedIn groups listed above</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-card">
+        <div class="month-header">Week 2 · Activate</div>
+        <div class="month-body">
+          <div class="month-focus">First content + warm-up</div>
+          <ul class="month-tasks">
+            <li>Post first pain-validation thread on X</li>
+            <li>Leave 15 substantive X replies across audit hashtags</li>
+            <li>Like/comment on 15 LinkedIn posts from saved profiles</li>
+            <li>Send first 10 LinkedIn connection requests (warm only)</li>
+            <li>Post research question in 2 LinkedIn groups</li>
+            <li>Score all 30 LinkedIn profiles, prioritise top 10</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-card">
+        <div class="month-header">Week 3 · Outreach</div>
+        <div class="month-body">
+          <div class="month-focus">Start DMs + calls</div>
+          <ul class="month-tasks">
+            <li>Send 5–8 warm X DMs to engaged accounts</li>
+            <li>Send LinkedIn Message 2 to all new connections</li>
+            <li>Post second X thread (domain insight format)</li>
+            <li>Send 10 more LinkedIn connections</li>
+            <li>Book first 2–3 discovery calls</li>
+            <li>Track all responses in pipeline</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-card">
+        <div class="month-header">Week 4 · Compound</div>
+        <div class="month-body">
+          <div class="month-focus">Run calls + scale</div>
+          <ul class="month-tasks">
+            <li>Run all booked calls — discovery, not pitch</li>
+            <li>Ask each call for 1–2 referrals to other auditors</li>
+            <li>Send final follow-up (Message 3) to non-responders</li>
+            <li>Post X poll with research question</li>
+            <li>Review: which channel / content drove most replies?</li>
+            <li>Double down on what's working, cut what isn't</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout green" style="margin-top: 20px;">
+      <p><strong>Target by Day 30:</strong> 50+ profiles researched · 20+ connections sent · 10+ DMs sent · 5+ replies received · 3+ calls booked · 1–2 collaborators qualified</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 8: PIPELINE TRACKER -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Pipeline Tracker</h2>
+      <span class="platform-badge badge-both">BOTH</span>
+    </div>
+    <p>Track every lead. Copy to a spreadsheet with columns: Name · Platform · Source · Score · Stage · Last Action · Date · Notes.</p>
+
+    <div class="funnel">
+      <div class="funnel-stage">
+        <div class="funnel-icon">👀</div>
+        <div class="funnel-label">Spotted</div>
+        <div class="funnel-desc">Found, scored, not yet engaged</div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-icon">💬</div>
+        <div class="funnel-label">Warming</div>
+        <div class="funnel-desc">Liked / commented on their content</div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-icon">📩</div>
+        <div class="funnel-label">Contacted</div>
+        <div class="funnel-desc">Connection sent or DM delivered</div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-icon">✉️</div>
+        <div class="funnel-label">Replied</div>
+        <div class="funnel-desc">Positive response, convo open</div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-icon">📅</div>
+        <div class="funnel-label">Call Booked</div>
+        <div class="funnel-desc">Discovery call scheduled</div>
+      </div>
+      <div class="funnel-stage">
+        <div class="funnel-icon">🤝</div>
+        <div class="funnel-label">Collaborator</div>
+        <div class="funnel-desc">Agreed to co-design role</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<div class="footer">
+  <span class="footer-brand">X.com + LinkedIn · IT Audit Lead-Gen Strategy</span>
+  <span>Generated March 2026 · For internal use only</span>
+  <span>Senior & Lead IT Auditor Collaboration Outreach</span>
+</div>
+
+</body>
+</html>

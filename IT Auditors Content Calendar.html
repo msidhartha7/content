@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU AI Act · 7-Day Content Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #111214;
+    --bg2:      #16181c;
+    --surface:  #1c1f24;
+    --surface2: #22262d;
+    --border:   #2e333d;
+    --border2:  #3a4050;
+    --text:     #dde1ea;
+    --muted:    #7a8194;
+    --faint:    #404558;
+
+    --eu:       #003399;
+    --eu-bright:#1a4fd4;
+    --eu-glow:  rgba(26,79,212,0.18);
+    --amber:    #e8a020;
+    --amber-bg: rgba(232,160,32,0.08);
+    --red:      #d94040;
+    --red-bg:   rgba(217,64,64,0.08);
+    --green:    #3ab87a;
+    --green-bg: rgba(58,184,122,0.08);
+    --gold:     #c8a84b;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ─── SCANLINE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.06) 2px,
+      rgba(0,0,0,0.06) 4px
+    );
+    pointer-events: none;
+  }
+
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 28px 120px; position: relative; z-index: 1; }
+
+  /* ─── ALERT BANNER ─── */
+  .alert-banner {
+    background: var(--red);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-align: center;
+    padding: 9px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .alert-blink {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: blink 1.2s step-start infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 64px 0 52px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: -10px; right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(100px, 18vw, 220px);
+    color: rgba(26,79,212,0.04);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -0.02em;
+    user-select: none;
+  }
+
+  .hero-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid var(--eu-bright);
+    padding: 5px 14px 5px 10px;
+    margin-bottom: 28px;
+    animation: fadeIn 0.6s ease both;
+  }
+
+  .eu-flag {
+    width: 24px; height: 16px;
+    background: var(--eu);
+    border-radius: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; line-height: 1;
+  }
+
+  .stamp-text {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--eu-bright);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(46px, 8vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: #fff;
+    margin-bottom: 16px;
+    animation: fadeIn 0.7s ease 0.1s both;
+  }
+
+  .hero h1 span { color: var(--eu-bright); }
+
+  .hero-sub {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 17px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 32px;
+    animation: fadeIn 0.7s ease 0.2s both;
+    line-height: 1.6;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    animation: fadeIn 0.7s ease 0.3s both;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .meta-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .meta-val.urgent { color: var(--red); }
+  .meta-val.eu { color: var(--eu-bright); }
+
+  .meta-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  @keyframes fadeIn {
+    from { opacity:0; transform: translateY(12px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* ─── SECTION HEADER ─── */
+  .sec-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .sec-num {
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.12em;
+    flex-shrink: 0;
+  }
+
+  .sec-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    color: #fff;
+    flex: 1;
+  }
+
+  .sec-badge {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .sec-badge.live { border-color: var(--red); color: var(--red); }
+
+  /* ─── COUNTDOWN BAR ─── */
+  .countdown {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    padding: 20px 24px;
+    margin-bottom: 52px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .countdown-text {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .countdown-text strong { color: var(--text); font-style: normal; }
+
+  .countdown-days {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: var(--red);
+    line-height: 1;
+    text-align: right;
+  }
+
+  .countdown-days span {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--faint);
+    text-align: right;
+    margin-top: 2px;
+  }
+
+  /* ─── CLAUSE REFERENCE CARDS ─── */
+  .clauses-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 52px;
+  }
+
+  @media (max-width: 680px) { .clauses-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) and (min-width: 680px) { .clauses-grid { grid-template-columns: 1fr 1fr; } }
+
+  .clause-card {
+    background: var(--surface);
+    padding: 22px 20px;
+    position: relative;
+    transition: background 0.15s;
+  }
+
+  .clause-card:hover { background: var(--surface2); }
+
+  .clause-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--eu-bright);
+    margin-bottom: 6px;
+  }
+
+  .clause-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .clause-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .clause-risk {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 2px 7px;
+  }
+
+  .risk-high { background: var(--red-bg); color: var(--red); border: 1px solid rgba(217,64,64,0.3); }
+  .risk-med  { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(232,160,32,0.3); }
+  .risk-critical { background: rgba(217,64,64,0.2); color: #ff6060; border: 1px solid rgba(217,64,64,0.5); }
+
+  /* ─── DAY CARDS ─── */
+  .section { margin-bottom: 72px; }
+
+  .day-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease both;
+    transition: border-color 0.2s;
+  }
+
+  .day-card:hover { border-color: var(--border2); }
+
+  .day-card:nth-child(1) { animation-delay: 0.05s; }
+  .day-card:nth-child(2) { animation-delay: 0.10s; }
+  .day-card:nth-child(3) { animation-delay: 0.15s; }
+  .day-card:nth-child(4) { animation-delay: 0.20s; }
+  .day-card:nth-child(5) { animation-delay: 0.25s; }
+  .day-card:nth-child(6) { animation-delay: 0.30s; }
+  .day-card:nth-child(7) { animation-delay: 0.35s; }
+
+  .day-header {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    align-items: stretch;
+  }
+
+  .day-num-block {
+    background: var(--surface2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 10px;
+    border-right: 1px solid var(--border);
+  }
+
+  .day-word {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .day-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .day-title-block {
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .day-clause-ref {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--eu-bright);
+    margin-bottom: 5px;
+  }
+
+  .day-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .day-format-block {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 6px;
+    border-left: 1px solid var(--border);
+    min-width: 130px;
+  }
+
+  .format-tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .format-tag.thread { border-color: var(--eu-bright); color: var(--eu-bright); }
+  .format-tag.hook   { border-color: var(--amber); color: var(--amber); }
+  .format-tag.stat   { border-color: var(--green); color: var(--green); }
+  .format-tag.explainer { border-color: var(--gold); color: var(--gold); }
+  .format-tag.poll   { border-color: #9b7fe8; color: #9b7fe8; }
+  .format-tag.cta    { border-color: var(--red); color: var(--red); }
+  .format-tag.case   { border-color: #e87f60; color: #e87f60; }
+
+  .day-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  @media (max-width: 760px) {
+    .day-body { grid-template-columns: 1fr; }
+    .day-cell { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .day-cell:last-child { border-bottom: none; }
+    .day-header { grid-template-columns: 70px 1fr; }
+    .day-format-block { display: none; }
+  }
+
+  .day-cell {
+    padding: 20px 20px;
+    border-right: 1px solid var(--border);
+  }
+
+  .day-cell:last-child { border-right: none; }
+
+  .cell-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cell-content {
+    font-size: 13px;
+    color: #b8bcc8;
+    line-height: 1.65;
+  }
+
+  .cell-content strong { color: var(--text); }
+  .cell-content em { color: var(--amber); font-style: normal; }
+
+  .hook-text {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #fff;
+    line-height: 1.55;
+    border-left: 2px solid var(--eu-bright);
+    padding-left: 12px;
+    margin-bottom: 10px;
+  }
+
+  .clause-pill {
+    display: inline-block;
+    background: var(--eu-glow);
+    border: 1px solid rgba(26,79,212,0.35);
+    color: var(--eu-bright);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    margin: 2px 2px 2px 0;
+  }
+
+  .hashtag-line {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--faint);
+    line-height: 1.8;
+  }
+
+  .hashtag-line span {
+    color: var(--eu-bright);
+    margin-right: 6px;
+  }
+
+  /* ─── PENALTY BOX ─── */
+  .penalty-box {
+    background: var(--red-bg);
+    border: 1px solid rgba(217,64,64,0.3);
+    border-left: 4px solid var(--red);
+    padding: 20px 24px;
+    margin: 24px 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .penalty-icon { font-size: 24px; margin-top: 2px; }
+
+  .penalty-text { font-size: 13px; color: #c8c0c0; line-height: 1.6; }
+  .penalty-text strong { color: var(--red); }
+
+  /* ─── TIPS SECTION ─── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 640px) { .tips-grid { grid-template-columns: 1fr; } }
+
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+  }
+
+  .tip-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--faint);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .tip-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .tip-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ─── POSTING SCHEDULE ─── */
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    font-size: 12.5px;
+    margin-top: 8px;
+  }
+
+  .schedule-table th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 11px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .schedule-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: #a8adb8;
+    vertical-align: top;
+  }
+
+  .schedule-table tr:last-child td { border-bottom: none; }
+  .schedule-table tr:hover td { background: var(--surface); }
+
+  .time-label {
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 24px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 80px;
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-brand { color: var(--eu-bright); }
+
+  @media print {
+    .alert-banner { position: static; }
+    body { background: white; color: #111; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ALERT BANNER -->
+<div class="alert-banner">
+  <div class="alert-blink"></div>
+  EU AI ACT ENFORCEMENT BEGINS AUGUST 2025 · 127 DAYS REMAINING · FULL APPLICABILITY APPROACHING
+  <div class="alert-blink"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ════════════════════════════ HERO ════════════════════════════ -->
+  <div class="hero">
+    <div class="hero-bg-text">AI ACT</div>
+    <div class="hero-stamp">
+      <div class="eu-flag">🇪🇺</div>
+      <span class="stamp-text">Official Regulation 2024/1689 · EU AI Act</span>
+    </div>
+    <h1>7-Day Content<br>Calendar — <span>AI Act</span><br>&amp; AI Agents</h1>
+    <p class="hero-sub">A week of high-impact posts on the EU AI Act clauses that matter most to AI agents running in production — and touching critical data.</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <div class="meta-val urgent">127</div>
+        <div class="meta-label">Days Remaining</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-val eu">7</div>
+        <div class="meta-label">Days of Content</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-val">€35M</div>
+        <div class="meta-label">Max Fine (or 7% revenue)</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-val">Aug '25</div>
+        <div class="meta-label">Full Enforcement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════ COUNTDOWN ════════════════════════ -->
+  <div class="countdown">
+    <div class="countdown-text">
+      The EU AI Act entered into force on <strong>1 August 2024</strong>. Full enforcement for high-risk AI systems applies from <strong>2 August 2026</strong> — but obligations for GPAI models, prohibited practices, and governance frameworks kicked in earlier. <strong>If you have AI agents in production touching sensitive, financial, or personal data — you are already in scope.</strong>
+    </div>
+    <div class="countdown-days">
+      127
+      <span>DAYS TO FULL SCOPE</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════ CLAUSE REFERENCE ════════════════ -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">REF</span>
+      <span class="sec-title">Key Clauses Referenced This Week</span>
+      <span class="sec-badge">REGULATION 2024/1689</span>
+    </div>
+
+    <div class="clauses-grid">
+      <div class="clause-card">
+        <div class="clause-risk risk-critical">CRITICAL</div>
+        <div class="clause-num">ARTICLE 6 + ANNEX III</div>
+        <div class="clause-name">High-Risk AI Classification</div>
+        <div class="clause-desc">Defines which AI systems are "high-risk." Agents operating in employment, credit, biometrics, critical infrastructure, and legal/judicial contexts fall here automatically.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-high">HIGH</div>
+        <div class="clause-num">ARTICLE 9</div>
+        <div class="clause-name">Risk Management System</div>
+        <div class="clause-desc">Continuous risk management lifecycle required for high-risk systems — identification, estimation, evaluation, and mitigation of residual risks throughout the AI lifecycle.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-high">HIGH</div>
+        <div class="clause-num">ARTICLE 10</div>
+        <div class="clause-name">Data Governance</div>
+        <div class="clause-desc">Training, validation, and testing data practices must meet quality criteria. Relevance, representativeness, and freedom from errors required. Critical for agents trained on or accessing sensitive data.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-high">HIGH</div>
+        <div class="clause-num">ARTICLE 13</div>
+        <div class="clause-name">Transparency & Explainability</div>
+        <div class="clause-desc">High-risk AI must be transparent enough that deployers can interpret outputs correctly. Agents must surface how decisions are reached — not just what the decision is.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-high">HIGH</div>
+        <div class="clause-num">ARTICLE 14</div>
+        <div class="clause-name">Human Oversight</div>
+        <div class="clause-desc">Adequate human oversight measures must be technically built-in. Humans must be able to intervene, override, and halt AI agent actions — not just monitor them after the fact.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-med">MEDIUM</div>
+        <div class="clause-num">ARTICLE 17</div>
+        <div class="clause-name">Quality Management System</div>
+        <div class="clause-desc">Providers must implement a QMS covering design controls, testing, monitoring, and documentation — analogous to ISO 9001 but AI-specific. Required for all high-risk system providers.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-high">HIGH</div>
+        <div class="clause-num">ARTICLE 26</div>
+        <div class="clause-name">Obligations of Deployers</div>
+        <div class="clause-desc">Deployers (not just providers) have direct obligations: use AI only for intended purpose, monitor operation, ensure human oversight capability, and conduct data protection impact assessments.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-high">HIGH</div>
+        <div class="clause-num">ARTICLES 52–53</div>
+        <div class="clause-name">GPAI Model Obligations</div>
+        <div class="clause-desc">General-purpose AI models (GPT-class, Claude, Gemini) powering agents face transparency, copyright compliance, and systemic risk reporting obligations when used in production workflows.</div>
+      </div>
+      <div class="clause-card">
+        <div class="clause-risk risk-critical">CRITICAL</div>
+        <div class="clause-num">ARTICLE 71</div>
+        <div class="clause-name">Penalties</div>
+        <div class="clause-desc">Prohibited AI practices: up to €35M or 7% global revenue. High-risk violations: up to €15M or 3% revenue. Incorrect information to authorities: up to €7.5M or 1% revenue.</div>
+      </div>
+    </div>
+
+    <div class="penalty-box">
+      <div class="penalty-icon">⚠️</div>
+      <div class="penalty-text">
+        <strong>AI agents are not explicitly defined as a separate category in the Act — but they are captured under the broad definition of "AI system" (Article 3(1)).</strong> Any autonomous system that "generates outputs such as predictions, recommendations, decisions, or content that influence real or virtual environments" is in scope. An agent making credit decisions, processing employee data, or operating in critical infrastructure is almost certainly classified as high-risk under Annex III.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════ 7-DAY CALENDAR ══════════════════ -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">01</span>
+      <span class="sec-title">7-Day Content Calendar</span>
+      <span class="sec-badge live">LIVE · 127 DAYS OUT</span>
+    </div>
+
+    <div class="day-grid">
+
+      <!-- DAY 1 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-num-block">
+            <span class="day-word">Day</span>
+            <span class="day-number">1</span>
+          </div>
+          <div class="day-title-block">
+            <div class="day-clause-ref">ARTICLE 6 + ANNEX III · High-Risk Classification</div>
+            <div class="day-title">Is Your AI Agent Already Classified as High-Risk?</div>
+          </div>
+          <div class="day-format-block">
+            <span class="format-tag hook">HOOK POST</span>
+            <span class="format-tag thread">THREAD</span>
+          </div>
+        </div>
+        <div class="day-body">
+          <div class="day-cell">
+            <div class="cell-label">Hook / Opening Post</div>
+            <div class="cell-content">
+              <div class="hook-text">"127 days until the EU AI Act applies to your production AI agents. If your agent touches any of these 8 categories — you're already classified as high-risk. Here's what that means. 🧵"</div>
+              Follow with a thread listing Annex III categories: biometrics, critical infrastructure, education, employment, essential services, law enforcement, migration, justice. For each: one sentence on how an AI agent might fall in.
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Key Clause Angle</div>
+            <div class="cell-content">
+              <strong>Article 6 + Annex III</strong> creates the classification trigger. The list is not exhaustive of use-cases — it's <em>categorical</em>. An agent that automates hiring screening, credit scoring, or patient triage is high-risk by definition, regardless of how small or "assistive" it is.
+              <br><br>
+              <span class="clause-pill">Art. 6(1)</span><span class="clause-pill">Annex III</span><span class="clause-pill">Art. 3(1)</span>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Agent-Specific Angle + CTAs</div>
+            <div class="cell-content">
+              <strong>Agent angle:</strong> "Most teams shipping AI agents think the Act is about chatbots. It's not. An agent that reads employee performance data to generate a review draft is processing employment data — that's Annex III, point 4."
+              <br><br>
+              <strong>CTA:</strong> "Which Annex III categories could your agent touch? Drop it in the replies."
+              <div class="hashtag-line">
+                <span>#EUAIAct</span><span>#AIAgents</span><span>#AICompliance</span><span>#AIGovernance</span><span>#HighRiskAI</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 2 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-num-block">
+            <span class="day-word">Day</span>
+            <span class="day-number">2</span>
+          </div>
+          <div class="day-title-block">
+            <div class="day-clause-ref">ARTICLE 10 · Data Governance</div>
+            <div class="day-title">Your Agent's Data Diet Is Now a Legal Document</div>
+          </div>
+          <div class="day-format-block">
+            <span class="format-tag stat">DATA POST</span>
+            <span class="format-tag explainer">EXPLAINER</span>
+          </div>
+        </div>
+        <div class="day-body">
+          <div class="day-cell">
+            <div class="cell-label">Hook / Opening Post</div>
+            <div class="cell-content">
+              <div class="hook-text">"Under the EU AI Act, the data your AI agent was trained on — and the data it accesses at runtime — must meet documented quality standards. Your RAG pipeline is now compliance infrastructure."</div>
+              Open with the statistic: Article 10 requires training data to be "relevant, representative, free of errors and complete to the best extent possible." Ask: can you prove that today?
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Key Clause Angle</div>
+            <div class="cell-content">
+              <strong>Article 10(3)</strong> mandates data governance practices covering collection, processing, and preparation. <strong>Article 10(5)</strong> allows processing of special category data (health, biometrics) only where "strictly necessary" — AI agents querying such data must justify it.
+              <br><br>
+              <span class="clause-pill">Art. 10(2)</span><span class="clause-pill">Art. 10(3)</span><span class="clause-pill">Art. 10(5)</span>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Agent-Specific Angle + CTAs</div>
+            <div class="cell-content">
+              <strong>Agent angle:</strong> "Agentic RAG systems retrieving financial records, health summaries, or HR files at query time are performing real-time data access over potentially special-category data. That access must be purposeful, logged, and justified — not just technically possible."
+              <br><br>
+              <strong>CTA:</strong> "Does your team have a documented data governance policy for your agent's retrieval layer? Honest answers only."
+              <div class="hashtag-line">
+                <span>#DataGovernance</span><span>#AIAct</span><span>#RAG</span><span>#AIAgents</span><span>#GDPR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 3 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-num-block">
+            <span class="day-word">Day</span>
+            <span class="day-number">3</span>
+          </div>
+          <div class="day-title-block">
+            <div class="day-clause-ref">ARTICLE 14 · Human Oversight</div>
+            <div class="day-title">"Human-in-the-Loop" Is Not Optional. It's Article 14.</div>
+          </div>
+          <div class="day-format-block">
+            <span class="format-tag poll">POLL</span>
+            <span class="format-tag thread">THREAD</span>
+          </div>
+        </div>
+        <div class="day-body">
+          <div class="day-cell">
+            <div class="cell-label">Hook / Opening Post</div>
+            <div class="cell-content">
+              <div class="hook-text">"The EU AI Act doesn't just say 'have a human available.' It requires that humans can understand, monitor, and STOP your AI agent — by design, not by accident. Is your agentic system actually built for that?"</div>
+              Lead with the poll: "What's your current human oversight model for AI agents in production?" Options: Full automation / Human reviews outputs / Human approves before action / No agents yet.
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Key Clause Angle</div>
+            <div class="cell-content">
+              <strong>Article 14(1)–(4)</strong>: High-risk AI must allow natural persons to fully understand the system's capacities, correctly interpret outputs, and decide not to use it or override its output. This means your agent needs interpretable output, an audit trail, and a hard stop mechanism.
+              <br><br>
+              <span class="clause-pill">Art. 14(1)</span><span class="clause-pill">Art. 14(4)(a)</span><span class="clause-pill">Art. 14(4)(e)</span>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Agent-Specific Angle + CTAs</div>
+            <div class="cell-content">
+              <strong>Agent angle:</strong> "Multi-step agents are the hardest case. If your agent autonomously chains tool calls — search → query DB → draft email → send — at what point does a human actually see what's happening? Article 14 requires that oversight is built into the architecture, not bolted on post-deployment."
+              <br><br>
+              <strong>CTA:</strong> "Share your HITL architecture — what does 'pause for human review' actually look like in your agent stack?"
+              <div class="hashtag-line">
+                <span>#HITL</span><span>#AIGovernance</span><span>#EUAIAct</span><span>#AgenticAI</span><span>#ResponsibleAI</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 4 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-num-block">
+            <span class="day-word">Day</span>
+            <span class="day-number">4</span>
+          </div>
+          <div class="day-title-block">
+            <div class="day-clause-ref">ARTICLE 13 · Transparency + ARTICLES 52–53 · GPAI</div>
+            <div class="day-title">When Your Agent Uses GPT-4 or Claude — Both Layers Are Regulated</div>
+          </div>
+          <div class="day-format-block">
+            <span class="format-tag explainer">EXPLAINER</span>
+            <span class="format-tag case">CASE STUDY</span>
+          </div>
+        </div>
+        <div class="day-body">
+          <div class="day-cell">
+            <div class="cell-label">Hook / Opening Post</div>
+            <div class="cell-content">
+              <div class="hook-text">"You're not just deploying an AI agent. You're deploying a stack: your orchestration layer + a GPAI model (GPT-4, Claude, Gemini). Under the EU AI Act, BOTH layers have obligations. Most teams are only thinking about one."</div>
+              Frame as the "double obligation" problem — model provider obligations (Art. 52–53) AND deployer obligations (Art. 13, 26) stack on top of each other.
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Key Clause Angle</div>
+            <div class="cell-content">
+              <strong>Article 52</strong>: AI systems interacting with humans must disclose they are AI. <strong>Article 53</strong>: GPAI model providers must publish training data summaries and maintain model cards. <strong>Article 13</strong>: Deployers must ensure outputs are interpretable. When your agent takes action on behalf of a user, transparency must exist at both the model and application layer.
+              <br><br>
+              <span class="clause-pill">Art. 52(1)</span><span class="clause-pill">Art. 53(1)(b)</span><span class="clause-pill">Art. 13(1)</span>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Agent-Specific Angle + CTAs</div>
+            <div class="cell-content">
+              <strong>Agent angle:</strong> "A financial services agent using Claude to summarise client portfolios and generate advice drafts is: (1) subject to Art. 13 — output must be explainable to the deployer; (2) reliant on Anthropic's Art. 53 obligations for model-level transparency; and (3) possibly violating Art. 52 if the client doesn't know they're interacting with AI."
+              <br><br>
+              <strong>CTA:</strong> "Does your agent disclose its AI nature at every user-facing touchpoint? Where does transparency break down in your stack?"
+              <div class="hashtag-line">
+                <span>#GPAI</span><span>#LLM</span><span>#EUAIAct</span><span>#AITransparency</span><span>#AIAgents</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 5 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-num-block">
+            <span class="day-word">Day</span>
+            <span class="day-number">5</span>
+          </div>
+          <div class="day-title-block">
+            <div class="day-clause-ref">ARTICLE 9 · Risk Management + ARTICLE 17 · QMS</div>
+            <div class="day-title">Your Agent Needs a Living Risk Register. Not a PDF. A Process.</div>
+          </div>
+          <div class="day-format-block">
+            <span class="format-tag thread">THREAD</span>
+            <span class="format-tag stat">FRAMEWORK</span>
+          </div>
+        </div>
+        <div class="day-body">
+          <div class="day-cell">
+            <div class="cell-label">Hook / Opening Post</div>
+            <div class="cell-content">
+              <div class="hook-text">"Article 9 of the EU AI Act doesn't ask for a risk assessment. It asks for a risk management SYSTEM — continuous, documented, updated across the entire AI lifecycle. One-time audits won't cut it."</div>
+              Thread format: "Here are the 5 components of an Article 9-compliant risk management system for an AI agent in production" — identification, estimation, evaluation, mitigation, residual risk documentation.
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Key Clause Angle</div>
+            <div class="cell-content">
+              <strong>Article 9(1)</strong>: Risk management must be "a continuous iterative process." <strong>Article 9(4)</strong>: Risk mitigation measures must consider foreseeable misuse. <strong>Article 17</strong>: Quality management system must cover design, testing, monitoring, and post-market surveillance. Together: compliance is an ongoing engineering discipline, not a legal checkbox.
+              <br><br>
+              <span class="clause-pill">Art. 9(1)</span><span class="clause-pill">Art. 9(4)</span><span class="clause-pill">Art. 17(1)(e)</span>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Agent-Specific Angle + CTAs</div>
+            <div class="cell-content">
+              <strong>Agent angle:</strong> "AI agents in production drift. Prompts change, tools are added, data sources expand. Article 9 requires that your risk register reflects the system as it runs — not as it was designed. Every new tool call your agent can make is a new risk surface that must be evaluated."
+              <br><br>
+              <strong>CTA:</strong> "Is your agent's risk management process manual or automated? What triggers a risk re-evaluation in your team?"
+              <div class="hashtag-line">
+                <span>#AIRisk</span><span>#EUAIAct</span><span>#MLOps</span><span>#AIGovernance</span><span>#QMS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 6 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-num-block">
+            <span class="day-word">Day</span>
+            <span class="day-number">6</span>
+          </div>
+          <div class="day-title-block">
+            <div class="day-clause-ref">ARTICLE 26 · Deployer Obligations</div>
+            <div class="day-title">If You Deploy the Agent, You Own the Compliance. Not Just the Vendor.</div>
+          </div>
+          <div class="day-format-block">
+            <span class="format-tag hook">MYTH BUST</span>
+            <span class="format-tag cta">HIGH URGENCY</span>
+          </div>
+        </div>
+        <div class="day-body">
+          <div class="day-cell">
+            <div class="cell-label">Hook / Opening Post</div>
+            <div class="cell-content">
+              <div class="hook-text">"Big misconception: 'our AI vendor is responsible for EU AI Act compliance.' Wrong. Article 26 gives deployers direct, non-delegable obligations. If you're running the agent in production — you are on the hook."</div>
+              Open with a myth vs. reality format. Myth: "Anthropic / OpenAI handles this." Reality: Model provider handles GPAI obligations. YOU handle deployment obligations.
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Key Clause Angle</div>
+            <div class="cell-content">
+              <strong>Article 26(1)</strong>: Deployers must use AI only as intended. <strong>Article 26(5)</strong>: Deployers must conduct Data Protection Impact Assessments (DPIA) where Art. 35 GDPR is triggered. <strong>Article 26(6)</strong>: Deployers must inform providers of any serious incidents. The Act creates a shared but distinct responsibility chain — providers and deployers both have independent obligations.
+              <br><br>
+              <span class="clause-pill">Art. 26(1)</span><span class="clause-pill">Art. 26(5)</span><span class="clause-pill">Art. 26(6)</span>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Agent-Specific Angle + CTAs</div>
+            <div class="cell-content">
+              <strong>Agent angle:</strong> "An enterprise deploying a third-party AI agent (built on LangChain + Claude) to process customer support data cannot point to Anthropic when the regulator asks about human oversight mechanisms, data access logs, or incident reporting. Article 26 is your problem."
+              <br><br>
+              <strong>CTA:</strong> "Have you mapped where your obligations end and your AI provider's begin? Most teams haven't. What does your vendor contract actually say about compliance responsibilities?"
+              <div class="hashtag-line">
+                <span>#EUAIAct</span><span>#AICompliance</span><span>#DeployerObligations</span><span>#EnterpiseAI</span><span>#AILaw</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 7 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-num-block">
+            <span class="day-word">Day</span>
+            <span class="day-number">7</span>
+          </div>
+          <div class="day-title-block">
+            <div class="day-clause-ref">ARTICLE 71 · Penalties + Week Summary</div>
+            <div class="day-title">127 Days Left. Here's Your Compliance Checklist for AI Agents.</div>
+          </div>
+          <div class="day-format-block">
+            <span class="format-tag cta">CALL TO ACTION</span>
+            <span class="format-tag thread">THREAD</span>
+          </div>
+        </div>
+        <div class="day-body">
+          <div class="day-cell">
+            <div class="cell-label">Hook / Opening Post</div>
+            <div class="cell-content">
+              <div class="hook-text">"We spent a week unpacking the EU AI Act for AI agents in production. Day 7: the checklist. 7 questions every team deploying AI agents touching critical data needs to answer before August. 🧵"</div>
+              Thread format — one question per article covered this week. Each question is binary: "Can you answer YES to this right now? If not, that's your compliance gap."
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">The 7-Question Checklist</div>
+            <div class="cell-content">
+              <strong>1.</strong> Have you classified your agent under Annex III? <em>(Art. 6)</em><br>
+              <strong>2.</strong> Can you document your agent's data governance? <em>(Art. 10)</em><br>
+              <strong>3.</strong> Is human override technically built into your agent? <em>(Art. 14)</em><br>
+              <strong>4.</strong> Are all user-facing touchpoints disclosed as AI? <em>(Art. 52)</em><br>
+              <strong>5.</strong> Do you have a continuous risk management process? <em>(Art. 9)</em><br>
+              <strong>6.</strong> Have you mapped deployer vs. provider obligations? <em>(Art. 26)</em><br>
+              <strong>7.</strong> Do you have incident reporting and logging in place? <em>(Art. 26(6))</em>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="cell-label">Final CTA + Penalties Hook</div>
+            <div class="cell-content">
+              <strong>Penalties hook:</strong> "Article 71 penalties for high-risk violations: up to €15M or 3% of global annual revenue. For prohibited practices: €35M or 7%. These aren't theoretical. National authorities are building enforcement capacity right now."
+              <br><br>
+              <strong>CTA:</strong> "Save this checklist. Share it with your compliance team. And if you're building tooling to automate any part of this audit trail — I'd genuinely love to talk."
+              <div class="hashtag-line">
+                <span>#EUAIAct</span><span>#AICompliance</span><span>#AIAgents</span><span>#AIGovernance</span><span>#RegTech</span><span>#CISA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /day-grid -->
+  </div>
+
+  <!-- ════════════════════════════ POSTING SCHEDULE ════════════════ -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">02</span>
+      <span class="sec-title">Recommended Posting Schedule</span>
+      <span class="sec-badge">X.COM + LINKEDIN</span>
+    </div>
+
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Best Post Time</th>
+          <th>X.com Format</th>
+          <th>LinkedIn Format</th>
+          <th>Engagement Tactic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Day 1 — High-Risk Classification</strong></td>
+          <td><span class="time-label">09:00 BST / 10:00 CET</span></td>
+          <td>Hook tweet + 8-part thread</td>
+          <td>Long-form post with Annex III list</td>
+          <td>End with: "Which category could your agent touch?" — drives replies</td>
+        </tr>
+        <tr>
+          <td><strong>Day 2 — Data Governance</strong></td>
+          <td><span class="time-label">08:30 BST / 09:30 CET</span></td>
+          <td>Stat-led single tweet → thread</td>
+          <td>Document post: Data Governance Checklist</td>
+          <td>Ask if teams have a data governance policy for their retrieval layer</td>
+        </tr>
+        <tr>
+          <td><strong>Day 3 — Human Oversight</strong></td>
+          <td><span class="time-label">12:00 BST / 13:00 CET</span></td>
+          <td>Poll first, then thread</td>
+          <td>Poll + explainer on Art. 14</td>
+          <td>Poll creates built-in engagement. Follow up on results next day.</td>
+        </tr>
+        <tr>
+          <td><strong>Day 4 — GPAI Double Obligation</strong></td>
+          <td><span class="time-label">09:00 BST / 10:00 CET</span></td>
+          <td>Thread with model provider diagram</td>
+          <td>Case study format — fintech agent example</td>
+          <td>Tag model providers (OpenAI, Anthropic) in the post — expands reach</td>
+        </tr>
+        <tr>
+          <td><strong>Day 5 — Risk Management</strong></td>
+          <td><span class="time-label">08:00 BST / 09:00 CET</span></td>
+          <td>Framework thread: 5-part risk system</td>
+          <td>Carousel-style numbered post</td>
+          <td>Ask what triggers a risk re-evaluation — operational question drives replies</td>
+        </tr>
+        <tr>
+          <td><strong>Day 6 — Deployer Obligations</strong></td>
+          <td><span class="time-label">10:00 BST / 11:00 CET</span></td>
+          <td>Myth-bust format (short, punchy)</td>
+          <td>Long-form with myth vs. reality table</td>
+          <td>Ask about vendor contracts — controversial and specific = high engagement</td>
+        </tr>
+        <tr>
+          <td><strong>Day 7 — Checklist + CTA</strong></td>
+          <td><span class="time-label">09:00 BST / 10:00 CET</span></td>
+          <td>Thread: 7 questions + penalties</td>
+          <td>Checklist document + DM CTA</td>
+          <td>Explicitly ask people to save/share. Week 1 CTA for your collaboration ask.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════════════════ PRO TIPS ════════════════════════ -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">03</span>
+      <span class="sec-title">Execution Tips for Maximum Reach</span>
+      <span class="sec-badge">STRATEGY</span>
+    </div>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-num">01</div>
+        <div class="tip-title">Always Cite the Article Number</div>
+        <div class="tip-body">Saying "Article 14" instead of "the human oversight bit" signals you've read the regulation. IT auditors, compliance leads, and legal teams respond to precision. It also differentiates your content from generic "AI regulation is coming" posts.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-num">02</div>
+        <div class="tip-title">Make It Operational, Not Theoretical</div>
+        <div class="tip-body">Every post should answer: "What does my team actually need to DO?" Abstract compliance commentary is low-engagement. "Here's what Article 10 means for your RAG pipeline" is actionable and shareable.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-num">03</div>
+        <div class="tip-title">Use the 127-Day Urgency Every Day</div>
+        <div class="tip-body">Open every post with a countdown or deadline reference. Urgency is your primary engagement driver. "127 days" is more visceral than "enforcement begins August 2025."</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-num">04</div>
+        <div class="tip-title">End Every Post With a Question</div>
+        <div class="tip-body">Compliance content can feel one-directional. Each post should close with a specific operational question — not "thoughts?" but "What does human override look like in your architecture?" — to surface qualified leads in the replies.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-num">05</div>
+        <div class="tip-title">Cross-Post to LinkedIn With More Depth</div>
+        <div class="tip-body">X threads work as punchy hooks. LinkedIn posts can be longer and more structured — use the same content but expand the clause analysis and add a practical checklist. Compliance leads and IT auditors skew LinkedIn.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-num">06</div>
+        <div class="tip-title">Week 2: Pitch Your Tooling — Naturally</div>
+        <div class="tip-body">After 7 days of credibility-building, Day 8 is when you can post: "I'm building tools to automate the compliance audit trail that Articles 9, 13, and 17 require. If that's your problem too — DMs open." The audience is pre-qualified from the week.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<div class="footer">
+  <span class="footer-brand">EU AI Act · 7-Day Content Calendar</span>
+  <span>Regulation 2024/1689 · Enforcement: August 2025–2026</span>
+  <span>Generated March 2026 · 127 days remaining</span>
+</div>
+
+</body>
+</html>
