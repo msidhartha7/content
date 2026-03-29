@@ -38,5 +38,14 @@ def update_index():
     
     print("Index updated with current HTML files.")
 
+    # Commit and push
+    from datetime import datetime
+    import subprocess
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    subprocess.run(['git', '-C', dir_path, 'add', '*'], check=True)
+    subprocess.run(['git', '-C', dir_path, 'commit', '-m', f'Update index.html with new content on {timestamp}'], check=True)
+    subprocess.run(['git', '-C', dir_path, 'push'], check=True)
+    print("Committed and pushed.")
+
 if __name__ == '__main__':
     update_index()
