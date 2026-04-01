@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lookover.io</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand:#2d55c0; --brand2:#3662cc; --brand-light:#eef2fb; --brand-glow:rgba(45,85,192,.12);
+  --danger:#c43232; --danger-light:#fdf3f3; --danger-glow:rgba(196,50,50,.12);
+  --warn:#c47c10; --warn-light:#fdf8ee;
+  --success:#0a7c58; --success-light:#edf8f4;
+  --bg:#ffffff; --surface:#f8fafc; --surface2:#f0f4f8;
+  --border:rgba(15,23,42,.11); --border-s:rgba(15,23,42,.20);
+  --text:#0f172a; --text2:#334155; --text3:#64748b; --text4:#94a3b8;
+  --mono:'JetBrains Mono',monospace; --disp:'Syne',sans-serif; --body:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#0c1220;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:var(--body);}
+
+.stage{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--bg);}
+
+/* ── INTRO ── */
+.intro{position:absolute;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease;}
+.intro.gone{opacity:0;pointer-events:none;}
+.intro-mark{animation:popIn .7s cubic-bezier(.175,.885,.32,1.275) both;}
+@keyframes popIn{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.intro-word{font-family:var(--disp);font-size:54px;font-weight:800;color:var(--text);letter-spacing:-.03em;margin-top:20px;animation:fadeUp .6s .3s ease both;}
+.intro-word em{color:var(--brand);font-style:normal;}
+.intro-sub{font-size:14px;color:var(--text3);margin-top:10px;animation:fadeUp .6s .55s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+/* ── SHELL ── */
+.shell{position:absolute;inset:0;opacity:0;transition:opacity .7s ease;}
+.shell.on{opacity:1;}
+
+/* SIDEBAR */
+.sb{position:absolute;left:0;top:0;bottom:0;width:216px;background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10;}
+.sb-logo{padding:20px 18px 16px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);}
+.sb-logo svg{width:26px;height:26px;flex-shrink:0;}
+.sb-word{font-family:var(--disp);font-size:16px;font-weight:700;color:var(--text);}
+.sb-word em{color:var(--brand);font-style:normal;}
+.sb-nav{padding:14px 8px;display:flex;flex-direction:column;gap:2px;}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:7px;font-size:13px;font-weight:500;color:var(--text3);cursor:default;transition:all .2s;}
+.ni.on{background:var(--brand-light);color:var(--brand);font-weight:600;}
+.ni svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:100px;font-family:var(--mono);display:none;}
+.nb.on{display:inline;}
+.sb-foot{margin-top:auto;padding:14px;border-top:1px solid var(--border);}
+.spill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:11px;font-weight:600;color:var(--text2);}
+.sd{width:7px;height:7px;border-radius:50%;background:var(--success);flex-shrink:0;}
+.sd.pulse{animation:sdot 2s ease infinite;}
+@keyframes sdot{0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,.5);}50%{box-shadow:0 0 0 5px rgba(5,150,105,0);}}
+.sd.red{background:var(--danger);animation:rdot .9s ease infinite;}
+@keyframes rdot{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5);}50%{box-shadow:0 0 0 5px rgba(220,38,38,0);}}
+
+/* MAIN */
+.main{position:absolute;left:216px;top:0;right:0;bottom:0;display:flex;flex-direction:column;}
+.topbar{height:54px;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid var(--border);background:var(--bg);}
+.tb-title{font-family:var(--disp);font-size:14px;font-weight:700;color:var(--text);}
+.tb-sub{font-size:12px;color:var(--text4);margin-left:3px;}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.badge{font-size:11px;font-weight:600;padding:3px 11px;border-radius:100px;font-family:var(--disp);letter-spacing:.02em;}
+.b-live{background:var(--brand);color:#fff;}
+.b-warn{background:var(--warn-light);color:var(--warn);border:1px solid rgba(245,158,11,.25);}
+.b-crit{background:var(--danger);color:#fff;animation:blink .8s ease infinite;}
+.b-ok{background:var(--success-light);color:var(--success);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.7;}}
+
+.content{flex:1;overflow:hidden;position:relative;}
+.panel{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .55s ease,transform .55s ease;transform:translateY(10px);}
+.panel.show{opacity:1;pointer-events:all;transform:none;}
+
+/* ── AGENT PANEL ── */
+.ag-grid{display:grid;grid-template-columns:1fr 320px;grid-template-rows:auto 1fr;height:100%;}
+.stats-row{grid-column:1/-1;display:flex;border-bottom:1px solid var(--border);}
+.sc{flex:1;padding:15px 18px;border-right:1px solid var(--border);}
+.sc:last-child{border-right:none;}
+.sc-lbl{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.sc-val{font-family:var(--disp);font-size:22px;font-weight:700;color:var(--text);}
+.sc-val.g{color:var(--success);} .sc-val.b{color:var(--brand);}
+.sc-d{font-size:11px;color:var(--text4);margin-top:1px;}
+.sc-d.up{color:var(--success);}
+
+.tl{padding:14px 16px;overflow:hidden;border-right:1px solid var(--border);}
+.tl-hdr{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.tr{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:7px;border:1px solid var(--border);background:var(--bg);margin-bottom:6px;font-size:13px;animation:taskIn .35s ease both;}
+@keyframes taskIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:none;}}
+.tr.done{opacity:.4;}
+.tr.err{border-color:var(--danger);background:var(--danger-light);}
+.ti{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.tm{flex:1;min-width:0;}
+.tn{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tm-meta{font-size:11px;color:var(--text4);margin-top:1px;}
+.chip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;font-family:var(--mono);flex-shrink:0;}
+.ch-done{background:var(--success-light);color:var(--success);}
+.ch-run{background:var(--brand-light);color:var(--brand);animation:blink 1.2s ease infinite;}
+.ch-q{background:var(--surface2);color:var(--text3);}
+.ch-err{background:var(--danger-light);color:var(--danger);}
+
+.ls{padding:12px 14px;background:#0d1117;overflow:hidden;display:flex;flex-direction:column;}
+.ls-hdr{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.ls-hdr span{font-family:var(--mono);font-size:10px;color:#4b5563;}
+.ls-scroll{flex:1;overflow:hidden;}
+.le{font-family:var(--mono);font-size:10.5px;line-height:1.75;display:flex;gap:7px;animation:logIn .28s ease both;}
+@keyframes logIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.l-ts{color:#374151;flex-shrink:0;} .l-lv{flex-shrink:0;font-weight:700;min-width:32px;}
+.lv-info{color:#6890cc;} .lv-act{color:#9070c4;} .lv-ok{color:#38a065;} .lv-warn{color:#c47c10;} .lv-err{color:#c04040;}
+.l-msg{color:#b0bfd0;flex:1;} .l-key{color:#50a8b8;} .l-val{color:#c49010;} .l-bad{color:#b86060;}
+
+/* ── HITL PANEL ── */
+.hl{display:flex;height:100%;}
+.hq{width:320px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.hq-hdr{padding:13px 16px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;}
+.qc{margin-left:auto;background:var(--warn-light);color:var(--warn);font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;}
+.qi-wrap{flex:1;overflow:hidden;padding:9px;}
+.qi{padding:11px 13px;border-radius:8px;border:1px solid var(--border);background:var(--bg);margin-bottom:6px;}
+.qi.sel{border-color:var(--brand);background:var(--brand-light);}
+.qi.esel{border-color:var(--danger);background:var(--danger-light);}
+.qi-top{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.qi-title{font-size:13px;font-weight:600;color:var(--text);}
+.qi-meta{font-size:11px;color:var(--text4);}
+.qp{font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;}
+.qp-hi{background:var(--danger-light);color:var(--danger);}
+.qp-md{background:var(--warn-light);color:var(--warn);}
+.qp-lo{background:var(--surface2);color:var(--text3);}
+
+.hr{flex:1;display:flex;flex-direction:column;}
+.rh{padding:13px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;}
+.rav{width:32px;height:32px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:11px;font-weight:800;color:var(--brand);flex-shrink:0;}
+.rn{font-size:13px;font-weight:600;color:var(--text);font-family:var(--disp);}
+.rs{font-size:11px;color:var(--text4);}
+
+.rb{flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:12px;}
+.rc{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px 16px;}
+.rc-lbl{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.rc-amt{font-family:var(--disp);font-size:30px;font-weight:700;letter-spacing:-.02em;}
+.rc-amt.bad{color:var(--danger);}
+.rf{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.rf:last-child{border:none;}
+.rf-k{color:var(--text3);}
+.rf-v{font-weight:500;color:var(--text);font-family:var(--mono);font-size:11px;}
+
+.ra{display:flex;gap:9px;padding:0 20px 18px;}
+.btn-ap{flex:1;padding:11px;border-radius:8px;border:none;font-family:var(--disp);font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn-ok{background:var(--success);color:#fff;}
+.btn-ok.clicking{transform:scale(.94);filter:brightness(.9);}
+.btn-ok.approved{background:var(--warn);opacity:.7;cursor:not-allowed;}
+.btn-rej{flex:1;padding:11px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-family:var(--disp);font-size:13px;font-weight:700;color:var(--text3);cursor:pointer;}
+
+.blk{position:absolute;inset:0;background:rgba(220,38,38,.06);border:2px solid var(--danger);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;z-index:20;}
+.blk.on{opacity:1;}
+.blk-ban{background:var(--danger);color:#fff;font-family:var(--disp);font-size:20px;font-weight:800;padding:18px 44px;border-radius:11px;letter-spacing:.02em;display:flex;align-items:center;gap:14px;box-shadow:0 8px 40px rgba(220,38,38,.3);}
+
+/* ── COMPLIANCE PANEL ── */
+.ck-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto 1fr;gap:1px;background:var(--border);height:100%;}
+.ck{background:var(--bg);padding:16px 18px;}
+.ck.s2{grid-column:span 2;}
+.ck.s3{grid-column:span 3;}
+.ck-hdr{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px;}
+
+.sr-wrap{display:flex;align-items:center;gap:18px;}
+.ring-wrap{position:relative;width:76px;height:76px;flex-shrink:0;}
+.ring-wrap svg{width:100%;height:100%;}
+.ring-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:17px;font-weight:800;}
+.ring-val.ok{color:var(--success);} .ring-val.warn{color:var(--warn);} .ring-val.crit{color:var(--danger);}
+.rl{font-family:var(--disp);font-size:13px;font-weight:700;color:var(--text);}
+.rs2{font-size:11px;color:var(--text4);margin-top:3px;}
+
+.pl{display:flex;flex-direction:column;gap:6px;}
+.pc{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:7px;border:1px solid var(--border);font-size:12px;color:var(--text2);transition:all .4s;}
+.pc.pass{background:var(--success-light);border-color:rgba(5,150,105,.2);}
+.pc.fail{background:var(--danger-light);border-color:rgba(220,38,38,.25);font-weight:600;color:var(--danger);}
+.pc.scan{background:var(--surface);}
+.pd{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.pd.ok{background:var(--success);} .pd.bad{background:var(--danger);animation:rdot .8s ease infinite;} .pd.sp{background:var(--text4);animation:spindot 1s linear infinite;}
+@keyframes spindot{0%{opacity:1;}50%{opacity:.3;}100%{opacity:1;}}
+
+.af{display:flex;flex-direction:column;gap:6px;overflow:hidden;}
+.ar{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--bg);animation:alertIn .35s ease both;font-size:12px;}
+@keyframes alertIn{from{opacity:0;transform:translateX(8px);}to{opacity:1;transform:none;}}
+.ar.crit{border-color:rgba(220,38,38,.3);background:var(--danger-light);}
+.ar.blkd{border-color:rgba(29,78,216,.3);background:var(--brand-light);}
+.ar.pass{border-color:rgba(5,150,105,.25);background:var(--success-light);}
+.asev{font-size:9px;font-weight:700;padding:2px 6px;border-radius:100px;flex-shrink:0;margin-top:1px;font-family:var(--mono);}
+.sev-c{background:var(--danger);color:#fff;} .sev-b{background:var(--brand);color:#fff;} .sev-p{background:var(--success);color:#fff;}
+.at{flex:1;} .at-t{font-weight:600;color:var(--text);margin-bottom:1px;} .at-s{color:var(--text3);font-size:11px;}
+.a-ts{font-family:var(--mono);font-size:9px;color:var(--text4);margin-left:auto;flex-shrink:0;margin-top:1px;}
+
+.fine-blk{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;}
+.fine-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text4);margin-bottom:6px;}
+.fine-v{font-family:var(--disp);font-size:34px;font-weight:700;color:var(--success);letter-spacing:-.02em;}
+.fine-s{font-size:11px;color:var(--text4);margin-top:3px;}
+
+/* TOAST */
+.toast{position:absolute;top:14px;right:14px;z-index:80;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px 16px;box-shadow:0 4px 24px rgba(0,0,0,.1);max-width:270px;transform:translateX(310px);transition:transform .4s cubic-bezier(.175,.885,.32,1.275);display:flex;align-items:flex-start;gap:9px;}
+.toast.on{transform:none;}
+.toast.danger{border-color:var(--danger);background:var(--danger-light);}
+.toast.success{border-color:rgba(5,150,105,.3);background:var(--success-light);}
+.t-ico{font-size:16px;flex-shrink:0;}
+.t-ti{font-family:var(--disp);font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.t-su{font-size:11px;color:var(--text3);}
+
+/* CTA */
+.cta{position:absolute;inset:0;z-index:30;background:rgba(248,250,252,.97);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .8s ease;}
+.cta.on{opacity:1;pointer-events:all;}
+.cta-box{text-align:center;max-width:620px;}
+.cta-sh{width:76px;height:76px;background:var(--success);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;animation:shPop .6s cubic-bezier(.175,.885,.32,1.275) both;}
+@keyframes shPop{from{transform:scale(0);}to{transform:scale(1);}}
+.cta-fine{font-family:var(--disp);font-size:16px;font-weight:600;color:var(--success);margin-bottom:18px;}
+.cta-h{font-family:var(--disp);font-size:44px;font-weight:800;color:var(--text);line-height:1.08;letter-spacing:-.025em;}
+.cta-h em{color:var(--brand);font-style:normal;}
+.cta-p{font-size:15px;color:var(--text3);margin-top:13px;line-height:1.6;max-width:500px;margin-left:auto;margin-right:auto;}
+.cta-url{margin-top:20px;display:inline-block;font-family:var(--disp);font-size:20px;font-weight:700;color:var(--brand);letter-spacing:-.01em;}
+
+.prog{position:absolute;bottom:0;left:0;height:2px;background:var(--brand);z-index:200;width:0;transition:width linear;}
+.replay{position:absolute;bottom:18px;right:18px;z-index:100;background:var(--brand);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-family:var(--disp);font-size:13px;font-weight:700;cursor:pointer;opacity:0;transition:opacity .5s;}
+.replay.on{opacity:1;}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+<!-- INTRO -->
+<div class="intro" id="intro">
+  <div class="intro-mark">
+    <svg width="80" height="80" viewBox="0 0 512 512" fill="none">
+      <path d="M230 172Q230 140 262 140H268Q300 140 300 172V336H368Q400 336 400 368Q400 400 368 400H262Q230 400 230 368Z" fill="#0D0D0D"/>
+      <line x1="175" y1="230" x2="135" y2="270" stroke="#0D0D0D" stroke-width="28" stroke-linecap="round"/>
+      <circle cx="220" cy="185" r="55" fill="#fff"/>
+      <circle cx="220" cy="185" r="55" stroke="#0D0D0D" stroke-width="12"/>
+      <path d="M195 165Q205 150 225 155" stroke="#0D0D0D" stroke-width="5" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+  <div class="intro-word">lookover<em>.io</em></div>
+  <div class="intro-sub">Active Compliance Monitoring for AI Agents</div>
+</div>
+
+<!-- SHELL -->
+<div class="shell" id="shell">
+  <!-- SIDEBAR -->
+  <div class="sb">
+    <div class="sb-logo">
+      <svg viewBox="0 0 512 512" fill="none">
+        <path d="M230 172Q230 140 262 140H268Q300 140 300 172V336H368Q400 336 400 368Q400 400 368 400H262Q230 400 230 368Z" fill="#0D0D0D"/>
+        <line x1="175" y1="230" x2="135" y2="270" stroke="#0D0D0D" stroke-width="28" stroke-linecap="round"/>
+        <circle cx="220" cy="185" r="55" fill="#fff"/>
+        <circle cx="220" cy="185" r="55" stroke="#0D0D0D" stroke-width="12"/>
+        <path d="M195 165Q205 150 225 155" stroke="#0D0D0D" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span class="sb-word">lookover<em>.io</em></span>
+    </div>
+    <nav class="sb-nav">
+      <div class="ni on" id="ni-ag">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M8 5v6"/></svg>
+        Agent Monitor
+      </div>
+      <div class="ni" id="ni-hl">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="2.5"/><path d="M3 13c0-3 10-3 10 0"/></svg>
+        HITL Review
+        <span class="nb" id="nb-hl">3</span>
+      </div>
+      <div class="ni" id="ni-ck">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2L3 5v4c0 3 2.5 5 5 5s5-2 5-5V5L8 2z"/><path d="M6 8l1.5 1.5L10 6"/></svg>
+        Compliance
+        <span class="nb" id="nb-ck">!</span>
+      </div>
+    </nav>
+    <div class="sb-foot">
+      <div class="spill"><div class="sd pulse" id="sd"></div><span id="st">Agent running</span></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div><span class="tb-title" id="tt">Agent Operations</span><span class="tb-sub" id="ts2">— live feed</span></div>
+      <div class="tb-right"><span class="badge b-live" id="tb">● LIVE</span></div>
+    </div>
+    <div class="content">
+
+      <!-- AGENT -->
+      <div class="panel show" id="pAg">
+        <div class="ag-grid">
+          <div class="stats-row">
+            <div class="sc"><div class="sc-lbl">Tasks Completed</div><div class="sc-val g" id="vTasks">0</div><div class="sc-d up">↑ running</div></div>
+            <div class="sc"><div class="sc-lbl">Revenue Influenced</div><div class="sc-val b" id="vRev">$0</div><div class="sc-d up">↑ 38% vs last month</div></div>
+            <div class="sc"><div class="sc-lbl">Avg Response</div><div class="sc-val" id="vResp">1.2s</div><div class="sc-d">per task</div></div>
+            <div class="sc"><div class="sc-lbl">Success Rate</div><div class="sc-val g" id="vSucc">99.4%</div><div class="sc-d up">healthy</div></div>
+          </div>
+          <div class="tl" id="tl"><div class="tl-hdr">Live Task Queue</div></div>
+          <div class="ls" id="ls">
+            <div class="ls-hdr">
+              <svg width="8" height="8"><circle cx="4" cy="4" r="4" fill="#22c55e"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle></svg>
+              <span>agent-runtime.log</span>
+            </div>
+            <div class="ls-scroll" id="lsc"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HITL -->
+      <div class="panel" id="pHl">
+        <div class="hl">
+          <div class="hq">
+            <div class="hq-hdr">Review Queue<span class="qc">3 pending</span></div>
+            <div class="qi-wrap">
+              <div class="qi"><div class="qi-top"><span class="qi-title">#REF-9201</span><span class="qp qp-lo">low</span></div><div class="qi-meta">Refund $42.00 · Acme Corp</div></div>
+              <div class="qi esel"><div class="qi-top"><span class="qi-title">#REF-9204</span><span class="qp qp-hi">high</span></div><div class="qi-meta">Refund $12,400.00 · TechFlow Ltd</div></div>
+              <div class="qi"><div class="qi-top"><span class="qi-title">#INV-0087</span><span class="qp qp-md">med</span></div><div class="qi-meta">Invoice $890.00 · DataSync Inc</div></div>
+            </div>
+          </div>
+          <div class="hr">
+            <div class="rh">
+              <div class="rav">SR</div>
+              <div><div class="rn">Sarah R.</div><div class="rs">Compliance Reviewer · 47 tasks today</div></div>
+              <div style="margin-left:auto;font-size:11px;color:var(--text4);font-family:var(--mono);">11:47 AM</div>
+            </div>
+            <div class="rb">
+              <div class="rc" style="border-color:rgba(220,38,38,.3);background:var(--danger-light);">
+                <div class="rc-lbl" style="color:var(--danger);">⚠ Agent Output — Refund #REF-9204</div>
+                <div class="rc-amt bad">$12,400.00</div>
+                <div style="font-size:11px;color:var(--danger);margin-top:3px;">Expected: $124.00 — output is 100× inflated</div>
+              </div>
+              <div class="rc">
+                <div class="rc-lbl">Task Details</div>
+                <div class="rf"><span class="rf-k">Customer</span><span class="rf-v">TechFlow Ltd</span></div>
+                <div class="rf"><span class="rf-k">Ticket</span><span class="rf-v">#4821</span></div>
+                <div class="rf"><span class="rf-k">Policy</span><span class="rf-v">refund-v2</span></div>
+                <div class="rf" style="border:none;"><span class="rf-k">Max Allowed</span><span class="rf-v" style="color:var(--success);">$500.00</span></div>
+              </div>
+            </div>
+            <div class="ra">
+              <button class="btn-ap btn-ok" id="btnAp">✓ Approve</button>
+              <button class="btn-ap btn-rej">✕ Reject</button>
+            </div>
+          </div>
+        </div>
+        <div class="blk" id="blk">
+          <div class="blk-ban">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" fill="white"/><path d="M12 8v4M12 16h.01" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Lookover blocked this transaction
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLIANCE -->
+      <div class="panel" id="pCk">
+        <div class="ck-grid">
+          <div class="ck">
+            <div class="ck-hdr">Compliance Score</div>
+            <div class="sr-wrap">
+              <div class="ring-wrap">
+                <svg viewBox="0 0 76 76">
+                  <circle cx="38" cy="38" r="30" fill="none" stroke="#f1f5f9" stroke-width="7"/>
+                  <circle cx="38" cy="38" r="30" fill="none" stroke="#059669" stroke-width="7" stroke-dasharray="188" stroke-dashoffset="188" stroke-linecap="round" transform="rotate(-90 38 38)" id="arc" style="transition:stroke-dashoffset 1.4s ease,stroke .5s;"/>
+                </svg>
+                <div class="ring-val ok" id="rv">—</div>
+              </div>
+              <div><div class="rl" id="rl">Scanning...</div><div class="rs2" id="rs2">Loading data</div></div>
+            </div>
+          </div>
+          <div class="ck s2">
+            <div class="ck-hdr">Policy Engine — refund-v2</div>
+            <div class="pl" id="pl">
+              <div class="pc scan"><div class="pd sp"></div>Checking max refund limit...</div>
+              <div class="pc scan"><div class="pd sp"></div>Checking ticket reference match...</div>
+              <div class="pc scan"><div class="pd sp"></div>Verifying customer identity...</div>
+              <div class="pc scan"><div class="pd sp"></div>Evaluating human approval authority...</div>
+            </div>
+          </div>
+          <div class="ck">
+            <div class="ck-hdr">Fine Exposure Saved</div>
+            <div class="fine-blk"><div class="fine-lbl">Potential Fine Avoided</div><div class="fine-v" id="fv">$0</div><div class="fine-s" id="fs">No violations yet</div></div>
+          </div>
+          <div class="ck s2">
+            <div class="ck-hdr">Live Compliance Feed</div>
+            <div class="af" id="af"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="t-ico" id="t-ico">⚡</span>
+  <div><div class="t-ti" id="t-ti"></div><div class="t-su" id="t-su"></div></div>
+</div>
+
+<!-- CTA -->
+<div class="cta" id="cta">
+  <div class="cta-box">
+    <div class="cta-sh"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" fill="white"/><path d="M9 12l2 2 4-4" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cta-fine">$12,400 non-compliant transaction — blocked before execution</div>
+    <h1 class="cta-h">Keep AI agents compliant.<br><em>In real time. At any scale.</em></h1>
+    <p class="cta-p">Lookover monitors every agent action and HITL decision against your compliance policies — blocking violations before they cause fines, damage, or loss of trust.</p>
+    <div class="cta-url">lookover.io</div>
+  </div>
+</div>
+
+<div class="prog" id="prog"></div>
+<button class="replay" id="replay" onclick="boot()">↺ Replay</button>
+
+<script>
+const $ = id => document.getElementById(id);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+function countUp(el, to, pre='', suf='', dur=2200) {
+  const s = Date.now();
+  (function tick() {
+    const p = Math.min((Date.now()-s)/dur, 1);
+    const e = 1 - Math.pow(1-p, 3);
+    el.textContent = pre + Math.round(e*to).toLocaleString() + suf;
+    if (p < 1) requestAnimationFrame(tick);
+  })();
+}
+
+function toast(ico, title, sub, type='', dur=3800) {
+  const t = $('toast');
+  $('t-ico').textContent = ico;
+  $('t-ti').textContent = title;
+  $('t-su').textContent = sub;
+  t.className = 'toast ' + type;
+  requestAnimationFrame(() => t.classList.add('on'));
+  setTimeout(() => t.classList.remove('on'), dur);
+}
+
+const TASKS = [
+  { icon:'📧', name:'Reply to ticket #4821 — Acme Corp', meta:'policy: support-v3 · SLA: 4hr', s:'done' },
+  { icon:'🤝', name:'Onboard j.smith@corp.io', meta:'Role: Admin · Enterprise', s:'done' },
+  { icon:'📊', name:'Generate Q2 Summary report', meta:'board@company.com · scheduled', s:'done' },
+  { icon:'💳', name:'Process refund #REF-9204', meta:'Amount: $12,400.00 · TechFlow Ltd', s:'err' },
+  { icon:'📋', name:'Invoice INV-0087 · DataSync', meta:'Net 30 · $890.00', s:'queue' },
+];
+
+function addTask(t) {
+  const tl = $('tl');
+  const d = document.createElement('div');
+  const cls = t.s === 'done' ? 'tr done' : t.s === 'err' ? 'tr err' : 'tr';
+  const chip = t.s === 'done' ? '<span class="chip ch-done">Done</span>' :
+               t.s === 'err'  ? '<span class="chip ch-err">Error</span>' :
+               t.s === 'run'  ? '<span class="chip ch-run">Running</span>' :
+                                '<span class="chip ch-q">Queued</span>';
+  d.className = cls;
+  d.innerHTML = `<div class="ti" style="background:${t.s==='err'?'#fee2e2':'#f1f5f9'}">${t.icon}</div>
+    <div class="tm"><div class="tn" style="${t.s==='err'?'color:var(--danger);':''}">${t.name}</div><div class="tm-meta">${t.meta}</div></div>${chip}`;
+  tl.appendChild(d);
+}
+
+const LOGS = [
+  {ts:'11:47:02.001',lv:'INFO',c:'info',msg:'Task received',k:'task_id',v:'REF-9204'},
+  {ts:'11:47:02.104',lv:'ACT', c:'act', msg:'Fetching customer record',k:'id',v:'acme-4821'},
+  {ts:'11:47:02.319',lv:'ACT', c:'act', msg:'Loading policy file',k:'policy',v:'refund-v2.json'},
+  {ts:'11:47:02.521',lv:'INFO',c:'info',msg:'LLM inference started',k:'model',v:'claude-3-5'},
+  {ts:'11:47:02.893',lv:'OK',  c:'ok',  msg:'Token count within limits',k:'tokens',v:'1,204'},
+  {ts:'11:47:03.101',lv:'WARN',c:'warn',msg:'Output anomaly — amount unusually high',k:'amount',v:'$12,400.00'},
+  {ts:'11:47:03.207',lv:'ACT', c:'act', msg:'Routing to HITL queue',k:'reviewer',v:'sarah.r'},
+  {ts:'11:47:03.995',lv:'WARN',c:'warn',msg:'Human approved without verifying policy cap',k:'approver',v:'sarah.r'},
+  {ts:'11:47:04.012',lv:'ERR', c:'err', msg:'LOOKOVER: policy violation — execution BLOCKED',k:'rule',v:'refund_cap_exceeded'},
+];
+let logI = 0;
+function addLog() {
+  if (logI >= LOGS.length) return;
+  const l = LOGS[logI++];
+  const sc = $('lsc');
+  const d = document.createElement('div');
+  d.className = 'le';
+  const bad = l.c === 'warn' || l.c === 'err';
+  d.innerHTML = `<span class="l-ts">${l.ts}</span><span class="l-lv lv-${l.c}">${l.lv}</span><span class="l-msg ${bad?'l-bad':''}">${l.msg} <span class="l-key">${l.k}</span>=<span class="l-val">"${l.v}"</span></span>`;
+  sc.appendChild(d);
+  sc.scrollTop = sc.scrollHeight;
+}
+
+function setNav(id) {
+  ['ni-ag','ni-hl','ni-ck'].forEach(n => $(n).classList.toggle('on', n===id));
+}
+function setPanel(id) {
+  ['pAg','pHl','pCk'].forEach(p => $(p).classList.toggle('show', p===id));
+}
+function setTop(title, sub, badge, bc) {
+  $('tt').textContent = title;
+  $('ts2').textContent = sub;
+  $('tb').textContent = badge;
+  $('tb').className = 'badge ' + bc;
+}
+
+const POLICY_DATA = [
+  { txt:'Max single refund: $500.00', pass:false, failTxt:'FAIL — $12,400 exceeds cap by 2,380%' },
+  { txt:'Ticket reference match', pass:true },
+  { txt:'Customer identity verified', pass:true },
+  { txt:'Human approval overrides policy', pass:false, failTxt:'FAIL — approval cannot override cap violation' },
+];
+
+async function runCompliance() {
+  const arc = $('arc');
+  $('rv').textContent = '…';
+  $('rv').className = 'ring-val warn';
+  $('rl').textContent = 'Scanning...';
+  $('rs2').textContent = 'Checking 4 policy rules';
+
+  await wait(500);
+  const pl = $('pl');
+  for (let i = 0; i < POLICY_DATA.length; i++) {
+    await wait(650);
+    const p = POLICY_DATA[i];
+    const el = pl.children[i];
+    if (p.pass) {
+      el.className = 'pc pass';
+      el.innerHTML = `<div class="pd ok"></div>${p.txt}`;
+    } else {
+      el.className = 'pc fail';
+      el.innerHTML = `<div class="pd bad"></div>${p.failTxt}`;
+    }
+  }
+
+  await wait(350);
+  arc.style.strokeDashoffset = '94';
+  arc.style.stroke = 'var(--danger)';
+  $('rv').textContent = '50%';
+  $('rv').className = 'ring-val crit';
+  $('rl').textContent = 'Non-compliant';
+  $('rs2').textContent = '2 critical violations';
+
+  const af = $('af');
+  const alerts = [
+    { type:'crit', sev:'CRITICAL', t:'Policy violation — refund cap exceeded', s:'$12,400 violates refund-v2 max of $500', ts:'11:47:04' },
+    { type:'blkd', sev:'BLOCKED',  t:'Transaction halted before gateway call', s:'Lookover intercepted at pre-execution hook', ts:'11:47:04' },
+  ];
+  for (const a of alerts) {
+    await wait(550);
+    const el = document.createElement('div');
+    el.className = 'ar ' + a.type;
+    const sevCls = a.type==='crit'?'sev-c':a.type==='blkd'?'sev-b':'sev-p';
+    el.innerHTML = `<span class="asev ${sevCls}">${a.sev}</span><div class="at"><div class="at-t">${a.t}</div><div class="at-s">${a.s}</div></div><span class="a-ts">${a.ts}</span>`;
+    af.appendChild(el);
+  }
+
+  await wait(700);
+  $('fs').textContent = '$12,400 blocked — $0 exposed';
+
+  await wait(500);
+  const el2 = document.createElement('div');
+  el2.className = 'ar pass';
+  el2.innerHTML = `<span class="asev sev-p">RESOLVED</span><div class="at"><div class="at-t">Correct amount $124.00 requeued</div><div class="at-s">Task reissued with authorised amount. Audit log updated.</div></div><span class="a-ts">11:47:05</span>`;
+  af.appendChild(el2);
+
+  await wait(700);
+  arc.style.strokeDashoffset = '0';
+  arc.style.stroke = 'var(--success)';
+  $('rv').textContent = '100%';
+  $('rv').className = 'ring-val ok';
+  $('rl').textContent = 'Compliant';
+  $('rs2').textContent = 'All policies enforced';
+}
+
+let timers = [];
+function after(ms, fn) { timers.push(setTimeout(fn, ms)); }
+
+function boot() {
+  timers.forEach(clearTimeout); timers = [];
+  logI = 0;
+
+  // Reset DOM
+  $('intro').className = 'intro';
+  $('shell').className = 'shell';
+  $('blk').className = 'blk';
+  $('cta').className = 'cta';
+  $('replay').className = 'replay';
+  $('toast').className = 'toast';
+  $('tl').innerHTML = '<div class="tl-hdr">Live Task Queue</div>';
+  $('lsc').innerHTML = '';
+  $('af').innerHTML = '';
+  $('fv').textContent = '$0';
+  $('fs').textContent = 'No violations yet';
+  $('vTasks').textContent = '0';
+  $('vRev').textContent = '$0';
+  $('vSucc').textContent = '99.4%';
+  $('vSucc').style.color = 'var(--success)';
+  $('nb-hl').classList.remove('on');
+  $('nb-ck').classList.remove('on');
+  $('sd').className = 'sd pulse';
+  $('st').textContent = 'Agent running';
+  $('btnAp').className = 'btn-ap btn-ok';
+  $('btnAp').textContent = '✓ Approve';
+  $('btnAp').disabled = false;
+  $('btnAp').style = '';
+  const arc = $('arc');
+  arc.style.strokeDashoffset = '188'; arc.style.stroke = '#059669';
+  $('rv').textContent = '—'; $('rv').className = 'ring-val ok';
+  $('rl').textContent = 'Scanning...'; $('rs2').textContent = 'Loading data';
+  $('pl').innerHTML = `
+    <div class="pc scan"><div class="pd sp"></div>Checking max refund limit...</div>
+    <div class="pc scan"><div class="pd sp"></div>Checking ticket reference match...</div>
+    <div class="pc scan"><div class="pd sp"></div>Verifying customer identity...</div>
+    <div class="pc scan"><div class="pd sp"></div>Evaluating human approval authority...</div>`;
+  setPanel('pAg'); setNav('ni-ag');
+  setTop('Agent Operations', '— live feed', '● LIVE', 'b-live');
+
+  // Progress bar
+  const pb = $('prog');
+  pb.style.transition = 'none'; pb.style.width = '0';
+  setTimeout(() => { pb.style.transition = 'width 68s linear'; pb.style.width = '100%'; }, 80);
+
+  // T=3s: intro fades, shell appears
+  after(3000, () => {
+    $('intro').classList.add('gone');
+    $('shell').classList.add('on');
+  });
+
+  // T=3.6s: counters & tasks
+  after(3600, () => {
+    countUp($('vTasks'), 1847, '', '', 7000);
+    countUp($('vRev'), 284700, '$', '', 7000);
+  });
+  after(4000, () => addTask(TASKS[0]));
+  after(4700, () => addTask(TASKS[1]));
+  after(5400, () => addTask(TASKS[2]));
+
+  // T=5.5s: logs stream
+  after(5500, () => {
+    let li = setInterval(() => { if (logI >= 5) { clearInterval(li); return; } addLog(); }, 1000);
+    timers.push(li);
+  });
+
+  // T=10.5s: error task + anomaly toast
+  after(10500, () => {
+    addTask(TASKS[3]);
+    toast('⚠️', 'Anomaly detected', 'Agent output: $12,400.00 on refund task', 'danger');
+    $('sd').className = 'sd red';
+    $('st').textContent = 'Anomaly detected';
+    $('vSucc').textContent = '98.7%';
+    $('vSucc').style.color = 'var(--warn)';
+    setTimeout(addLog, 400);
+    setTimeout(addLog, 1100);
+  });
+
+  // T=13.8s: switch to HITL
+  after(13800, () => {
+    $('nb-hl').classList.add('on');
+    setNav('ni-hl'); setPanel('pHl');
+    setTop('HITL Review', '— awaiting decision', '⚠ ACTION REQUIRED', 'b-warn');
+    setTimeout(addLog, 300);
+  });
+
+  // T=18s: animate human click (wrong approval)
+  after(18000, () => {
+    const btn = $('btnAp');
+    btn.classList.add('clicking');
+    setTimeout(() => {
+      btn.classList.remove('clicking');
+      btn.classList.add('approved');
+      btn.textContent = '✓ Approved';
+      btn.disabled = true;
+      // immediately Lookover fires
+      setTimeout(() => {
+        $('nb-ck').classList.add('on');
+        setTop('HITL Review', '— intervention', '🚨 BLOCKED', 'b-crit');
+        toast('🛡️', 'Lookover intervened', 'Policy violation blocked before payment gateway', 'danger', 5000);
+        addLog(); // ERR log
+        setTimeout(() => $('blk').classList.add('on'), 700);
+      }, 800);
+    }, 320);
+  });
+
+  // T=22.5s: switch to compliance
+  after(22500, () => {
+    $('blk').classList.remove('on');
+    setNav('ni-ck'); setPanel('pCk');
+    setTop('Compliance Monitor', '— policy engine', '1 VIOLATION', 'b-crit');
+    runCompliance();
+  });
+
+  // T=42s: status recovers + queued task
+  after(42000, () => {
+    $('sd').className = 'sd pulse';
+    $('st').textContent = 'All compliant';
+    setTop('Compliance Monitor', '— all policies enforced', '✓ COMPLIANT', 'b-ok');
+    addTask(TASKS[4]);
+    toast('✅', 'Agent resumed', 'Correct amount $124.00 processed successfully', 'success', 4000);
+  });
+
+  // T=52s: CTA
+  after(52000, () => {
+    $('cta').classList.add('on');
+    $('replay').classList.add('on');
+  });
+}
+
+boot();
+</script>
+</body>
+</html>
