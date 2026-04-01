@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sidhartha Mallick — VibeCon India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue:    #38bdf8;
+    --indigo:  #818cf8;
+    --violet:  #6366f1;
+    --fg:      #f0f9ff;
+    --muted:   rgba(148,163,184,0.75);
+    --bg:      #030712;
+    --glass:   rgba(15,23,42,0.85);
+    --grid:    rgba(56,189,248,0.04);
+    --ease:    cubic-bezier(0.4,0,0.2,1);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ── STAGE ── */
+  .stage {
+    width: min(100vw, calc(100vh * 16/9));
+    aspect-ratio: 16/9;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* Shared: grid + vignette */
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 35%, var(--bg) 100%);
+    pointer-events: none; z-index: 1;
+  }
+
+  /* Corner brackets */
+  .corner { position: absolute; width: 22px; height: 22px; border-color: rgba(56,189,248,0.45); border-style: solid; z-index: 50; pointer-events: none; }
+  .corner-tl { top: 14px; left: 14px; border-width: 1.5px 0 0 1.5px; }
+  .corner-tr { top: 14px; right: 14px; border-width: 1.5px 1.5px 0 0; }
+  .corner-bl { bottom: 14px; left: 14px; border-width: 0 0 1.5px 1.5px; }
+  .corner-br { bottom: 14px; right: 14px; border-width: 0 1.5px 1.5px 0; }
+
+  /* Progress bar */
+  .progress-bar {
+    position: absolute; bottom: 0; left: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--indigo));
+    z-index: 100;
+    animation: progressGrow 35s linear forwards;
+    box-shadow: 0 0 6px rgba(56,189,248,0.4);
+  }
+  @keyframes progressGrow { from { width: 0; } to { width: 100%; } }
+
+  /* Replay button */
+  .replay-btn {
+    position: absolute; bottom: 20px; right: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(8px, 1vw, 10px);
+    color: rgba(56,189,248,0.5);
+    border: 1px solid rgba(56,189,248,0.2);
+    padding: 5px 12px; border-radius: 4px;
+    cursor: pointer; z-index: 200;
+    letter-spacing: 0.15em;
+    background: transparent;
+    opacity: 0;
+    animation: replayAppear 0.5s ease forwards 34s;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .replay-btn:hover { color: var(--blue); border-color: rgba(56,189,248,0.6); }
+  @keyframes replayAppear { to { opacity: 1; } }
+
+  /* ═══════════════════════════════════
+     SCENE SYSTEM
+     Each scene: position:absolute, full stage
+     Controlled by animation timing
+  ══════════════════════════════════ */
+  .scene {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+  }
+
+  /* Scene 1: 0–7s */
+  .s1 { animation: sceneOn 7s var(--ease) forwards 0s; }
+  /* Scene 2: 7–14s */
+  .s2 { animation: sceneOn 7s var(--ease) forwards 7s; }
+  /* Scene 3: 14–22s */
+  .s3 { animation: sceneOn 8s var(--ease) forwards 14s; }
+  /* Scene 4: 22–28s */
+  .s4 { animation: sceneOn 6s var(--ease) forwards 22s; }
+  /* Scene 5: 28–35s */
+  .s5 { animation: sceneOnHold 7s var(--ease) forwards 28s; }
+
+  @keyframes sceneOn {
+    0%   { opacity: 0; }
+    6%   { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes sceneOnHold {
+    0%   { opacity: 0; }
+    8%   { opacity: 1; }
+    100% { opacity: 1; }
+  }
+
+  /* Inner content zoom for each scene */
+  .s1 .content { animation: zoomScene 7s var(--ease) forwards 0s; }
+  .s2 .content { animation: zoomScene 7s var(--ease) forwards 7s; }
+  .s3 .content { animation: zoomScene 8s var(--ease) forwards 14s; }
+  .s4 .content { animation: zoomScene 6s var(--ease) forwards 22s; }
+  .s5 .content { animation: zoomSceneHold 7s var(--ease) forwards 28s; }
+
+  @keyframes zoomScene {
+    0%   { transform: scale(0.9); }
+    10%  { transform: scale(1); }
+    82%  { transform: scale(1); }
+    100% { transform: scale(1.06); }
+  }
+  @keyframes zoomSceneHold {
+    0%  { transform: scale(0.9); }
+    12% { transform: scale(1); }
+    100%{ transform: scale(1.02); }
+  }
+
+  /* Shared content wrapper */
+  .content {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center;
+    width: 90%; max-width: 900px;
+  }
+
+  /* ─── SHARED UTILITIES ─── */
+  .mono { font-family: 'Space Mono', monospace; }
+  .tag-label {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(7px, 1.1vw, 10px);
+    color: rgba(56,189,248,0.65);
+    letter-spacing: 0.28em; text-transform: uppercase;
+    align-self: center;
+  }
+
+  /* ─────────────────────────────────
+     SCENE 1 — Identity Boot
+  ───────────────────────────────── */
+  .s1 .content { gap: clamp(6px, 1.5vw, 14px); }
+
+  .s1 .scanline {
+    position: absolute; width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.5), transparent);
+    animation: scanDown 0.9s ease-out forwards 0.1s;
+    opacity: 0; z-index: 5;
+  }
+  @keyframes scanDown {
+    0%   { top: 25%; opacity: 0; }
+    40%  { opacity: 0.8; }
+    100% { top: 50%; opacity: 0; }
+  }
+
+  .s1 .glitch {
+    position: absolute; inset: 0;
+    background: rgba(56,189,248,0.025);
+    animation: glitchFlash 0.08s ease forwards 0.72s; opacity: 0;
+  }
+  @keyframes glitchFlash { 50% { opacity: 1; } }
+
+  .s1 .tag-top {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(7px, 1.3vw, 12px);
+    color: var(--blue); letter-spacing: 0.25em; text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .s1 .main-name {
+    font-size: clamp(24px, 5.5vw, 58px);
+    font-weight: 700; color: var(--fg);
+    letter-spacing: 0.06em; text-align: center;
+    line-height: 1; white-space: nowrap;
+    overflow: hidden; border-right: 2px solid var(--blue); width: 0;
+    animation:
+      typeIn 1.1s steps(18,end) forwards 0.8s,
+      cursorBlink 0.65s step-end infinite 0.8s,
+      cursorFade 0.2s ease forwards 2.1s;
+  }
+  @keyframes typeIn { from { width: 0; } to { width: 100%; } }
+  @keyframes cursorBlink { 50% { border-color: transparent; } }
+  @keyframes cursorFade  { to  { border-color: transparent; } }
+
+  .s1 .neon-line {
+    height: 1.5px; width: 0;
+    background: linear-gradient(90deg, transparent, var(--blue), var(--indigo), transparent);
+    border-radius: 2px;
+    animation: lineGrow 0.8s ease forwards 2.15s;
+  }
+  @keyframes lineGrow { to { width: 76%; opacity: 1; } }
+
+  .s1 .subtitle {
+    font-size: clamp(8px, 1.4vw, 13px); font-weight: 400;
+    color: var(--muted); letter-spacing: 0.06em; text-align: center; line-height: 1.6;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 2.4s;
+  }
+  .s1 .subtitle span { color: var(--blue); margin: 0 5px; }
+
+  /* ─────────────────────────────────
+     SCENE 2 — Numbers
+  ───────────────────────────────── */
+  .s2 .content { gap: clamp(8px, 2vw, 20px); width: 88%; }
+
+  .s2 .tag-label { opacity: 0; animation: fadeUp 0.5s ease forwards 7.3s; }
+
+  .s2 .cards-grid {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(6px, 1.4vw, 14px); width: 100%;
+  }
+
+  .stat-card {
+    position: relative; background: var(--glass);
+    border: 1px solid rgba(56,189,248,0.16);
+    border-radius: 10px;
+    padding: clamp(10px, 2vw, 20px) clamp(8px, 1.5vw, 14px);
+    display: flex; flex-direction: column;
+    align-items: flex-start; gap: clamp(4px, 0.7vw, 7px);
+    overflow: hidden; opacity: 0;
+  }
+  .stat-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.65), transparent);
+    border-radius: 10px 10px 0 0;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: -70%; width: 45%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.055), transparent);
+    animation: shimmer 1s ease forwards var(--sd);
+  }
+  @keyframes shimmer { to { left: 160%; } }
+
+  .stat-card:nth-child(1) { animation: cardIn 0.55s var(--ease) forwards 7.5s; --sd: 7.9s; }
+  .stat-card:nth-child(2) { animation: cardIn 0.55s var(--ease) forwards 7.75s; --sd: 8.15s; }
+  .stat-card:nth-child(3) { animation: cardIn 0.55s var(--ease) forwards 8.0s; --sd: 8.4s; }
+  .stat-card:nth-child(4) { animation: cardIn 0.55s var(--ease) forwards 8.25s; --sd: 8.65s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .stat-number {
+    font-size: clamp(18px, 3.4vw, 36px); font-weight: 700; color: var(--fg);
+    line-height: 1; letter-spacing: -0.01em;
+  }
+  .stat-number em { font-style: normal; color: var(--blue); font-size: clamp(13px, 2.4vw, 26px); }
+  .stat-label {
+    font-size: clamp(7px, 1vw, 10px); font-weight: 400; color: rgba(148,163,184,0.7);
+    letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.35;
+  }
+
+  .s2 .footnote {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(7px, 0.95vw, 9px); color: rgba(56,189,248,0.4);
+    letter-spacing: 0.15em;
+    opacity: 0; animation: fadeUp 0.5s ease forwards 9.2s;
+  }
+
+  /* ─────────────────────────────────
+     SCENE 3 — Ships / Timeline
+  ───────────────────────────────── */
+  .s3 .content { gap: clamp(8px, 1.8vw, 16px); width: 86%; align-items: flex-start; }
+
+  .s3 .tag-label { opacity: 0; animation: fadeUp 0.5s ease forwards 14.3s; }
+
+  .timeline {
+    width: 100%; display: flex; flex-direction: column;
+    gap: clamp(5px, 1vw, 10px); position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute; left: clamp(9px, 1.6vw, 16px);
+    top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(180deg, rgba(56,189,248,0.55), rgba(129,140,248,0.25), transparent);
+    transform-origin: top; transform: scaleY(0);
+    animation: lineAppear 0.6s ease forwards 14.5s;
+  }
+  @keyframes lineAppear { to { transform: scaleY(1); opacity: 1; } }
+
+  .venture-row {
+    display: flex; align-items: center;
+    gap: clamp(8px, 1.8vw, 18px);
+    padding: clamp(8px, 1.4vw, 13px) clamp(10px, 1.8vw, 16px);
+    background: rgba(15,23,42,0.72);
+    border: 1px solid rgba(56,189,248,0.1);
+    border-left: 2px solid var(--ac);
+    border-radius: 8px;
+    position: relative; overflow: hidden; opacity: 0;
+  }
+  .venture-row::before {
+    content: '';
+    position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.045), transparent);
+    animation: shimmer 0.9s ease forwards var(--sd);
+  }
+
+  .venture-row:nth-child(1) { animation: rowIn 0.5s var(--ease) forwards 14.6s; --sd: 15s; --ac: rgba(56,189,248,0.8); }
+  .venture-row:nth-child(2) { animation: rowIn 0.5s var(--ease) forwards 15.0s; --sd: 15.4s; --ac: rgba(129,140,248,0.8); }
+  .venture-row:nth-child(3) { animation: rowIn 0.5s var(--ease) forwards 15.4s; --sd: 15.8s; --ac: rgba(99,102,241,0.7); }
+  .venture-row:nth-child(4) { animation: rowIn 0.5s var(--ease) forwards 15.8s; --sd: 16.2s; --ac: rgba(56,189,248,0.4); }
+
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .v-dot {
+    width: clamp(7px, 1.1vw, 11px); height: clamp(7px, 1.1vw, 11px);
+    border-radius: 50%; background: var(--ac); flex-shrink: 0;
+    box-shadow: 0 0 7px var(--ac);
+  }
+  .v-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .v-name {
+    font-size: clamp(11px, 1.7vw, 16px); font-weight: 600; color: var(--fg);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .v-desc {
+    font-size: clamp(7px, 1vw, 10px); color: rgba(148,163,184,0.65);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(6px, 0.85vw, 8px);
+    padding: 2px 7px; border-radius: 4px;
+    letter-spacing: 0.1em; flex-shrink: 0;
+  }
+  .badge-live   { color: var(--blue); border: 1px solid rgba(56,189,248,0.45); animation: badgePulse 1.6s ease-in-out infinite; }
+  .badge-ship   { color: var(--indigo); border: 1px solid rgba(129,140,248,0.4); animation: badgePulse 1.6s ease-in-out infinite 0.3s; }
+  .badge-muted  { color: rgba(148,163,184,0.45); border: 1px solid rgba(148,163,184,0.18); }
+
+  @keyframes badgePulse {
+    0%,100% { opacity: 1; }
+    50%     { opacity: 0.6; }
+  }
+
+  /* ─────────────────────────────────
+     SCENE 4 — Thesis
+  ───────────────────────────────── */
+  .s4 .content { gap: clamp(8px, 2vw, 18px); text-align: center; }
+
+  .center-glow {
+    position: absolute; width: 55%; height: 55%;
+    top: 22%; left: 22%;
+    background: radial-gradient(ellipse at center, rgba(56,189,248,0.05) 0%, transparent 70%);
+    animation: glowPulse 3s ease-in-out infinite; pointer-events: none;
+  }
+  @keyframes glowPulse {
+    0%,100% { opacity: 0.5; transform: scale(1); }
+    50%     { opacity: 1;   transform: scale(1.1); }
+  }
+
+  .s4 .tag-label { opacity: 0; animation: fadeUp 0.5s ease forwards 22.3s; }
+
+  .quote-block { display: flex; flex-direction: column; gap: clamp(4px, 0.8vw, 8px); }
+  .q-line {
+    font-size: clamp(12px, 2.4vw, 26px); font-weight: 500;
+    color: rgba(240,249,255,0.9); line-height: 1.3;
+    opacity: 0; transform: translateY(12px);
+  }
+  .q-line.hl { color: var(--blue); font-weight: 600; }
+  .q-line:nth-child(1) { animation: lineIn 0.6s ease forwards 22.6s; }
+  .q-line:nth-child(2) { animation: lineIn 0.6s ease forwards 23.1s; }
+  .q-line:nth-child(3) { animation: lineIn 0.6s ease forwards 23.7s; }
+  @keyframes lineIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .s4 .divider {
+    width: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.45), transparent);
+    animation: divGrow 0.7s ease forwards 24.5s;
+  }
+  @keyframes divGrow { to { width: 55%; opacity: 1; } }
+
+  .s4 .sub {
+    font-size: clamp(7px, 1.1vw, 11px); color: rgba(148,163,184,0.62);
+    letter-spacing: 0.05em; line-height: 1.65;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 24.9s;
+  }
+  .s4 .sub strong { color: rgba(56,189,248,0.8); font-weight: 500; }
+
+  /* particles */
+  .particle {
+    position: absolute; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(56,189,248,0.35);
+    animation: float var(--dur) ease-in-out infinite var(--del);
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+    50%     { transform: translateY(var(--dy)) translateX(var(--dx)); opacity: 0.75; }
+  }
+
+  /* ─────────────────────────────────
+     SCENE 5 — The Loop (Finale)
+  ───────────────────────────────── */
+  .s5 .content { gap: clamp(8px, 2vw, 20px); text-align: center; }
+
+  .s5 .tag-label { opacity: 0; animation: fadeUp 0.5s ease forwards 28.3s; }
+
+  .loop-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: clamp(6px, 1.5vw, 16px); width: 100%;
+  }
+
+  .loop-node {
+    display: flex; flex-direction: column; align-items: center;
+    gap: clamp(4px, 0.7vw, 7px); opacity: 0;
+  }
+  .loop-node:nth-child(1) { animation: nodeIn 0.6s var(--ease) forwards 28.6s; }
+  .loop-node:nth-child(3) { animation: nodeIn 0.6s var(--ease) forwards 29.05s; }
+  .loop-node:nth-child(5) { animation: nodeIn 0.6s var(--ease) forwards 29.5s; }
+  @keyframes nodeIn {
+    from { opacity: 0; transform: scale(0.82) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .node-circle {
+    width: clamp(54px, 9.5vw, 94px); height: clamp(54px, 9.5vw, 94px);
+    border-radius: 50%; border: 1.5px solid var(--nc);
+    background: rgba(15,23,42,0.9);
+    display: flex; align-items: center; justify-content: center;
+    animation: circlePulse 2.2s ease-in-out infinite var(--cd);
+  }
+  @keyframes circlePulse {
+    0%,100% { box-shadow: 0 0 10px var(--ng); }
+    50%     { box-shadow: 0 0 26px var(--ng); }
+  }
+
+  .node-word { font-size: clamp(9px, 1.6vw, 16px); font-weight: 700; color: var(--nc); letter-spacing: 0.06em; }
+  .node-sub  { font-size: clamp(6px, 0.9vw, 9px); color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* Arrows */
+  .arrow-wrap { display: flex; align-items: center; opacity: 0; flex-shrink: 0; }
+  .arrow-wrap:nth-child(2) { animation: arrowIn 0.4s ease forwards 28.9s; }
+  .arrow-wrap:nth-child(4) { animation: arrowIn 0.4s ease forwards 29.3s; }
+  @keyframes arrowIn { to { opacity: 1; } }
+
+  .arrow-line {
+    width: clamp(18px, 3.5vw, 46px); height: 1px;
+    background: linear-gradient(90deg, rgba(56,189,248,0.5), rgba(129,140,248,0.5));
+    position: relative;
+  }
+  .arrow-line::after {
+    content: ''; position: absolute; right: -4px; top: -3px;
+    border-left: 6px solid rgba(129,140,248,0.7);
+    border-top: 3.5px solid transparent;
+    border-bottom: 3.5px solid transparent;
+  }
+
+  .return-arc {
+    width: 52%; max-width: 300px;
+    height: clamp(12px, 2.2vw, 22px);
+    border: 1px dashed rgba(56,189,248,0.2);
+    border-top: none;
+    border-radius: 0 0 50px 50px;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 30.1s;
+  }
+
+  .s5 .divider {
+    width: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.4), transparent);
+    animation: divGrow 0.7s ease forwards 30.5s;
+  }
+
+  .closing { display: flex; flex-direction: column; align-items: center; gap: clamp(4px, 0.8vw, 8px); }
+
+  .closing-line {
+    font-size: clamp(10px, 1.7vw, 17px); font-weight: 400;
+    color: rgba(148,163,184,0.8); letter-spacing: 0.04em;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 30.9s;
+  }
+  .closing-line em { font-style: normal; color: var(--fg); font-weight: 500; }
+
+  .closing-name {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(11px, 2vw, 21px); font-weight: 700;
+    color: var(--blue); letter-spacing: 0.12em;
+    opacity: 0; animation: nameReveal 0.9s ease forwards 31.5s;
+  }
+  @keyframes nameReveal {
+    from { opacity: 0; transform: scale(0.92); letter-spacing: 0.28em; }
+    to   { opacity: 1; transform: scale(1);    letter-spacing: 0.12em; }
+  }
+
+  .closing-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(6px, 0.85vw, 8.5px);
+    color: rgba(56,189,248,0.42); letter-spacing: 0.25em; text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.5s ease forwards 32.2s;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <!-- Shared background -->
+  <div class="grid-bg"></div>
+  <div class="vignette"></div>
+
+  <!-- Corner brackets (shared) -->
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Progress bar -->
+  <div class="progress-bar"></div>
+
+  <!-- Replay -->
+  <button class="replay-btn" onclick="location.reload()">↺ REPLAY</button>
+
+  <!-- ══════════════════════════
+       SCENE 1 — Identity Boot
+  ══════════════════════════ -->
+  <div class="scene s1">
+    <div class="scanline"></div>
+    <div class="glitch"></div>
+    <div class="content" style="gap: clamp(6px,1.5vw,14px)">
+      <div class="tag-top">Product Engineer &amp; Founder</div>
+      <div class="main-name">SIDHARTHA MALLICK</div>
+      <div class="neon-line"></div>
+      <div class="subtitle">
+        Bengaluru <span>·</span> Building at the intersection of<br>
+        Agentic Systems, Compliance &amp; Privacy
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       SCENE 2 — The Numbers
+  ══════════════════════════ -->
+  <div class="scene s2">
+    <div class="content" style="gap:clamp(8px,2vw,20px); width:88%">
+      <div class="tag-label">// proof of scale</div>
+      <div class="cards-grid">
+        <div class="stat-card">
+          <div class="stat-number">40<em>M+</em></div>
+          <div class="stat-label">Monthly Active Users<br>Infrastructure</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">48<em>H</em></div>
+          <div class="stat-label">Concept to<br>MVP</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1.5<em>M+</em></div>
+          <div class="stat-label">Companies<br>Indexed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1<em>M+</em></div>
+          <div class="stat-label">Distribution<br>Impressions</div>
+        </div>
+      </div>
+      <div class="footnote">not metrics. evidence.</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       SCENE 3 — The Ships
+  ══════════════════════════ -->
+  <div class="scene s3">
+    <div class="content" style="gap:clamp(8px,1.8vw,16px); width:86%; align-items:flex-start">
+      <div class="tag-label">// founded &amp; shipped</div>
+      <div class="timeline">
+
+        <div class="venture-row" style="--ac:rgba(56,189,248,0.85)">
+          <div class="v-dot" style="--ac:rgba(56,189,248,0.9)"></div>
+          <div class="v-info">
+            <div class="v-name">Lookover</div>
+            <div class="v-desc">Compliance infra for production AI agents — EU AI Act enforcement layer</div>
+          </div>
+          <div class="badge badge-live">LIVE</div>
+        </div>
+
+        <div class="venture-row" style="--ac:rgba(129,140,248,0.8)">
+          <div class="v-dot" style="--ac:rgba(129,140,248,0.9)"></div>
+          <div class="v-info">
+            <div class="v-name">The Invoice App</div>
+            <div class="v-desc">Snap a quote → professional invoice → paid in 10s. Built &amp; shipped in 48H.</div>
+          </div>
+          <div class="badge badge-ship">SHIPPED</div>
+        </div>
+
+        <div class="venture-row" style="--ac:rgba(99,102,241,0.7)">
+          <div class="v-dot" style="--ac:rgba(99,102,241,0.85)"></div>
+          <div class="v-info">
+            <div class="v-name">Privyy</div>
+            <div class="v-desc">Secure AI — client-side keys, 20+ OSS models, zero data sovereignty risk</div>
+          </div>
+          <div class="badge badge-muted">WOUND DOWN</div>
+        </div>
+
+        <div class="venture-row" style="--ac:rgba(56,189,248,0.4)">
+          <div class="v-dot" style="--ac:rgba(56,189,248,0.5)"></div>
+          <div class="v-info">
+            <div class="v-name">InvestorSync</div>
+            <div class="v-desc">1.5M+ companies indexed · 1M+ impressions · pivoted on signal</div>
+          </div>
+          <div class="badge badge-muted">PIVOTED</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       SCENE 4 — The Thesis
+  ══════════════════════════ -->
+  <div class="scene s4">
+    <div class="center-glow"></div>
+    <div class="particle" style="top:20%;left:14%;--dur:4s;--del:0s;--dy:-12px;--dx:6px"></div>
+    <div class="particle" style="top:70%;left:80%;--dur:5s;--del:0.5s;--dy:-8px;--dx:-10px"></div>
+    <div class="particle" style="top:40%;left:87%;--dur:3.5s;--del:1s;--dy:-14px;--dx:-5px"></div>
+    <div class="particle" style="top:75%;left:22%;--dur:4.5s;--del:0.3s;--dy:-10px;--dx:8px"></div>
+    <div class="particle" style="top:15%;left:70%;--dur:3.8s;--del:0.8s;--dy:-6px;--dx:-11px"></div>
+
+    <div class="content" style="gap:clamp(8px,2vw,18px); text-align:center; width:82%">
+      <div class="tag-label">// the builder's thesis</div>
+      <div class="quote-block">
+        <div class="q-line">The blocker isn't capability.</div>
+        <div class="q-line hl">It's verifiable accountability.</div>
+        <div class="q-line">Enterprises can build AI agents.<br>They can't deploy them.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="sub">
+        <strong>EU AI Act · August 2026</strong> — audit trails move from nice-to-have<br>
+        to a legal requirement. Lookover is the infrastructure layer for that shift.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       SCENE 5 — The Loop
+  ══════════════════════════ -->
+  <div class="scene s5">
+    <div class="content" style="gap:clamp(8px,2vw,20px); text-align:center">
+      <div class="tag-label">// the simple loop</div>
+
+      <div class="loop-row">
+        <div class="loop-node">
+          <div class="node-circle" style="--nc:var(--blue);--ng:rgba(56,189,248,0.22);--cd:0s">
+            <div class="node-word">BUILD</div>
+          </div>
+          <div class="node-sub">ship fast</div>
+        </div>
+
+        <div class="arrow-wrap">
+          <div class="arrow-line"></div>
+        </div>
+
+        <div class="loop-node">
+          <div class="node-circle" style="--nc:var(--indigo);--ng:rgba(129,140,248,0.22);--cd:0.3s">
+            <div class="node-word">MEASURE</div>
+          </div>
+          <div class="node-sub">read signal</div>
+        </div>
+
+        <div class="arrow-wrap">
+          <div class="arrow-line" style="background:linear-gradient(90deg,rgba(129,140,248,0.5),rgba(99,102,241,0.5))"></div>
+        </div>
+
+        <div class="loop-node">
+          <div class="node-circle" style="--nc:var(--violet);--ng:rgba(99,102,241,0.22);--cd:0.6s">
+            <div class="node-word">LEARN</div>
+          </div>
+          <div class="node-sub">iterate sharp</div>
+        </div>
+      </div>
+
+      <div class="return-arc"></div>
+      <div class="divider"></div>
+
+      <div class="closing">
+        <div class="closing-line">That's why <em>I build.</em></div>
+        <div class="closing-name">SIDHARTHA MALLICK</div>
+        <div class="closing-sub">vibecon india &nbsp;·&nbsp; top 300 builders</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
