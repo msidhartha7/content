@@ -99,6 +99,19 @@ html,body{width:100%;height:100%;background:#0c1220;display:flex;align-items:cen
 .ch-q{background:var(--surface2);color:var(--text3);}
 .ch-err{background:var(--danger-light);color:var(--danger);}
 
+/* ── SUBTASKS ── */
+.tr-subs{padding:2px 0 6px 50px;}
+.ts{display:flex;align-items:center;gap:7px;padding:4px 10px;border-radius:5px;border-left:2px solid var(--border);margin-bottom:3px;font-size:11px;color:var(--text2);background:var(--surface);animation:subIn .3s ease both;}
+@keyframes subIn{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:none;}}
+.ts.ok{border-left-color:rgba(5,150,105,.4);background:var(--success-light);}
+.ts.flag{border-left-color:var(--danger);background:var(--danger-light);color:var(--danger);font-weight:600;}
+.ts-icon{font-size:10px;flex-shrink:0;}
+.ts-name{flex:1;font-family:var(--mono);font-size:10px;letter-spacing:-.01em;}
+.ts-chip{font-size:9px;font-weight:700;padding:1px 6px;border-radius:100px;font-family:var(--mono);flex-shrink:0;}
+.tsc-ok{background:var(--success-light);color:var(--success);}
+.tsc-flag{background:var(--danger);color:#fff;}
+.tsc-block{background:var(--danger-light);color:var(--danger);}
+
 .ls{padding:12px 14px;background:#0d1117;overflow:hidden;display:flex;flex-direction:column;}
 .ls-hdr{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
 .ls-hdr span{font-family:var(--mono);font-size:10px;color:#4b5563;}
@@ -220,20 +233,20 @@ html,body{width:100%;height:100%;background:#0c1220;display:flex;align-items:cen
 
 /* ── ZOOM & CURSOR ── */
 #stage{transition:transform .85s cubic-bezier(.25,.46,.45,.94);}
-.cur{position:absolute;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 2px 14px rgba(0,0,0,.28),0 0 0 3px rgba(255,255,255,.35);pointer-events:none;z-index:500;transform:translate(-50%,-50%) scale(0);opacity:0;transition:transform .38s cubic-bezier(.175,.885,.32,1.275),opacity .25s,left .45s ease,top .45s ease;}
-.cur.show{transform:translate(-50%,-50%) scale(1);opacity:1;}
-.cur.click{animation:curClick .5s ease-out forwards;}
+.cur{position:absolute;width:36px;height:36px;pointer-events:none;z-index:500;transform:translate(-50%,0) scale(0);opacity:0;transition:transform .45s cubic-bezier(.175,.885,.32,1.275),opacity .35s,left .65s cubic-bezier(.25,.46,.45,.94),top .65s cubic-bezier(.25,.46,.45,.94);filter:drop-shadow(0 3px 10px rgba(0,0,0,.6));}
+.cur.show{transform:translate(-50%,0) scale(1);opacity:1;}
+.cur.click{animation:curClick .45s ease-out forwards;}
 @keyframes curClick{
-  0%{transform:translate(-50%,-50%) scale(1.1);opacity:1;}
-  35%{transform:translate(-50%,-50%) scale(.7);opacity:1;}
-  100%{transform:translate(-50%,-50%) scale(2.6);opacity:0;}
+  0%  {transform:translate(-50%,0) scale(1);}
+  28% {transform:translate(-50%,5px) scale(.85);}
+  65% {transform:translate(-50%,-2px) scale(1.06);}
+  100%{transform:translate(-50%,0) scale(1);}
 }
-.cur-ring{position:absolute;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.7);pointer-events:none;z-index:499;transform:translate(-50%,-50%) scale(0);opacity:0;transition:left .45s ease,top .45s ease;}
-.cur-ring.show{animation:ringPulse 1.6s ease infinite;}
-@keyframes ringPulse{
-  0%{transform:translate(-50%,-50%) scale(1);opacity:.7;}
-  70%{transform:translate(-50%,-50%) scale(2.2);opacity:0;}
-  100%{transform:translate(-50%,-50%) scale(2.2);opacity:0;}
+.cur-ring{display:none;}
+.click-ripple{position:absolute;width:12px;height:12px;border-radius:50%;background:rgba(45,85,192,.18);border:2px solid rgba(45,85,192,.8);pointer-events:none;z-index:498;transform:translate(-50%,-50%) scale(1);animation:rippleOut .7s ease-out forwards;}
+@keyframes rippleOut{
+  0%  {transform:translate(-50%,-50%) scale(1);opacity:1;}
+  100%{transform:translate(-50%,-50%) scale(6);opacity:0;}
 }
 </style>
 </head>
@@ -441,28 +454,36 @@ function zoomReset(dur=780) {
 
 /* ── CURSOR ── */
 let _cur = null, _ring = null;
+const HAND_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-hand-finger"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5" /><path d="M11 11.5v-2a1.5 1.5 0 1 1 3 0v2.5" /><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5" /><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" /></svg>`;
 function spawnCursor() {
   if (!_cur) {
-    _cur = document.createElement('div'); _cur.className = 'cur'; stage.appendChild(_cur);
+    _cur = document.createElement('div'); _cur.className = 'cur';
+    _cur.innerHTML = HAND_SVG;
+    stage.appendChild(_cur);
     _ring = document.createElement('div'); _ring.className = 'cur-ring'; stage.appendChild(_ring);
   }
 }
 function moveCursor(x, y, show=true) {
   spawnCursor();
   _cur.style.left = x + 'px'; _cur.style.top = y + 'px';
-  _ring.style.left = x + 'px'; _ring.style.top = y + 'px';
-  if (show) { _cur.classList.add('show'); _ring.classList.add('show'); }
+  if (show) _cur.classList.add('show');
 }
 function clickCursor() {
   if (!_cur) return;
-  _ring.classList.remove('show');
-  _cur.classList.remove('show');
+  _cur.classList.remove('click');
   void _cur.offsetWidth;
   _cur.classList.add('click');
-  setTimeout(() => { if (_cur) _cur.classList.remove('click'); }, 520);
+  setTimeout(() => { if (_cur) _cur.classList.remove('click'); }, 460);
+  const rpl = document.createElement('div');
+  rpl.className = 'click-ripple';
+  rpl.style.left = _cur.style.left;
+  rpl.style.top = _cur.style.top;
+  stage.appendChild(rpl);
+  setTimeout(() => rpl.remove(), 750);
 }
 function hideCursor() {
-  if (_cur) { _cur.classList.remove('show','click'); _ring.classList.remove('show'); }
+  if (_cur) { _cur.classList.remove('show','click'); }
 }
 function destroyCursor() {
   if (_cur) { _cur.remove(); _ring.remove(); _cur = null; _ring = null; }
@@ -508,6 +529,33 @@ function addTask(t) {
   d.innerHTML = `<div class="ti" style="background:${t.s==='err'?'#fee2e2':'#f1f5f9'}">${t.icon}</div>
     <div class="tm"><div class="tn" style="${t.s==='err'?'color:var(--danger);':''}">${t.name}</div><div class="tm-meta">${t.meta}</div></div>${chip}`;
   tl.appendChild(d);
+  return d;
+}
+
+const SUBTASKS_Q2 = [
+  { icon:'📂', name:'fetch_transaction_records', chip:'done', cls:'ok' },
+  { icon:'🧮', name:'aggregate_revenue_by_category', chip:'done', cls:'ok' },
+  { icon:'📤', name:'email_report_to_board', chip:'done', cls:'ok' },
+];
+const SUBTASKS_REF = [
+  { icon:'🔍', name:'verify_customer_identity', chip:'done', cls:'ok' },
+  { icon:'📋', name:'check_policy_limits', chip:'done', cls:'ok' },
+  { icon:'💰', name:'calculate_refund_amount', chip:'⚠ RISKY', cls:'flag' },
+  { icon:'🚫', name:'initiate_payment_gateway', chip:'blocked', cls:'flag' },
+];
+function addSubTasks(parentEl, subtasks, interval=500) {
+  const wrap = document.createElement('div');
+  wrap.className = 'tr-subs';
+  parentEl.after(wrap);
+  subtasks.forEach((st, i) => {
+    setTimeout(() => {
+      const d = document.createElement('div');
+      const chipCls = st.cls === 'ok' ? 'tsc-ok' : st.chip === 'blocked' ? 'tsc-block' : 'tsc-flag';
+      d.className = 'ts ' + st.cls;
+      d.innerHTML = `<span class="ts-icon">${st.icon}</span><span class="ts-name">${st.name}</span><span class="ts-chip ${chipCls}">${st.chip}</span>`;
+      wrap.appendChild(d);
+    }, i * interval);
+  });
 }
 
 const LOGS = [
@@ -516,7 +564,10 @@ const LOGS = [
   {ts:'11:47:02.319',lv:'ACT', c:'act', msg:'Loading policy file',k:'policy',v:'refund-v2.json'},
   {ts:'11:47:02.521',lv:'INFO',c:'info',msg:'LLM inference started',k:'model',v:'claude-3-5'},
   {ts:'11:47:02.893',lv:'OK',  c:'ok',  msg:'Token count within limits',k:'tokens',v:'1,204'},
-  {ts:'11:47:03.101',lv:'WARN',c:'warn',msg:'Output anomaly — amount unusually high',k:'amount',v:'$12,400.00'},
+  {ts:'11:47:02.921',lv:'ACT', c:'act', msg:'Subtask: verify_customer_identity',k:'status',v:'pass'},
+  {ts:'11:47:03.011',lv:'ACT', c:'act', msg:'Subtask: check_policy_limits',k:'status',v:'pass'},
+  {ts:'11:47:03.058',lv:'WARN',c:'warn',msg:'Subtask: calculate_refund_amount — anomaly',k:'amount',v:'$12,400.00'},
+  {ts:'11:47:03.101',lv:'ERR', c:'err', msg:'Subtask: initiate_payment_gateway — BLOCKED',k:'reason',v:'policy_cap_exceeded'},
   {ts:'11:47:03.207',lv:'ACT', c:'act', msg:'Routing to HITL queue',k:'reviewer',v:'sarah.r'},
   {ts:'11:47:03.995',lv:'WARN',c:'warn',msg:'Human approved without verifying policy cap',k:'approver',v:'sarah.r'},
   {ts:'11:47:04.012',lv:'ERR', c:'err', msg:'LOOKOVER: policy violation — execution BLOCKED',k:'rule',v:'refund_cap_exceeded'},
@@ -674,70 +725,89 @@ function boot() {
     $('shell').classList.add('on');
   });
 
-  // T=3.6s: counters & tasks
+  // T=3.6s: counters & tasks; spawn cursor at stats area
   after(3600, () => {
     countUp($('vTasks'), 1847, '', '', 7000);
     countUp($('vRev'), 284700, '$', '', 7000);
+    moveCursor(590, 85); // hover over stats row
   });
   after(4000, () => addTask(TASKS[0]));
   after(4700, () => addTask(TASKS[1]));
-  after(5400, () => addTask(TASKS[2]));
+  after(5400, () => {
+    const el = addTask(TASKS[2]);
+    setTimeout(() => addSubTasks(el, SUBTASKS_Q2, 480), 350); // healthy subtasks stream in
+  });
 
-  // T=5.5s: logs stream
+  // T=5.5s: logs stream; cursor drifts to task list
   after(5500, () => {
     let li = setInterval(() => { if (logI >= 5) { clearInterval(li); return; } addLog(); }, 1000);
     timers.push(li);
+    moveCursor(430, 260); // task list area
   });
 
-  // T=10.5s: error task + anomaly toast — zoom into task list error row
+  // T=7s: cursor moves to Q2 subtasks area
+  after(7000, () => { moveCursor(430, 310); });
+
+  // T=8s: cursor drifts to log panel
+  after(8000, () => { moveCursor(820, 380); });
+
+  // T=10.5s: error task + anomaly toast — cursor moves to error row, zoom in
   after(10500, () => {
-    addTask(TASKS[3]);
+    const el = addTask(TASKS[3]);
+    addSubTasks(el, SUBTASKS_REF, 550); // stream subtasks — 3rd flags risky, 4th blocked
+    setTimeout(addLog, 600);  // subtask WARN log
+    setTimeout(addLog, 1100); // subtask ERR log
     toast('⚠️', 'Anomaly detected', 'Agent output: $12,400.00 on refund task', 'danger');
     $('sd').className = 'sd red';
     $('st').textContent = 'Anomaly detected';
     $('vSucc').textContent = '98.7%';
     $('vSucc').style.color = 'var(--warn)';
-    setTimeout(addLog, 400);
-    setTimeout(addLog, 1100);
-    // zoom into the error task row
+    setTimeout(addLog, 1800); // routing to HITL log
+    moveCursor(590, 305); // point at error task row
     zoomTo(590, 305, 1.85, 800);
   });
 
-  // T=12.8s: zoom back out before nav switch
+  // T=12.5s: cursor moves to HITL nav item before switching
+  after(12500, () => { moveCursor(108, 128); }); // HITL nav item
+
+  // T=12.8s: zoom back out
   after(12800, () => { zoomReset(700); });
 
-  // T=13.8s: switch to HITL — zoom into review queue high-priority item
+  // T=13.5s: click HITL nav (visual), then switch panel
+  after(13500, () => { clickCursor(); });
   after(13800, () => {
     $('nb-hl').classList.add('on');
     setNav('ni-hl'); setPanel('pHl');
     setTop('HITL Review', '— awaiting decision', '⚠ ACTION REQUIRED', 'b-warn');
     setTimeout(addLog, 300);
-    // zoom in on the selected high-priority queue item
     setTimeout(() => zoomTo(376, 245, 1.85, 820), 600);
   });
 
-  // T=16.5s: zoom out, move cursor toward approve button
+  // T=14.8s: cursor moves to high-priority queue item
+  after(14800, () => { moveCursor(310, 245); });
+
+  // T=16.5s: zoom out, cursor drifts toward approve button
   after(16500, () => {
     zoomReset(700);
+    moveCursor(560, 490); // mid-point drift
   });
 
-  // T=17.2s: cursor appears near approve button, zoom in on it
+  // T=17.2s: cursor arrives at approve button, zoom in
   after(17200, () => {
-    moveCursor(714, 640);
-    zoomTo(714, 640, 2.0, 750);
+    moveCursor(720, 668);
+    zoomTo(714, 668, 2.0, 750);
   });
 
   // T=18s: animate human click (wrong approval)
   after(18000, () => {
     const btn = $('btnAp');
     btn.classList.add('clicking');
-    clickCursor(); // cursor click ripple
+    clickCursor();
     setTimeout(() => {
       btn.classList.remove('clicking');
       btn.classList.add('approved');
       btn.textContent = '✓ Approved';
       btn.disabled = true;
-      hideCursor();
       // immediately Lookover fires
       setTimeout(() => {
         $('nb-ck').classList.add('on');
@@ -749,11 +819,17 @@ function boot() {
     }, 320);
   });
 
-  // T=19.2s: zoom back out to reveal the full blocked overlay
+  // T=19.2s: zoom back out to reveal blocked overlay; cursor moves to it
   after(19200, () => {
     zoomReset(700);
-    destroyCursor();
+    moveCursor(750, 380); // point at blocked banner
   });
+
+  // T=21.5s: cursor moves to compliance nav before switching
+  after(21500, () => { moveCursor(108, 165); }); // Compliance nav item
+
+  // T=22.3s: click compliance nav (visual)
+  after(22300, () => { clickCursor(); });
 
   // T=22.5s: switch to compliance — zoom into score ring
   after(22500, () => {
@@ -761,20 +837,25 @@ function boot() {
     setNav('ni-ck'); setPanel('pCk');
     setTop('Compliance Monitor', '— policy engine', '1 VIOLATION', 'b-crit');
     runCompliance();
-    // zoom to compliance score ring
     setTimeout(() => zoomTo(285, 150, 1.8, 800), 400);
   });
 
-  // T=27s: zoom to policy engine checks (violations highlighted)
+  // T=24s: cursor points at compliance score ring
+  after(24000, () => { moveCursor(285, 150); });
+
+  // T=27s: zoom to policy engine checks
   after(27000, () => { zoomTo(850, 150, 1.75, 800); });
+  after(27600, () => { moveCursor(750, 185); }); // policy violations area
 
   // T=34s: zoom to live compliance feed / alert cards
   after(34000, () => { zoomTo(850, 290, 1.75, 800); });
+  after(34600, () => { moveCursor(750, 300); });
 
   // T=40s: zoom to fine exposure saved cell
   after(40000, () => { zoomTo(285, 290, 1.85, 800); });
+  after(40600, () => { moveCursor(285, 295); });
 
-  // T=42s: status recovers + queued task — zoom out to celebrate full view
+  // T=42s: status recovers + queued task — zoom out
   after(42000, () => {
     $('sd').className = 'sd pulse';
     $('st').textContent = 'All compliant';
@@ -782,6 +863,7 @@ function boot() {
     addTask(TASKS[4]);
     toast('✅', 'Agent resumed', 'Correct amount $124.00 processed successfully', 'success', 4000);
     zoomReset(900);
+    moveCursor(640, 360); // settle at center
   });
 
   // T=52s: CTA
