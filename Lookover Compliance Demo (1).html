@@ -866,10 +866,11 @@ function boot() {
     moveCursor(640, 360); // settle at center
   });
 
-  // T=52s: CTA
+  // T=52s: CTA — show for 4s then auto-loop
   after(52000, () => {
     $('cta').classList.add('on');
     $('replay').classList.add('on');
+    after(4000, () => boot());
   });
 }
 
