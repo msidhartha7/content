@@ -17,7 +17,7 @@
   --mono:'JetBrains Mono',monospace; --disp:'DM Sans',sans-serif; --body:'DM Sans',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;margin:0;padding:0;background:transparent;overflow:hidden;font-family:var(--body);}
+html,body{width:576px;height:324px;margin:0;padding:0;background:transparent;overflow:hidden;font-family:var(--body);}
 
 .window-wrap{width:100%;height:100%;display:flex;flex-direction:column;}
 .titlebar{height:36px;background:#1e2433;display:flex;align-items:center;padding:0 16px;flex-shrink:0;gap:8px;}
@@ -26,8 +26,8 @@ html,body{width:100%;height:100%;margin:0;padding:0;background:transparent;overf
 .tb-dot.yellow{background:#febc2e;}
 .tb-dot.green{background:#28c840;}
 
-.stage-wrap{flex:1;overflow:hidden;display:flex;align-items:flex-start;justify-content:flex-start;}
-.stage{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--bg);transform-origin:top left;}
+.stage-wrap{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.stage{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--bg);}
 
 /* ── INTRO ── */
 .intro{position:absolute;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease;}
@@ -882,7 +882,7 @@ function boot() {
   after(39000, () => {
     $('cta').classList.add('on');
     $('replay').classList.add('on');
-    after(1000, () => boot());
+    after(2000, () => boot());
   });
 }
 
@@ -891,10 +891,8 @@ function scaleStage() {
   const stage = document.getElementById('stage');
   const scaleX = wrap.offsetWidth / 1280;
   const scaleY = wrap.offsetHeight / 720;
-  const scale = Math.min(scaleX, scaleY);
-  stage.style.transform = `scale(${scale})`;
-  stage.style.marginLeft = (wrap.offsetWidth - 1280 * scale) / 2 + 'px';
-  stage.style.marginTop = (wrap.offsetHeight - 720 * scale) / 2 + 'px';
+  const s = Math.min(scaleX, scaleY);
+  stage.style.zoom = s;
 }
 scaleStage();
 window.addEventListener('resize', scaleStage);
