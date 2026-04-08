@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Audit & Compliance — Complete Landscape</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #111214;
+  --bg2:      #16181c;
+  --surface:  #1c1f24;
+  --surface2: #22262d;
+  --border:   #2e333d;
+  --border2:  #3a4050;
+  --text:     #dde1ea;
+  --muted:    #7a8194;
+  --faint:    #404558;
+  --accent:       #1a4fd4;
+  --accent-bright:#2a62f0;
+  --accent-glow:  rgba(26,79,212,0.14);
+  --amber:    #e8a020;
+  --amber-bg: rgba(232,160,32,0.08);
+  --red:      #d94040;
+  --red-bg:   rgba(217,64,64,0.08);
+  --green:    #3ab87a;
+  --green-bg: rgba(58,184,122,0.08);
+  --teal:     #2abfb0;
+  --teal-bg:  rgba(42,191,176,0.08);
+  --purple:   #9b7fe8;
+  --purple-bg:rgba(155,127,232,0.08);
+  --gold:     #c8a84b;
+  --gold-bg:  rgba(200,168,75,0.08);
+  --coral:    #e06b50;
+  --coral-bg: rgba(224,107,80,0.08);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  line-height: 1.6;
+  position: relative;
+}
+
+body::before {
+  content:'';
+  position:fixed;inset:0;z-index:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+  pointer-events:none;
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+
+/* ── ALERT BANNER ── */
+.alert-banner {
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px; letter-spacing: 0.22em;
+  text-align: center; padding: 9px 20px;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+}
+.alert-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #fff;
+  animation: blink 1.2s step-start infinite; flex-shrink: 0;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── HERO ── */
+.hero {
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.hero-bg-text {
+  position: absolute; top: -30px; right: -10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(100px,16vw,200px);
+  color: rgba(26,79,212,0.04);
+  pointer-events: none; user-select: none; line-height: 1;
+}
+.hero-eyebrow {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(38px, 7vw, 88px);
+  line-height: 1; letter-spacing: 0.02em;
+  color: #fff; margin-bottom: 16px;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  font-size: 16px; color: var(--muted);
+  max-width: 580px; margin-bottom: 32px;
+}
+.hero-stats {
+  display: flex; gap: 36px; flex-wrap: wrap;
+}
+.stat-block { display: flex; flex-direction: column; gap: 4px; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px; line-height: 1; color: #fff;
+}
+.stat-num.accent { color: var(--accent); }
+.stat-num.amber  { color: var(--amber); }
+.stat-num.green  { color: var(--green); }
+.stat-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ── PHASE OVERVIEW STRIP ── */
+.overview-strip {
+  display: flex; align-items: stretch;
+  border: 1px solid var(--border);
+  overflow: hidden; margin: 40px 0 0;
+}
+.ov-phase {
+  flex: 1; padding: 14px 12px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  text-align: center;
+  transition: background 0.15s;
+  cursor: default;
+}
+.ov-phase:last-child { border-right: none; }
+.ov-phase:hover { background: var(--surface2); }
+.ov-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; color: var(--accent); line-height: 1;
+}
+.ov-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-top: 4px; line-height: 1.3;
+}
+
+/* ── SECTION HEADER ── */
+.section { padding: 60px 0 0; }
+.sec-header {
+  display: flex; align-items: center; gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: 32px;
+}
+.sec-num {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px; color: var(--faint); letter-spacing: 0.14em; flex-shrink: 0;
+}
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px; letter-spacing: 0.06em; color: #fff; flex: 1;
+}
+.sec-badge {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 10px; border: 1px solid var(--border2); color: var(--muted);
+  flex-shrink: 0;
+}
+.sec-badge.planning  { border-color: var(--accent);  color: var(--accent); }
+.sec-badge.fieldwork { border-color: var(--amber);   color: var(--amber); }
+.sec-badge.reporting { border-color: var(--green);   color: var(--green); }
+.sec-badge.framework { border-color: var(--purple);  color: var(--purple); }
+.sec-badge.banned    { border-color: var(--red);     color: var(--red); }
+
+/* ── FLOW CHAIN ── */
+.flow-chain {
+  display: flex; flex-direction: column; gap: 0;
+}
+.flow-node {
+  display: grid; grid-template-columns: 200px 1fr;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: background 0.15s;
+  position: relative;
+}
+.flow-node:hover { background: var(--surface2); }
+.flow-node + .flow-node { border-top: none; }
+.flow-left {
+  padding: 20px 20px;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; justify-content: center;
+  background: var(--surface2);
+}
+.flow-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.flow-title {
+  font-family: 'Fraunces', serif;
+  font-size: 14px; font-weight: 600; color: #fff; line-height: 1.3;
+}
+.flow-right {
+  padding: 18px 20px;
+  display: flex; flex-direction: column; justify-content: center; gap: 10px;
+}
+.flow-pills {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.pill {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  background: var(--surface2);
+  white-space: nowrap;
+}
+.pill.accent { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.pill.amber  { border-color: var(--amber);  color: var(--amber);  background: var(--amber-bg); }
+.pill.green  { border-color: var(--green);  color: var(--green);  background: var(--green-bg); }
+.pill.red    { border-color: var(--red);    color: var(--red);    background: var(--red-bg); }
+.pill.teal   { border-color: var(--teal);   color: var(--teal);   background: var(--teal-bg); }
+.pill.purple { border-color: var(--purple); color: var(--purple); background: var(--purple-bg); }
+.pill.coral  { border-color: var(--coral);  color: var(--coral);  background: var(--coral-bg); }
+.pill.gold   { border-color: var(--gold);   color: var(--gold);   background: var(--gold-bg); }
+
+.flow-arrow {
+  text-align: center; padding: 6px 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px; color: var(--faint); letter-spacing: 0.1em;
+  position: relative;
+}
+.flow-arrow::before {
+  content: '↓';
+  color: var(--border2);
+  font-size: 16px;
+}
+
+/* ── OUTPUT ROW ── */
+.output-row {
+  margin-top: 16px;
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+.output-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint);
+}
+.output-doc {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border: 1px solid var(--green);
+  color: var(--green);
+  background: var(--green-bg);
+}
+
+/* ── GRID CARDS ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+.card {
+  background: var(--surface);
+  padding: 20px 18px;
+  transition: background 0.15s;
+}
+.card:hover { background: var(--surface2); }
+.card-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.card-title {
+  font-size: 13px; font-weight: 600; color: #fff;
+  margin-bottom: 8px; line-height: 1.3;
+}
+.card-items {
+  list-style: none; display: flex; flex-direction: column; gap: 5px;
+}
+.card-items li {
+  font-size: 11.5px; color: var(--muted);
+  display: flex; gap: 7px; align-items: flex-start; line-height: 1.4;
+}
+.card-items li::before { content: '▸'; color: var(--faint); flex-shrink: 0; font-size: 9px; margin-top: 2px; }
+
+/* ── RISK MATRIX ── */
+.matrix {
+  display: grid; grid-template-columns: 60px repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+.matrix-cell {
+  background: var(--surface);
+  padding: 14px 12px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; text-align: center;
+  display: flex; align-items: center; justify-content: center;
+}
+.matrix-header {
+  background: var(--surface2);
+  color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: 9px;
+}
+.matrix-label {
+  background: var(--surface2);
+  color: var(--muted); font-size: 9px; writing-mode: initial;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.m-critical { background: rgba(217,64,64,0.22); color: #ff6060; border: none; }
+.m-high     { background: rgba(224,107,80,0.18); color: var(--coral); }
+.m-med      { background: var(--amber-bg); color: var(--amber); }
+.m-low      { background: var(--green-bg); color: var(--green); }
+
+/* ── TECHNIQUE GRID ── */
+.technique-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+}
+.tech-card {
+  background: var(--surface); padding: 20px 18px;
+  transition: background 0.15s;
+}
+.tech-card:hover { background: var(--surface2); }
+.tech-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 0.06em; margin-bottom: 6px;
+}
+.tech-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+.tech-strength {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 3px 8px; border: 1px solid;
+  display: inline-block;
+}
+.str-weak   { border-color: var(--red);   color: var(--red); }
+.str-medium { border-color: var(--amber); color: var(--amber); }
+.str-strong { border-color: var(--green); color: var(--green); }
+
+/* ── 5CS TABLE ── */
+.fivecs { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); }
+.fc-row {
+  display: grid; grid-template-columns: 180px 1fr;
+  border-bottom: 1px solid var(--border);
+}
+.fc-row:last-child { border-bottom: none; }
+.fc-label {
+  padding: 16px 18px;
+  background: var(--surface2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 4px; justify-content: center;
+}
+.fc-lname {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px; letter-spacing: 0.06em;
+}
+.fc-lsub {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint);
+}
+.fc-content {
+  padding: 16px 20px;
+  font-size: 12.5px; color: var(--muted); line-height: 1.6;
+  display: flex; align-items: center;
+}
+.fc-content em { color: var(--text); font-style: normal; font-weight: 600; }
+
+/* ── SEVERITY SCALE ── */
+.severity-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+}
+.sev-card {
+  padding: 20px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.sev-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 0.06em;
+}
+.sev-deadline {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.sev-items {
+  list-style: none; display: flex; flex-direction: column; gap: 4px; margin-top: 4px;
+}
+.sev-items li { font-size: 11px; color: var(--muted); display: flex; gap: 6px; }
+.sev-items li::before { content: '—'; color: var(--faint); flex-shrink: 0; }
+.sev-critical { background: rgba(217,64,64,0.12); }
+.sev-critical .sev-label { color: #ff6060; }
+.sev-critical .sev-deadline { color: #ff6060; }
+.sev-high { background: var(--coral-bg); }
+.sev-high .sev-label { color: var(--coral); }
+.sev-high .sev-deadline { color: var(--coral); }
+.sev-med { background: var(--amber-bg); }
+.sev-med .sev-label { color: var(--amber); }
+.sev-med .sev-deadline { color: var(--amber); }
+.sev-low { background: var(--green-bg); }
+.sev-low .sev-label { color: var(--green); }
+.sev-low .sev-deadline { color: var(--green); }
+
+/* ── FRAMEWORK GRID ── */
+.fw-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.fw-card {
+  background: var(--surface); padding: 22px 18px;
+  transition: background 0.15s;
+  border-top: 3px solid transparent;
+}
+.fw-card:hover { background: var(--surface2); }
+.fw-card.voluntary { border-top-color: var(--purple); }
+.fw-card.mandatory { border-top-color: var(--red); }
+.fw-card.ai        { border-top-color: var(--teal); }
+.fw-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; letter-spacing: 0.06em; color: #fff; margin-bottom: 4px;
+}
+.fw-type {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.fw-card.voluntary .fw-type { color: var(--purple); }
+.fw-card.mandatory .fw-type { color: var(--red); }
+.fw-card.ai        .fw-type { color: var(--teal); }
+.fw-who { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+.fw-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.fw-items li { font-size: 11px; color: var(--faint); display: flex; gap: 6px; }
+.fw-items li::before { content: '▸'; flex-shrink: 0; margin-top: 1px; }
+
+/* ── AI TIERS ── */
+.ai-tiers { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); }
+.ai-tier {
+  display: grid; grid-template-columns: 160px 1fr 160px;
+  border-bottom: 1px solid var(--border);
+  transition: opacity 0.15s;
+}
+.ai-tier:last-child { border-bottom: none; }
+.ai-tier-left {
+  padding: 18px 16px;
+  display: flex; flex-direction: column; gap: 6px; justify-content: center;
+  border-right: 1px solid var(--border);
+}
+.ai-tier-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 0.04em; line-height: 1;
+}
+.ai-tier-status {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 3px 7px; border: 1px solid; display: inline-block; width: fit-content;
+}
+.ai-tier-mid { padding: 16px 20px; }
+.ai-tier-mid-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 8px;
+}
+.ai-tier-examples { display: flex; flex-wrap: wrap; gap: 5px; }
+.ai-tier-right {
+  padding: 16px 14px;
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 5px; justify-content: center;
+}
+.ai-tier-right-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 4px;
+}
+.ai-tier-right li { font-size: 10.5px; color: var(--muted); list-style: none; padding: 2px 0; display: flex; gap: 5px; }
+.ai-tier-right li::before { content: '→'; color: var(--faint); flex-shrink: 0; }
+
+.tier-banned   .ai-tier-left { background: rgba(217,64,64,0.1); }
+.tier-banned   .ai-tier-name { color: #ff6060; }
+.tier-banned   .ai-tier-status { border-color: var(--red); color: var(--red); }
+.tier-high     .ai-tier-left { background: var(--coral-bg); }
+.tier-high     .ai-tier-name { color: var(--coral); }
+.tier-high     .ai-tier-status { border-color: var(--coral); color: var(--coral); }
+.tier-limited  .ai-tier-left { background: var(--amber-bg); }
+.tier-limited  .ai-tier-name { color: var(--amber); }
+.tier-limited  .ai-tier-status { border-color: var(--amber); color: var(--amber); }
+.tier-minimal  .ai-tier-left { background: var(--green-bg); }
+.tier-minimal  .ai-tier-name { color: var(--green); }
+.tier-minimal  .ai-tier-status { border-color: var(--green); color: var(--green); }
+
+/* ── REMEDIATION TRACKER ── */
+.tracker { border: 1px solid var(--border); overflow: hidden; }
+.tracker-header {
+  display: grid; grid-template-columns: 1fr 90px 100px 90px 110px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.tracker-row {
+  display: grid; grid-template-columns: 1fr 90px 100px 90px 110px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  transition: background 0.15s;
+}
+.tracker-row:last-child { border-bottom: none; }
+.tracker-row:hover { background: var(--surface2); }
+.tracker-cell {
+  padding: 12px 14px;
+  border-right: 1px solid var(--border);
+  font-size: 11.5px; color: var(--muted);
+  display: flex; align-items: center;
+}
+.tracker-cell:last-child { border-right: none; }
+.tracker-cell.header {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint);
+}
+.tracker-cell.finding-name { color: var(--text); font-size: 12px; }
+.status-pill {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 8px; border: 1px solid;
+}
+.status-overdue  { border-color: var(--red);    color: var(--red);    background: var(--red-bg); }
+.status-progress { border-color: var(--amber);  color: var(--amber);  background: var(--amber-bg); }
+.status-ontrack  { border-color: var(--green);  color: var(--green);  background: var(--green-bg); }
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-glow);
+  padding: 14px 18px; margin: 20px 0;
+  font-size: 13px; color: var(--text); line-height: 1.6;
+}
+.callout.amber { border-color: var(--amber); background: var(--amber-bg); }
+.callout.red   { border-color: var(--red);   background: var(--red-bg); }
+.callout.green { border-color: var(--green); background: var(--green-bg); }
+.callout strong { color: #fff; }
+
+/* ── OVERLAP TABLE ── */
+.overlap-table { border: 1px solid var(--border); overflow: hidden; }
+.ot-row {
+  display: grid; grid-template-columns: 1fr 90px 90px 90px 90px;
+  border-bottom: 1px solid var(--border);
+}
+.ot-row:last-child { border-bottom: none; }
+.ot-cell {
+  padding: 11px 14px; border-right: 1px solid var(--border);
+  font-size: 11.5px; color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+}
+.ot-cell:first-child { justify-content: flex-start; color: var(--text); }
+.ot-cell:last-child { border-right: none; }
+.ot-cell.header {
+  background: var(--surface2);
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint);
+}
+.ot-cell.header:first-child { color: var(--faint); justify-content: flex-start; }
+.req { font-family: 'Courier Prime', monospace; font-size: 10px; padding: 2px 6px; border: 1px solid var(--green); color: var(--green); background: var(--green-bg); }
+.partial { font-family: 'Courier Prime', monospace; font-size: 10px; padding: 2px 6px; border: 1px solid var(--amber); color: var(--amber); background: var(--amber-bg); }
+.none-tag { color: var(--faint); font-size: 10px; font-family: 'Courier Prime', monospace; }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 50px 0 0; }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 24px 28px; margin-top: 80px;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--faint);
+}
+.footer-brand { color: var(--accent); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.card:nth-child(1) { animation: fadeUp 0.4s ease 0.05s both; }
+.card:nth-child(2) { animation: fadeUp 0.4s ease 0.10s both; }
+.card:nth-child(3) { animation: fadeUp 0.4s ease 0.15s both; }
+.card:nth-child(4) { animation: fadeUp 0.4s ease 0.20s both; }
+.card:nth-child(5) { animation: fadeUp 0.4s ease 0.25s both; }
+.card:nth-child(6) { animation: fadeUp 0.4s ease 0.30s both; }
+.fw-card:nth-child(1) { animation: fadeUp 0.4s ease 0.05s both; }
+.fw-card:nth-child(2) { animation: fadeUp 0.4s ease 0.10s both; }
+.fw-card:nth-child(3) { animation: fadeUp 0.4s ease 0.15s both; }
+.fw-card:nth-child(4) { animation: fadeUp 0.4s ease 0.20s both; }
+.fw-card:nth-child(5) { animation: fadeUp 0.4s ease 0.25s both; }
+.fw-card:nth-child(6) { animation: fadeUp 0.4s ease 0.30s both; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .flow-node { grid-template-columns: 1fr; }
+  .flow-left { border-right: none; border-bottom: 1px solid var(--border); }
+  .fc-row { grid-template-columns: 1fr; }
+  .fc-label { border-right: none; border-bottom: 1px solid var(--border); }
+  .severity-row { grid-template-columns: 1fr 1fr; }
+  .fw-grid { grid-template-columns: 1fr; }
+  .technique-grid { grid-template-columns: 1fr; }
+  .ai-tier { grid-template-columns: 1fr; }
+  .ai-tier-left { border-right: none; border-bottom: 1px solid var(--border); }
+  .ai-tier-right { border-left: none; border-top: 1px solid var(--border); }
+  .tracker-header, .tracker-row { grid-template-columns: 1fr 80px; }
+  .tracker-cell:nth-child(n+3) { display: none; }
+  .ot-row { grid-template-columns: 1fr 70px 70px; }
+  .ot-cell:nth-child(n+5) { display: none; }
+  .overview-strip { flex-wrap: wrap; }
+  .ov-phase { min-width: 80px; }
+  .matrix { grid-template-columns: 50px repeat(3, 1fr); }
+}
+
+@media print {
+  body { background: white; color: #111; }
+  .alert-banner { position: static; }
+  .surface, .card, .fw-card { border-color: #ccc; background: #f9f9f9; }
+}
+</style>
+</head>
+<body>
+
+<!-- ALERT BANNER -->
+<div class="alert-banner">
+  <div class="alert-dot"></div>
+  IT AUDIT & COMPLIANCE · COMPLETE LANDSCAPE · PHASES 1–8
+  <div class="alert-dot"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg-text">AUDIT</div>
+    <div class="hero-eyebrow">Knowledge Reference · IT Audit & Compliance</div>
+    <h1>IT Audit &amp;<br><span>Compliance</span><br>Landscape</h1>
+    <p class="hero-sub">A complete visual reference covering every phase of an IT audit — from foundations to frameworks. Built for people learning from scratch.</p>
+    <div class="hero-stats">
+      <div class="stat-block">
+        <div class="stat-num accent">8</div>
+        <div class="stat-label">Audit Phases</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num amber">6</div>
+        <div class="stat-label">Compliance Frameworks</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num green">4</div>
+        <div class="stat-label">Testing Techniques</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num" style="color:var(--purple)">5</div>
+        <div class="stat-label">Finding Components (5Cs)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE OVERVIEW STRIP -->
+  <div class="overview-strip">
+    <div class="ov-phase"><div class="ov-num">01</div><div class="ov-label">Foundations</div></div>
+    <div class="ov-phase"><div class="ov-num">02</div><div class="ov-label">Planning</div></div>
+    <div class="ov-phase"><div class="ov-num">03</div><div class="ov-label">Environment</div></div>
+    <div class="ov-phase"><div class="ov-num">04</div><div class="ov-label">Testing</div></div>
+    <div class="ov-phase"><div class="ov-num">05</div><div class="ov-label">Risk Analysis</div></div>
+    <div class="ov-phase"><div class="ov-num">06</div><div class="ov-label">Reporting</div></div>
+    <div class="ov-phase"><div class="ov-num">07</div><div class="ov-label">Remediation</div></div>
+    <div class="ov-phase"><div class="ov-num">08</div><div class="ov-label">Frameworks</div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ PHASE 1 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">AUDIT FOUNDATIONS</h2>
+      <span class="sec-badge planning">FOUNDATION</span>
+    </div>
+
+    <div class="callout">
+      <strong>What is IT Audit?</strong> An independent, structured examination of an organisation's IT systems, controls and processes — asking one question: <em>are the systems doing what they should, safely and reliably?</em>
+    </div>
+
+    <!-- CIA Triad -->
+    <div style="margin-bottom:8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Three things every audit evaluates — the CIA triad</span>
+    </div>
+    <div class="card-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="card">
+        <div class="card-tag" style="color:var(--purple)">CONFIDENTIALITY</div>
+        <div class="card-title">Data access is restricted</div>
+        <ul class="card-items">
+          <li>Only authorised users can read or modify data</li>
+          <li>Encryption, access controls, MFA</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-tag" style="color:var(--teal)">INTEGRITY</div>
+        <div class="card-title">Data is accurate and unaltered</div>
+        <ul class="card-items">
+          <li>Data cannot be tampered with undetected</li>
+          <li>Audit logs, checksums, change controls</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-tag" style="color:var(--amber)">AVAILABILITY</div>
+        <div class="card-title">Systems work when needed</div>
+        <ul class="card-items">
+          <li>Systems are accessible to authorised users</li>
+          <li>Backups, DR plans, uptime monitoring</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Framework types -->
+    <div style="margin:28px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Two types of frameworks auditors use simultaneously</span>
+    </div>
+    <div class="card-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="card">
+        <div class="card-tag" style="color:var(--accent)">AUDIT STANDARDS — HOW the auditor must behave</div>
+        <ul class="card-items" style="margin-top:8px;">
+          <li>ISACA / CISA — global IT audit certification body</li>
+          <li>ITAF — IT Assurance Framework</li>
+          <li>IIA Standards — internal audit professional standards</li>
+          <li>GAAS — Generally Accepted Audit Standards</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-tag" style="color:var(--amber)">CONTROL FRAMEWORKS — WHAT the auditor tests against</div>
+        <ul class="card-items" style="margin-top:8px;">
+          <li>COBIT — IT governance and management</li>
+          <li>ISO 27001 — information security management</li>
+          <li>SOC 2 — trust service criteria for vendors</li>
+          <li>NIST CSF — cybersecurity risk framework</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Types of IT audit →</span>
+      <span class="output-doc">General Controls</span>
+      <span class="output-doc">Compliance Audit</span>
+      <span class="output-doc">Application Audit</span>
+      <span class="output-doc">Forensic / Investigative</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════ PHASE 2 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">PRE-AUDIT PLANNING</h2>
+      <span class="sec-badge planning">PLANNING</span>
+    </div>
+
+    <div class="callout amber">
+      <strong>The audit is won or lost in planning, not fieldwork.</strong> Five steps must be completed before a single test is run.
+    </div>
+
+    <!-- Flow chain -->
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--purple)">Step 01</div>
+          <div class="flow-title">Audit Mandate &amp; Charter</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill accent">Formal authority to audit</span>
+            <span class="pill accent">Independence from business units</span>
+            <span class="pill accent">Right to access all systems</span>
+            <span class="pill accent">Reports to audit committee</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--teal)">Step 02</div>
+          <div class="flow-title">Risk Assessment</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill teal">What could go wrong?</span>
+            <span class="pill teal">Which systems are most critical?</span>
+            <span class="pill teal">What did last year flag?</span>
+            <span class="pill teal">Likelihood × Impact matrix</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--amber)">Step 03</div>
+          <div class="flow-title">Scope Definition</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill amber">Systems in scope</span>
+            <span class="pill amber">Locations covered</span>
+            <span class="pill amber">Time period under review</span>
+            <span class="pill amber">Explicit out-of-scope list + justification</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--coral)">Step 04</div>
+          <div class="flow-title">Audit Plan</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill coral">Audit objectives</span>
+            <span class="pill coral">Test procedures</span>
+            <span class="pill coral">Timeline &amp; milestones</span>
+            <span class="pill coral">Pass / fail criteria</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--green)">Step 05</div>
+          <div class="flow-title">Team &amp; Kick-off</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill green">Assign team roles</span>
+            <span class="pill green">Confirm access and tools</span>
+            <span class="pill green">Kick-off meeting with auditee</span>
+            <span class="pill green">Document request list issued</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Risk matrix -->
+    <div style="margin:24px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Risk matrix — how auditors prioritise where to focus</span>
+    </div>
+    <div class="matrix">
+      <div class="matrix-cell matrix-header"></div>
+      <div class="matrix-cell matrix-header">Low Impact</div>
+      <div class="matrix-cell matrix-header">Med Impact</div>
+      <div class="matrix-cell matrix-header">High Impact</div>
+      <div class="matrix-cell matrix-label">High Likelihood</div>
+      <div class="matrix-cell m-med">Medium</div>
+      <div class="matrix-cell m-high">High</div>
+      <div class="matrix-cell m-critical">Critical</div>
+      <div class="matrix-cell matrix-label">Med Likelihood</div>
+      <div class="matrix-cell m-low">Low</div>
+      <div class="matrix-cell m-med">Medium</div>
+      <div class="matrix-cell m-high">High</div>
+      <div class="matrix-cell matrix-label">Low Likelihood</div>
+      <div class="matrix-cell m-low">Low</div>
+      <div class="matrix-cell m-low">Low</div>
+      <div class="matrix-cell m-med">Medium</div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Outputs →</span>
+      <span class="output-doc">Audit Charter</span>
+      <span class="output-doc">Risk Register</span>
+      <span class="output-doc">Scope Statement</span>
+      <span class="output-doc">Audit Plan</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════ PHASE 3 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">UNDERSTANDING THE IT ENVIRONMENT</h2>
+      <span class="sec-badge fieldwork">FIELDWORK</span>
+    </div>
+
+    <div class="callout">
+      <strong>Never just accept what management tells you.</strong> The auditor independently verifies everything — network scans, system exports, user lists — not descriptions of them.
+    </div>
+
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--teal)">Map 01</div>
+          <div class="flow-title">Asset Inventory</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill teal">Servers, apps, databases, cloud instances</span>
+            <span class="pill teal">Network devices, endpoints</span>
+            <span class="pill teal">Cross-check against network scan</span>
+            <span class="pill amber">Shadow IT gap = immediate finding</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--accent)">Map 02</div>
+          <div class="flow-title">Data Flows</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill accent">Where does sensitive data originate?</span>
+            <span class="pill accent">Where is it processed and stored?</span>
+            <span class="pill accent">Where does it exit the system?</span>
+            <span class="pill accent">Encryption at every hop?</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--purple)">Map 03</div>
+          <div class="flow-title">Network Architecture</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill purple">Topology and segmentation</span>
+            <span class="pill purple">Firewall rules review</span>
+            <span class="pill purple">DMZ configuration</span>
+            <span class="pill red">Flat network = critical finding</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--coral)">Map 04</div>
+          <div class="flow-title">Access Landscape</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill coral">Pull full user list from AD / IAM</span>
+            <span class="pill coral">Map roles and privileges</span>
+            <span class="pill coral">Identify privileged accounts</span>
+            <span class="pill amber">Orphaned accounts = common finding</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left">
+          <div class="flow-tag" style="color:var(--amber)">Map 05</div>
+          <div class="flow-title">Third Parties</div>
+        </div>
+        <div class="flow-right">
+          <div class="flow-pills">
+            <span class="pill amber">Cloud providers (AWS, Azure, GCP)</span>
+            <span class="pill amber">SaaS vendors, outsourced IT</span>
+            <span class="pill amber">Payment processors, data vendors</span>
+            <span class="pill amber">SLAs, DPAs, security posture reviewed?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Outputs →</span>
+      <span class="output-doc">Asset Register</span>
+      <span class="output-doc">Data Flow Diagram</span>
+      <span class="output-doc">Network Map</span>
+      <span class="output-doc">Access Matrix</span>
+      <span class="output-doc">Third-Party Register</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════ PHASE 4 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">CONTROL IDENTIFICATION &amp; TESTING</h2>
+      <span class="sec-badge fieldwork">FIELDWORK</span>
+    </div>
+
+    <div class="callout amber">
+      <strong>Three questions every control must answer:</strong> Does it exist? Is it designed to prevent the risk? Is it actually operating consistently?
+    </div>
+
+    <!-- Two control types -->
+    <div style="margin-bottom:8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Two types of IT controls</span>
+    </div>
+    <div class="card-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="card">
+        <div class="card-tag" style="color:var(--purple)">GENERAL IT CONTROLS (GITCs) — govern the whole environment</div>
+        <ul class="card-items" style="margin-top:8px;">
+          <li>Access management — user provisioning, MFA, least privilege</li>
+          <li>Change management — approvals, testing, rollback</li>
+          <li>IT operations — monitoring, incident response, patching</li>
+          <li>Backup &amp; recovery — frequency, integrity, restore testing</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-tag" style="color:var(--teal)">APPLICATION CONTROLS — built into specific systems</div>
+        <ul class="card-items" style="margin-top:8px;">
+          <li>Input controls — validation, format checks, auth gates</li>
+          <li>Processing controls — calculations, logic, error handling</li>
+          <li>Output controls — report accuracy, distribution, masking</li>
+          <li>Interface controls — data transfer integrity between systems</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Four testing techniques -->
+    <div style="margin:28px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Four testing techniques — from weakest to strongest</span>
+    </div>
+    <div class="technique-grid">
+      <div class="tech-card">
+        <div class="tech-name" style="color:var(--red)">Inquiry</div>
+        <div class="tech-desc">Ask people how the control works. Weakest alone — people describe the ideal, not reality.</div>
+        <span class="tech-strength str-weak">Weak alone</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name" style="color:var(--amber)">Observation</div>
+        <div class="tech-desc">Watch the control being performed live. Only proves it works when being watched.</div>
+        <span class="tech-strength str-medium">Medium</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name" style="color:var(--accent)">Inspection</div>
+        <div class="tech-desc">Examine documentary evidence — logs, change tickets, approval emails, reports.</div>
+        <span class="tech-strength str-strong">Strong</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-name" style="color:var(--green)">Re-performance</div>
+        <div class="tech-desc">Auditor independently re-executes the control and verifies the result themselves.</div>
+        <span class="tech-strength str-strong">Strongest</span>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Sampling rule:</strong> Annual controls → test all instances. Quarterly → all 4. Monthly → 3–6 months. Daily / continuous → 25–60 items.
+    </div>
+
+    <!-- Access management walkthrough -->
+    <div style="margin:24px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Example — access management test procedure</span>
+    </div>
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--purple)">Test 1</div><div class="flow-title">Pull full user access list</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill purple">Extract from AD / IAM</span><span class="pill purple">Reconcile to HR headcount</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--red)">Test 2</div><div class="flow-title">Check for leaver accounts</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill red">Cross-ref with HR termination list</span><span class="pill red">Flag active accounts for leavers</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--amber)">Test 3</div><div class="flow-title">Test joiner provisioning</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill amber">Sample 25 new starters</span><span class="pill amber">Was access approved before granted?</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--coral)">Test 4</div><div class="flow-title">Review privileged accounts</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill coral">List all admin / root accounts</span><span class="pill coral">Is each one justified + documented?</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Test 5</div><div class="flow-title">Verify periodic access reviews</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Last 4 quarterly reviews with evidence</span><span class="pill teal">Manager sign-off and follow-up</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--accent)">Test 6</div><div class="flow-title">Confirm MFA enforcement</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill accent">Sample privileged users</span><span class="pill accent">MFA enabled and enforced by policy</span></div></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Outputs →</span>
+      <span class="output-doc">Test Workpapers</span>
+      <span class="output-doc">Evidence Files</span>
+      <span class="output-doc">Exceptions Log</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════ PHASE 5 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">RISK &amp; GAP ANALYSIS</h2>
+      <span class="sec-badge fieldwork">ANALYSIS</span>
+    </div>
+
+    <div class="callout">
+      <strong>Every exception becomes a finding.</strong> The auditor rates each by severity, identifies root cause, and quantifies the business risk exposure.
+    </div>
+
+    <!-- The 5Cs -->
+    <div style="margin-bottom:8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">The 5Cs — structure of every finding statement</span>
+    </div>
+    <div class="fivecs">
+      <div class="fc-row">
+        <div class="fc-label" style="border-left:3px solid var(--red);">
+          <div class="fc-lname" style="color:var(--red)">Condition</div>
+          <div class="fc-lsub">What we found</div>
+        </div>
+        <div class="fc-content"><em>"17 active user accounts belong to employees who left over 6 months ago."</em></div>
+      </div>
+      <div class="fc-row">
+        <div class="fc-label" style="border-left:3px solid var(--amber);">
+          <div class="fc-lname" style="color:var(--amber)">Criteria</div>
+          <div class="fc-lsub">What should be true</div>
+        </div>
+        <div class="fc-content"><em>"Policy requires all access be revoked within 24 hours of termination."</em></div>
+      </div>
+      <div class="fc-row">
+        <div class="fc-label" style="border-left:3px solid var(--accent);">
+          <div class="fc-lname" style="color:var(--accent)">Cause</div>
+          <div class="fc-lsub">Why it happened</div>
+        </div>
+        <div class="fc-content"><em>"HR offboarding does not trigger an automated IT access revocation."</em></div>
+      </div>
+      <div class="fc-row">
+        <div class="fc-label" style="border-left:3px solid var(--coral);">
+          <div class="fc-lname" style="color:var(--coral)">Consequence</div>
+          <div class="fc-lsub">The risk exposure</div>
+        </div>
+        <div class="fc-content"><em>"Former employees retain ability to access sensitive systems and data."</em></div>
+      </div>
+      <div class="fc-row">
+        <div class="fc-label" style="border-left:3px solid var(--green);">
+          <div class="fc-lname" style="color:var(--green)">Corrective Action</div>
+          <div class="fc-lsub">What must be fixed</div>
+        </div>
+        <div class="fc-content"><em>"Integrate HR system with IAM to auto-revoke access on termination date."</em></div>
+      </div>
+    </div>
+
+    <!-- Severity scale -->
+    <div style="margin:28px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Finding severity ratings</span>
+    </div>
+    <div class="severity-row">
+      <div class="sev-card sev-critical">
+        <div class="sev-label">Critical</div>
+        <div class="sev-deadline">Fix within 30 days</div>
+        <ul class="sev-items">
+          <li>Immediate threat to data or systems</li>
+          <li>Active exploitation risk</li>
+          <li>Board-level escalation</li>
+        </ul>
+      </div>
+      <div class="sev-card sev-high">
+        <div class="sev-label">High</div>
+        <div class="sev-deadline">Fix within 90 days</div>
+        <ul class="sev-items">
+          <li>Significant control weakness</li>
+          <li>Material risk exposure</li>
+          <li>CISO involvement required</li>
+        </ul>
+      </div>
+      <div class="sev-card sev-med">
+        <div class="sev-label">Medium</div>
+        <div class="sev-deadline">Fix within 180 days</div>
+        <ul class="sev-items">
+          <li>Control gap present</li>
+          <li>Limited immediate exposure</li>
+          <li>Management action plan</li>
+        </ul>
+      </div>
+      <div class="sev-card sev-low">
+        <div class="sev-label">Low</div>
+        <div class="sev-deadline">Fix within 12 months</div>
+        <ul class="sev-items">
+          <li>Minor weakness</li>
+          <li>Best-practice improvement</li>
+          <li>Noted for next cycle</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Outputs →</span>
+      <span class="output-doc">Findings Log</span>
+      <span class="output-doc">Risk Rating Matrix</span>
+      <span class="output-doc">Root Cause Analysis</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════ PHASE 6 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">AUDIT REPORTING</h2>
+      <span class="sec-badge reporting">REPORTING</span>
+    </div>
+
+    <div class="callout green">
+      <strong>The report is the auditor's most visible output.</strong> A well-written report drives change at board level. A poorly written one makes solid findings disappear.
+    </div>
+
+    <!-- Reporting pipeline -->
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--purple)">Stage 1</div><div class="flow-title">Draft Findings</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill purple">Apply 5Cs structure to each finding</span><span class="pill purple">Assign severity ratings</span><span class="pill purple">Link to workpaper evidence</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--accent)">Stage 2</div><div class="flow-title">Validate with Auditee</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill accent">Share draft findings</span><span class="pill accent">Adjust for facts, not opinions</span><span class="pill accent">Exit meeting / findings discussion</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Stage 3</div><div class="flow-title">Write the Report</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Executive summary (1 page)</span><span class="pill teal">Scope &amp; objectives</span><span class="pill teal">Findings summary + detail</span><span class="pill teal">Management action plan</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--amber)">Stage 4</div><div class="flow-title">Management Response</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill green">Agree — commit to owner + deadline</span><span class="pill red">Disagree — factual dispute only</span><span class="pill amber">Accept risk — CRO sign-off required</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--coral)">Stage 5</div><div class="flow-title">Issue &amp; Distribute</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill coral">Audit committee — full report</span><span class="pill coral">Board — executive summary</span><span class="pill coral">Regulators — as required</span></div></div>
+      </div>
+    </div>
+
+    <!-- Report structure -->
+    <div style="margin:24px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Report sections and their audience</span>
+    </div>
+    <div class="flow-chain">
+      <div class="flow-node" style="grid-template-columns:160px 1fr 110px;">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--purple)">Section 1</div><div class="flow-title">Executive Summary</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill purple">Overall opinion</span><span class="pill purple">Critical finding count</span><span class="pill purple">Headline risk</span></div></div>
+        <div style="padding:18px 14px;display:flex;align-items:center;border-left:1px solid var(--border);"><span style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--faint);letter-spacing:0.1em;">BOARD / CEO</span></div>
+      </div>
+      <div class="flow-node" style="grid-template-columns:160px 1fr 110px;">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--red)">Section 2</div><div class="flow-title">Findings Summary</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill red">All findings by severity</span><span class="pill red">Status at a glance</span></div></div>
+        <div style="padding:18px 14px;display:flex;align-items:center;border-left:1px solid var(--border);"><span style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--faint);letter-spacing:0.1em;">MANAGEMENT</span></div>
+      </div>
+      <div class="flow-node" style="grid-template-columns:160px 1fr 110px;">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Section 3</div><div class="flow-title">Detailed Findings</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Full 5Cs per finding</span><span class="pill teal">Management response inline</span></div></div>
+        <div style="padding:18px 14px;display:flex;align-items:center;border-left:1px solid var(--border);"><span style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--faint);letter-spacing:0.1em;">IT / RISK</span></div>
+      </div>
+      <div class="flow-node" style="grid-template-columns:160px 1fr 110px;">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--amber)">Section 4</div><div class="flow-title">Action Plan</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill amber">Owner, action, target date</span><span class="pill amber">Success criteria per finding</span></div></div>
+        <div style="padding:18px 14px;display:flex;align-items:center;border-left:1px solid var(--border);"><span style="font-family:'Courier Prime',monospace;font-size:9px;color:var(--faint);letter-spacing:0.1em;">IT / RISK</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Outputs →</span>
+      <span class="output-doc">Formal Audit Report</span>
+      <span class="output-doc">Management Action Plan</span>
+      <span class="output-doc">Executive Summary</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════ PHASE 7 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">07</span>
+      <h2 class="sec-title">REMEDIATION &amp; FOLLOW-UP</h2>
+      <span class="sec-badge reporting">POST-AUDIT</span>
+    </div>
+
+    <div class="callout red">
+      <strong>The audit is only complete when findings are verified as fixed.</strong> Issuing the report is not the end — it's the start of the accountability phase.
+    </div>
+
+    <!-- Remediation lifecycle -->
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--purple)">Stage 1</div><div class="flow-title">Management Action Plan</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill purple">Named owner (a person, not a team)</span><span class="pill purple">Specific action steps</span><span class="pill purple">Concrete target date</span><span class="pill purple">Success criteria defined</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--accent)">Stage 2</div><div class="flow-title">Periodic Status Tracking</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill accent">Monthly check-ins for Critical / High</span><span class="pill accent">Quarterly for Medium / Low</span><span class="pill red">Escalate if overdue — no exceptions</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Stage 3</div><div class="flow-title">Evidence Collection</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Screenshots, config exports, policy docs</span><span class="pill teal">System-generated reports with timestamps</span><span class="pill teal">Stored in remediation workpaper</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--amber)">Stage 4</div><div class="flow-title">Re-testing</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill amber">Auditor independently re-runs original test</span><span class="pill amber">Does not accept evidence on trust alone</span><span class="pill red">Policy ≠ reality — both must be verified</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--green)">Stage 5</div><div class="flow-title">Formal Closure</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill green">Lead auditor sign-off</span><span class="pill green">Closed in tracking system</span><span class="pill green">Record retained for future cycles</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--coral)">Stage 6</div><div class="flow-title">Continuous Monitoring</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill coral">SIEM alerts, vuln scanners, IAM reports</span><span class="pill coral">Automated dashboard flags exceptions</span><span class="pill coral">Feeds next audit cycle risk assessment</span></div></div>
+      </div>
+    </div>
+
+    <!-- Escalation path -->
+    <div style="margin:24px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Overdue finding escalation path</span>
+    </div>
+    <div style="display:flex;border:1px solid var(--border);overflow:hidden;">
+      <div style="flex:1;padding:16px 14px;background:var(--surface);border-right:1px solid var(--border);text-align:center;">
+        <div style="font-family:'Courier Prime',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--faint);margin-bottom:6px;">Due date</div>
+        <div style="font-size:12px;color:var(--muted);">Finding Owner Reminder</div>
+      </div>
+      <div style="width:28px;display:flex;align-items:center;justify-content:center;background:var(--surface);border-right:1px solid var(--border);color:var(--faint);font-size:12px;">→</div>
+      <div style="flex:1;padding:16px 14px;background:var(--surface);border-right:1px solid var(--border);text-align:center;">
+        <div style="font-family:'Courier Prime',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);margin-bottom:6px;">+30 days</div>
+        <div style="font-size:12px;color:var(--muted);">Direct Manager</div>
+      </div>
+      <div style="width:28px;display:flex;align-items:center;justify-content:center;background:var(--surface);border-right:1px solid var(--border);color:var(--faint);font-size:12px;">→</div>
+      <div style="flex:1;padding:16px 14px;background:var(--surface);border-right:1px solid var(--border);text-align:center;">
+        <div style="font-family:'Courier Prime',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--coral);margin-bottom:6px;">+60 days</div>
+        <div style="font-size:12px;color:var(--muted);">CISO / CTO</div>
+      </div>
+      <div style="width:28px;display:flex;align-items:center;justify-content:center;background:var(--surface);border-right:1px solid var(--border);color:var(--faint);font-size:12px;">→</div>
+      <div style="flex:1;padding:16px 14px;background:rgba(217,64,64,0.08);text-align:center;">
+        <div style="font-family:'Courier Prime',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--red);margin-bottom:6px;">+90 days</div>
+        <div style="font-size:12px;color:var(--text);font-weight:600;">Audit Committee</div>
+      </div>
+    </div>
+
+    <!-- Ageing report -->
+    <div style="margin:24px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Finding ageing report — monthly view to audit committee</span>
+    </div>
+    <div class="tracker">
+      <div class="tracker-header">
+        <div class="tracker-cell header">Finding</div>
+        <div class="tracker-cell header">Severity</div>
+        <div class="tracker-cell header">Owner</div>
+        <div class="tracker-cell header">Days Open</div>
+        <div class="tracker-cell header">Status</div>
+      </div>
+      <div class="tracker-row">
+        <div class="tracker-cell finding-name">Orphaned admin accounts</div>
+        <div class="tracker-cell"><span class="status-pill status-overdue">Critical</span></div>
+        <div class="tracker-cell">A. Sharma</div>
+        <div class="tracker-cell" style="color:var(--red)">47 days</div>
+        <div class="tracker-cell"><span class="status-pill status-overdue">Overdue</span></div>
+      </div>
+      <div class="tracker-row">
+        <div class="tracker-cell finding-name">MFA not enforced — VPN</div>
+        <div class="tracker-cell"><span class="status-pill status-progress" style="border-color:var(--coral);color:var(--coral);">High</span></div>
+        <div class="tracker-cell">R. Patel</div>
+        <div class="tracker-cell">32 days</div>
+        <div class="tracker-cell"><span class="status-pill status-progress">In Progress</span></div>
+      </div>
+      <div class="tracker-row">
+        <div class="tracker-cell finding-name">No DR test in 18 months</div>
+        <div class="tracker-cell"><span class="status-pill status-progress" style="border-color:var(--coral);color:var(--coral);">High</span></div>
+        <div class="tracker-cell">D. Kim</div>
+        <div class="tracker-cell">18 days</div>
+        <div class="tracker-cell"><span class="status-pill status-ontrack">On Track</span></div>
+      </div>
+      <div class="tracker-row">
+        <div class="tracker-cell finding-name">Patch cycle exceeds 30 days</div>
+        <div class="tracker-cell"><span class="status-pill status-progress">Medium</span></div>
+        <div class="tracker-cell">T. Obi</div>
+        <div class="tracker-cell">12 days</div>
+        <div class="tracker-cell"><span class="status-pill status-ontrack">On Track</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Outputs →</span>
+      <span class="output-doc">MAP Tracker</span>
+      <span class="output-doc">Closure Workpapers</span>
+      <span class="output-doc">Ageing Report</span>
+      <span class="output-doc">Monitoring Dashboard</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════ PHASE 8 -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-num">08</span>
+      <h2 class="sec-title">COMPLIANCE FRAMEWORKS</h2>
+      <span class="sec-badge framework">FRAMEWORKS</span>
+    </div>
+
+    <div class="callout">
+      <strong>Frameworks define what "good" looks like.</strong> Voluntary certifications = you choose them. Regulatory mandates = legally required. AI regulation = the emerging frontier.
+    </div>
+
+    <!-- Framework cards -->
+    <div class="fw-grid">
+      <div class="fw-card voluntary">
+        <div class="fw-name">SOC 2</div>
+        <div class="fw-type">Voluntary · Security Certification</div>
+        <div class="fw-who">Trust service criteria. De facto standard for SaaS and cloud companies selling to enterprise customers.</div>
+        <ul class="fw-items">
+          <li>Security (mandatory) + Availability, Integrity, Confidentiality, Privacy</li>
+          <li>Type I = design at a point in time</li>
+          <li>Type II = operating over 6–12 months (enterprise required)</li>
+          <li>Report shared with customers under NDA</li>
+        </ul>
+      </div>
+      <div class="fw-card voluntary">
+        <div class="fw-name">ISO 27001</div>
+        <div class="fw-type">Voluntary · International Standard</div>
+        <div class="fw-who">Information Security Management System (ISMS). Most globally recognised security certification — publicly verifiable.</div>
+        <ul class="fw-items">
+          <li>10 management clauses + 93 Annex A controls</li>
+          <li>Statement of Applicability (SoA) defines scope</li>
+          <li>Stage 1 (documentation) + Stage 2 (technical audit)</li>
+          <li>Certificate valid 3 years with annual surveillance</li>
+        </ul>
+      </div>
+      <div class="fw-card voluntary">
+        <div class="fw-name">COBIT</div>
+        <div class="fw-type">Voluntary · IT Governance Framework</div>
+        <div class="fw-who">Comprehensive IT governance and management framework by ISACA. Maps IT processes to business goals.</div>
+        <ul class="fw-items">
+          <li>5 domains: Evaluate, Direct, Monitor / Build, Run</li>
+          <li>Aligns IT with business objectives</li>
+          <li>Used as audit benchmark for IT governance</li>
+          <li>Companion to CISA certification</li>
+        </ul>
+      </div>
+      <div class="fw-card mandatory">
+        <div class="fw-name">GDPR</div>
+        <div class="fw-type">Mandatory · EU Law</div>
+        <div class="fw-who">Any organisation anywhere processing EU personal data. Extraterritorial — applies globally. Fines up to 4% global turnover.</div>
+        <ul class="fw-items">
+          <li>Lawful basis required for every processing activity</li>
+          <li>Data subject rights: access, erasure, portability</li>
+          <li>72-hour breach notification to regulator</li>
+          <li>DPAs required with all third-party processors</li>
+        </ul>
+      </div>
+      <div class="fw-card mandatory">
+        <div class="fw-name">HIPAA</div>
+        <div class="fw-type">Mandatory · US Healthcare Law</div>
+        <div class="fw-who">US healthcare organisations and their business associates. Governs Protected Health Information (PHI).</div>
+        <ul class="fw-items">
+          <li>Privacy Rule — patient rights over health data</li>
+          <li>Security Rule — technical and admin safeguards</li>
+          <li>Breach Notification Rule — 60-day notification</li>
+          <li>Fines up to $1.9M per violation category</li>
+        </ul>
+      </div>
+      <div class="fw-card mandatory">
+        <div class="fw-name">PCI-DSS</div>
+        <div class="fw-type">Mandatory · Payment Industry Standard</div>
+        <div class="fw-who">Any organisation that stores, processes, or transmits card data. Enforced contractually — fail and lose ability to accept payments.</div>
+        <ul class="fw-items">
+          <li>12 requirements across 6 goals</li>
+          <li>Cardholder Data Environment (CDE) must be defined</li>
+          <li>Tokenisation reduces CDE scope significantly</li>
+          <li>Annual QSA assessment for large merchants</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EU AI Act — special section -->
+    <div style="margin:36px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);">● AI-Specific Regulation — The Emerging Frontier</span>
+    </div>
+
+    <div style="border:1px solid var(--teal);background:var(--teal-bg);padding:20px 22px;margin-bottom:20px;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--teal);letter-spacing:0.06em;margin-bottom:4px;">EU AI Act</div>
+      <div style="font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;">World's First Comprehensive AI Law · In force August 2024 · High-risk enforcement: August 2026</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;max-width:700px;">Applies to any organisation that provides, deploys, imports, or distributes AI systems affecting people in the EU — regardless of where the organisation is based. Risk-tiered obligations: the higher the potential harm, the heavier the compliance requirements.</div>
+    </div>
+
+    <!-- AI Act tiers -->
+    <div style="margin-bottom:8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Four risk tiers — the auditor's first task is classifying each AI system</span>
+    </div>
+    <div class="ai-tiers">
+      <div class="ai-tier tier-banned">
+        <div class="ai-tier-left">
+          <div class="ai-tier-name">Unacceptable</div>
+          <div class="ai-tier-status">Banned Feb 2025</div>
+        </div>
+        <div class="ai-tier-mid">
+          <div class="ai-tier-mid-label">Examples</div>
+          <div class="ai-tier-examples">
+            <span class="pill red">Social scoring by governments</span>
+            <span class="pill red">Real-time biometric surveillance in public</span>
+            <span class="pill red">Subliminal manipulation techniques</span>
+            <span class="pill red">Exploitation of vulnerable groups</span>
+          </div>
+        </div>
+        <div class="ai-tier-right">
+          <div class="ai-tier-right-label">Audit action</div>
+          <ul>
+            <li>Confirm no prohibited systems deployed</li>
+            <li>Document classification decision</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ai-tier tier-high">
+        <div class="ai-tier-left">
+          <div class="ai-tier-name">High Risk</div>
+          <div class="ai-tier-status">Enforce Aug 2026</div>
+        </div>
+        <div class="ai-tier-mid">
+          <div class="ai-tier-mid-label">Examples</div>
+          <div class="ai-tier-examples">
+            <span class="pill coral">CV screening / HR decisions</span>
+            <span class="pill coral">Credit scoring</span>
+            <span class="pill coral">Medical devices</span>
+            <span class="pill coral">Critical infrastructure</span>
+            <span class="pill coral">Biometric identification</span>
+            <span class="pill coral">Law enforcement</span>
+          </div>
+        </div>
+        <div class="ai-tier-right">
+          <div class="ai-tier-right-label">Full compliance required</div>
+          <ul>
+            <li>Risk management system</li>
+            <li>Data governance + bias checks</li>
+            <li>Technical documentation</li>
+            <li>Automatic logging</li>
+            <li>Human oversight mechanism</li>
+            <li>Conformity assessment + CE mark</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ai-tier tier-limited">
+        <div class="ai-tier-left">
+          <div class="ai-tier-name">Limited Risk</div>
+          <div class="ai-tier-status">Enforce Aug 2026</div>
+        </div>
+        <div class="ai-tier-mid">
+          <div class="ai-tier-mid-label">Examples</div>
+          <div class="ai-tier-examples">
+            <span class="pill amber">Chatbots and virtual assistants</span>
+            <span class="pill amber">Deepfake generation tools</span>
+            <span class="pill amber">Emotion recognition systems</span>
+          </div>
+        </div>
+        <div class="ai-tier-right">
+          <div class="ai-tier-right-label">Transparency required</div>
+          <ul>
+            <li>Disclose AI interaction to users</li>
+            <li>Label AI-generated content</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ai-tier tier-minimal">
+        <div class="ai-tier-left">
+          <div class="ai-tier-name">Minimal Risk</div>
+          <div class="ai-tier-status">No deadline</div>
+        </div>
+        <div class="ai-tier-mid">
+          <div class="ai-tier-mid-label">Examples</div>
+          <div class="ai-tier-examples">
+            <span class="pill green">AI spam filters</span>
+            <span class="pill green">AI in video games</span>
+            <span class="pill green">Recommendation engines</span>
+          </div>
+        </div>
+        <div class="ai-tier-right">
+          <div class="ai-tier-right-label">No mandatory obligations</div>
+          <ul>
+            <li>Voluntary codes of practice</li>
+            <li>Document classification decision</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EU AI Act audit obligations -->
+    <div style="margin:24px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">High-risk AI — audit obligations mapped to controls</span>
+    </div>
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 1</div><div class="flow-title">Risk Management System</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Documented iterative risk process</span><span class="pill teal">Covers full AI lifecycle</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 2</div><div class="flow-title">Data Governance</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Training data lineage documented</span><span class="pill teal">Bias examination completed</span><span class="pill teal">Data quality checks in place</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 3</div><div class="flow-title">Technical Documentation</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Complete technical file exists</span><span class="pill teal">Current and version-controlled</span><span class="pill teal">Capabilities and limitations stated</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 4</div><div class="flow-title">Logging &amp; Record-keeping</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Automatic logs generated</span><span class="pill teal">Retained for required period</span><span class="pill teal">Traceable to specific decisions</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 5</div><div class="flow-title">Transparency to Users</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">AI interaction disclosed before use</span><span class="pill teal">Disclosure clear and prominent</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 6</div><div class="flow-title">Human Oversight</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Human can stop or override system</span><span class="pill teal">Override mechanism documented and tested</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 7</div><div class="flow-title">Accuracy &amp; Robustness</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Accuracy metrics reviewed</span><span class="pill teal">Tested for adversarial inputs</span><span class="pill teal">Edge case performance documented</span></div></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-left"><div class="flow-tag" style="color:var(--teal)">Obligation 8</div><div class="flow-title">Conformity Assessment</div></div>
+        <div class="flow-right"><div class="flow-pills"><span class="pill teal">Self-assessment or third-party audit</span><span class="pill teal">Registered in EU AI database</span><span class="pill teal">CE marking applied</span></div></div>
+      </div>
+    </div>
+
+    <!-- Framework overlap -->
+    <div style="margin:28px 0 8px;">
+      <span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Framework overlap — one control test can satisfy multiple frameworks</span>
+    </div>
+    <div class="overlap-table">
+      <div class="ot-row">
+        <div class="ot-cell header">Control domain</div>
+        <div class="ot-cell header">SOC 2</div>
+        <div class="ot-cell header">ISO 27001</div>
+        <div class="ot-cell header">GDPR</div>
+        <div class="ot-cell header">PCI-DSS</div>
+      </div>
+      <div class="ot-row">
+        <div class="ot-cell">Access management</div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+      </div>
+      <div class="ot-row">
+        <div class="ot-cell">Encryption</div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+      </div>
+      <div class="ot-row">
+        <div class="ot-cell">Incident response</div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+      </div>
+      <div class="ot-row">
+        <div class="ot-cell">Data subject rights</div>
+        <div class="ot-cell"><span class="partial">Partial</span></div>
+        <div class="ot-cell"><span class="partial">Partial</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="none-tag">—</span></div>
+      </div>
+      <div class="ot-row">
+        <div class="ot-cell">Network segmentation</div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+        <div class="ot-cell"><span class="partial">Implied</span></div>
+        <div class="ot-cell"><span class="req">Req.</span></div>
+      </div>
+      <div class="ot-row">
+        <div class="ot-cell">AI system logging</div>
+        <div class="ot-cell"><span class="none-tag">—</span></div>
+        <div class="ot-cell"><span class="partial">Partial</span></div>
+        <div class="ot-cell"><span class="partial">Partial</span></div>
+        <div class="ot-cell"><span class="none-tag">—</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="output-label">Outputs →</span>
+      <span class="output-doc">SOC 2 Report</span>
+      <span class="output-doc">ISO 27001 Certificate</span>
+      <span class="output-doc">GDPR Assessment</span>
+      <span class="output-doc">PCI RoC</span>
+      <span class="output-doc">EU AI Act Conformity File</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-brand">IT Audit &amp; Compliance Landscape</span>
+    <span>April 2026</span>
+    <span>Phases 1–8 · All frameworks including EU AI Act</span>
+  </div>
+
+</div>
+</body>
+</html>

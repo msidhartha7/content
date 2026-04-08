@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Infrastructure Audit — EU AI Act Compliance</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #0e1014;
+  --bg2:          #13161b;
+  --surface:      #191c22;
+  --surface2:     #1f232b;
+  --border:       #2a2f3a;
+  --border2:      #363d4d;
+  --text:         #dde1ea;
+  --muted:        #7a8194;
+  --faint:        #3d4357;
+  --accent:       #1a4fd4;
+  --accent-b:     #2a62f0;
+  --accent-glow:  rgba(26,79,212,0.13);
+  --teal:         #18b8a8;
+  --teal-bg:      rgba(24,184,168,0.09);
+  --amber:        #e8a020;
+  --amber-bg:     rgba(232,160,32,0.09);
+  --red:          #d94040;
+  --red-bg:       rgba(217,64,64,0.09);
+  --green:        #3ab87a;
+  --green-bg:     rgba(58,184,122,0.09);
+  --purple:       #9b7fe8;
+  --purple-bg:    rgba(155,127,232,0.09);
+  --coral:        #e0694e;
+  --coral-bg:     rgba(224,105,78,0.09);
+  --gold:         #c8a84b;
+  --gold-bg:      rgba(200,168,75,0.09);
+  --cyan:         #38bdf8;
+  --cyan-bg:      rgba(56,189,248,0.09);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+  );
+  pointer-events: none;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative; z-index: 1;
+}
+
+/* ── NAV BAR ── */
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  position: sticky; top: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 44px;
+}
+.topbar-left {
+  display: flex; align-items: center; gap: 6px;
+}
+.topbar-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--red);
+  animation: blink 1.4s step-start infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.topbar-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted);
+}
+.topbar-label span { color: var(--red); }
+.topbar-nav {
+  display: flex; gap: 0;
+}
+.topbar-nav a {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint); text-decoration: none;
+  padding: 0 12px; height: 44px;
+  display: flex; align-items: center;
+  border-left: 1px solid var(--border);
+  transition: color 0.15s, background 0.15s;
+}
+.topbar-nav a:hover { color: var(--text); background: var(--surface); }
+
+/* ── ALERT STRIP ── */
+.alert-strip {
+  background: var(--red);
+  padding: 9px 32px;
+  display: flex; align-items: center; justify-content: center; gap: 18px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #fff;
+}
+.alert-strip-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #fff; flex-shrink: 0;
+  animation: blink 1s step-start infinite;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 64px;
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; top: -20px; right: -24px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(90px, 15vw, 190px);
+  color: rgba(26,79,212,0.04);
+  line-height: 1; pointer-events: none; user-select: none;
+  letter-spacing: 0.02em;
+}
+.hero-eyebrow {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before {
+  content: ''; display: block;
+  width: 24px; height: 1px; background: var(--teal);
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(40px, 7vw, 90px);
+  line-height: 0.96; letter-spacing: 0.02em;
+  color: #fff; margin-bottom: 20px;
+}
+.hero h1 em { color: var(--teal); font-style: normal; }
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  font-size: 16px; color: var(--muted); max-width: 600px;
+  margin-bottom: 40px; line-height: 1.7;
+}
+.hero-stats {
+  display: flex; gap: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.stat-cell {
+  flex: 1; padding: 20px 22px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+.stat-cell:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px; line-height: 1; margin-bottom: 4px;
+}
+.stat-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ── DOMAIN OVERVIEW STRIP ── */
+.domain-strip {
+  display: flex; border: 1px solid var(--border);
+  border-top: none; overflow: hidden;
+}
+.ds-cell {
+  flex: 1; padding: 14px 10px; text-align: center;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+  transition: background 0.15s;
+}
+.ds-cell:last-child { border-right: none; }
+.ds-cell:hover { background: var(--surface); }
+.ds-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; line-height: 1;
+}
+.ds-name {
+  font-family: 'Courier Prime', monospace;
+  font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-top: 3px; line-height: 1.3;
+}
+
+/* ── SECTION HEADER ── */
+.section { padding: 68px 0 0; }
+.sec-hd {
+  display: flex; align-items: center; gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: 32px;
+}
+.sec-num {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11px; letter-spacing: 0.14em;
+  color: var(--faint); flex-shrink: 0;
+}
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; letter-spacing: 0.06em;
+  color: #fff; flex: 1;
+}
+.sec-badge {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 4px 11px; border: 1px solid; flex-shrink: 0;
+}
+.b-systems { border-color: var(--accent);  color: var(--accent); }
+.b-ai      { border-color: var(--teal);    color: var(--teal); }
+.b-trail   { border-color: var(--green);   color: var(--green); }
+.b-data    { border-color: var(--amber);   color: var(--amber); }
+.b-legal   { border-color: var(--red);     color: var(--red); }
+.b-access  { border-color: var(--purple);  color: var(--purple); }
+.b-risk    { border-color: var(--coral);   color: var(--coral); }
+.b-score   { border-color: var(--gold);    color: var(--gold); }
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-glow);
+  padding: 14px 18px; margin: 0 0 28px;
+  font-size: 13px; color: var(--text); line-height: 1.65;
+}
+.callout.teal   { border-color: var(--teal);   background: var(--teal-bg); }
+.callout.amber  { border-color: var(--amber);  background: var(--amber-bg); }
+.callout.red    { border-color: var(--red);    background: var(--red-bg); }
+.callout.green  { border-color: var(--green);  background: var(--green-bg); }
+.callout.purple { border-color: var(--purple); background: var(--purple-bg); }
+.callout.coral  { border-color: var(--coral);  background: var(--coral-bg); }
+.callout strong { color: #fff; font-weight: 600; }
+
+/* ── FLOW CHAIN ── */
+.flow-chain { display: flex; flex-direction: column; }
+.flow-node {
+  display: grid; grid-template-columns: 190px 1fr;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: var(--surface);
+  transition: background 0.15s;
+}
+.flow-node:last-child { border-bottom: 1px solid var(--border); }
+.flow-node:hover { background: var(--surface2); }
+.fn-left {
+  padding: 18px 18px;
+  border-right: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.fn-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.fn-title {
+  font-size: 13px; font-weight: 600; color: #fff; line-height: 1.3;
+}
+.fn-right {
+  padding: 16px 18px;
+  display: flex; flex-wrap: wrap; gap: 6px; align-content: center;
+}
+
+/* ── PILLS ── */
+.pill {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.07em;
+  padding: 4px 10px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  background: var(--surface2);
+  white-space: nowrap;
+}
+.p-accent { border-color: var(--accent);  color: var(--accent);  background: var(--accent-glow); }
+.p-teal   { border-color: var(--teal);    color: var(--teal);    background: var(--teal-bg); }
+.p-amber  { border-color: var(--amber);   color: var(--amber);   background: var(--amber-bg); }
+.p-red    { border-color: var(--red);     color: var(--red);     background: var(--red-bg); }
+.p-green  { border-color: var(--green);   color: var(--green);   background: var(--green-bg); }
+.p-purple { border-color: var(--purple);  color: var(--purple);  background: var(--purple-bg); }
+.p-coral  { border-color: var(--coral);   color: var(--coral);   background: var(--coral-bg); }
+.p-gold   { border-color: var(--gold);    color: var(--gold);    background: var(--gold-bg); }
+.p-cyan   { border-color: var(--cyan);    color: var(--cyan);    background: var(--cyan-bg); }
+
+/* ── CARD GRID ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+}
+.cg-card {
+  background: var(--surface); padding: 20px 18px;
+  transition: background 0.15s;
+}
+.cg-card:hover { background: var(--surface2); }
+.cg-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cg-title {
+  font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 10px; line-height: 1.3;
+}
+.cg-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.cg-list li {
+  font-size: 11.5px; color: var(--muted);
+  display: flex; gap: 7px; align-items: flex-start; line-height: 1.45;
+}
+.cg-list li::before { content: '▸'; color: var(--faint); flex-shrink: 0; font-size: 9px; margin-top: 2px; }
+
+/* ── THREE COL DOMAIN BLOCK ── */
+.domain-block {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+.db-col { background: var(--surface); padding: 20px 18px; }
+.db-col-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.db-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.db-list li {
+  font-size: 12px; color: var(--muted);
+  display: flex; gap: 7px; align-items: flex-start; line-height: 1.45;
+}
+.db-list li::before { content: '→'; color: var(--faint); flex-shrink: 0; font-size: 10px; margin-top: 1px; }
+.db-list li strong { color: var(--text); font-weight: 600; }
+
+/* ── OUTPUT ROW ── */
+.output-row {
+  display: flex; flex-wrap: wrap; gap: 7px; align-items: center; margin: 20px 0 0;
+}
+.out-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint);
+}
+.out-doc {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; padding: 4px 10px;
+  border: 1px solid var(--green); color: var(--green); background: var(--green-bg);
+}
+
+/* ── ARCHITECTURE DIAGRAM (log trail) ── */
+.arch {
+  border: 1px solid var(--border); overflow: hidden; margin-bottom: 28px;
+}
+.arch-header {
+  background: var(--surface2); padding: 12px 18px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--faint); border-bottom: 1px solid var(--border);
+}
+.arch-body {
+  padding: 20px 18px;
+  display: flex; align-items: center; gap: 0;
+  overflow-x: auto;
+}
+.arch-node {
+  display: flex; flex-direction: column; gap: 5px;
+  align-items: center; text-align: center; flex-shrink: 0;
+  padding: 14px 12px;
+  background: var(--surface2); border: 1px solid var(--border);
+  min-width: 110px; transition: background 0.15s;
+}
+.arch-node:hover { background: var(--surface); }
+.arch-node-icon {
+  font-family: 'Courier Prime', monospace;
+  font-size: 18px; color: var(--teal); line-height: 1;
+}
+.arch-node-name {
+  font-size: 11px; font-weight: 600; color: #fff; line-height: 1.2;
+}
+.arch-node-sub {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; color: var(--faint); letter-spacing: 0.06em;
+}
+.arch-arrow {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0 6px; flex-shrink: 0; gap: 2px;
+}
+.arch-arrow-line {
+  width: 30px; height: 1px; background: var(--border2);
+  position: relative;
+}
+.arch-arrow-head {
+  font-size: 10px; color: var(--border2);
+}
+.arch-arrow-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 8px; color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── AI TIER TABLE ── */
+.tier-table { border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+.tt-row {
+  display: grid; grid-template-columns: 150px 1fr 180px;
+  border-bottom: 1px solid var(--border);
+}
+.tt-row:last-child { border-bottom: none; }
+.tt-left {
+  padding: 16px 16px; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; justify-content: center; gap: 6px;
+}
+.tt-name {
+  font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; line-height: 1;
+}
+.tt-status {
+  font-family: 'Courier Prime', monospace;
+  font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 2px 7px; border: 1px solid; display: inline-block; width: fit-content;
+}
+.tt-mid { padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 5px; align-content: center; }
+.tt-right {
+  padding: 14px 14px; border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 4px; justify-content: center;
+}
+.tt-right-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 4px;
+}
+.tt-right ul { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.tt-right li { font-size: 10.5px; color: var(--muted); display: flex; gap: 5px; }
+.tt-right li::before { content: '·'; color: var(--faint); flex-shrink: 0; }
+.tier-banned .tt-left { background: rgba(217,64,64,0.1); }
+.tier-banned .tt-name { color: #ff6060; }
+.tier-banned .tt-status { border-color: var(--red); color: var(--red); }
+.tier-high .tt-left   { background: var(--coral-bg); }
+.tier-high .tt-name   { color: var(--coral); }
+.tier-high .tt-status { border-color: var(--coral); color: var(--coral); }
+.tier-ltd .tt-left    { background: var(--amber-bg); }
+.tier-ltd .tt-name    { color: var(--amber); }
+.tier-ltd .tt-status  { border-color: var(--amber); color: var(--amber); }
+.tier-min .tt-left    { background: var(--green-bg); }
+.tier-min .tt-name    { color: var(--green); }
+.tier-min .tt-status  { border-color: var(--green); color: var(--green); }
+
+/* ── OBLIGATION ROWS ── */
+.obl-table { border: 1px solid var(--border); overflow: hidden; }
+.obl-row {
+  display: grid; grid-template-columns: 200px 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.obl-row:last-child { border-bottom: none; }
+.obl-row:hover { background: var(--surface2); }
+.obl-row.header { background: var(--surface2); }
+.obl-cell {
+  padding: 13px 16px; border-right: 1px solid var(--border);
+  font-size: 12px; color: var(--muted);
+  display: flex; align-items: center;
+}
+.obl-cell:last-child { border-right: none; }
+.obl-cell.header-cell {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint);
+}
+.obl-cell.obl-name { color: var(--text); font-weight: 600; font-size: 12px; }
+
+/* ── SCORECARD ── */
+.scorecard { border: 1px solid var(--border); overflow: hidden; }
+.sc-header {
+  display: grid; grid-template-columns: 1fr 90px 90px 90px 90px 90px;
+  background: var(--surface2); border-bottom: 1px solid var(--border);
+}
+.sc-row {
+  display: grid; grid-template-columns: 1fr 90px 90px 90px 90px 90px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.sc-row:last-child { border-bottom: none; }
+.sc-row:hover { background: var(--surface2); }
+.sc-cell {
+  padding: 13px 14px; border-right: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--muted);
+}
+.sc-cell:first-child { justify-content: flex-start; color: var(--text); font-size: 12px; font-weight: 600; }
+.sc-cell:last-child { border-right: none; }
+.sc-cell.hdr {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint);
+}
+.sc-cell.hdr:first-child { justify-content: flex-start; }
+.badge-pass  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green);  font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 2px 7px; }
+.badge-gap   { background: var(--amber-bg);  color: var(--amber);  border: 1px solid var(--amber);  font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 2px 7px; }
+.badge-fail  { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red);    font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 2px 7px; }
+.badge-na    { color: var(--faint); font-family: 'Courier Prime', monospace; font-size: 10px; }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+/* ── PERMISSION MATRIX ── */
+.perm-matrix { border: 1px solid var(--border); overflow-x: auto; }
+.pm-row {
+  display: grid; grid-template-columns: 200px repeat(5, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+.pm-row:last-child { border-bottom: none; }
+.pm-cell {
+  padding: 12px 12px; border-right: 1px solid var(--border);
+  font-size: 11px; display: flex; align-items: center; justify-content: center;
+  text-align: center;
+}
+.pm-cell:first-child { justify-content: flex-start; color: var(--text); font-size: 12px; }
+.pm-cell:last-child { border-right: none; }
+.pm-cell.hdr {
+  background: var(--surface2);
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint);
+}
+.pm-cell.hdr:first-child { justify-content: flex-start; }
+.pm-allow { color: var(--green); font-size: 13px; }
+.pm-deny  { color: var(--red);   font-size: 13px; }
+.pm-gate  { color: var(--amber); font-family: 'Courier Prime', monospace; font-size: 9px; padding: 2px 6px; border: 1px solid var(--amber); }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 26px 32px; margin-top: 90px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.07em; color: var(--faint);
+}
+.footer-brand { color: var(--teal); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.cg-card:nth-child(1) { animation: fadeUp 0.4s ease 0.05s both; }
+.cg-card:nth-child(2) { animation: fadeUp 0.4s ease 0.10s both; }
+.cg-card:nth-child(3) { animation: fadeUp 0.4s ease 0.15s both; }
+.cg-card:nth-child(4) { animation: fadeUp 0.4s ease 0.20s both; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 760px) {
+  .wrap { padding: 0 16px; }
+  .flow-node { grid-template-columns: 1fr; }
+  .fn-left { border-right: none; border-bottom: 1px solid var(--border); }
+  .domain-block { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; }
+  .stat-cell { border-right: none; border-bottom: 1px solid var(--border); }
+  .domain-strip { flex-wrap: wrap; }
+  .ds-cell { min-width: 80px; }
+  .tt-row { grid-template-columns: 1fr; }
+  .tt-left { border-right: none; border-bottom: 1px solid var(--border); }
+  .tt-right { border-left: none; border-top: 1px solid var(--border); }
+  .obl-row { grid-template-columns: 1fr; }
+  .obl-cell { border-right: none; border-bottom: 1px solid var(--border); }
+  .sc-header, .sc-row { grid-template-columns: 1fr 72px 72px; }
+  .sc-cell:nth-child(n+4) { display: none; }
+  .pm-row { grid-template-columns: 140px repeat(3,1fr); }
+  .pm-cell:nth-child(n+5) { display: none; }
+  .topbar-nav { display: none; }
+}
+@media print {
+  body { background: white; color: #111; }
+  .topbar, .alert-strip { position: static; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-dot"></div>
+    <span class="topbar-label">AI Agent Audit · <span>EU AI ACT · AUG 2026</span></span>
+  </div>
+  <div class="topbar-nav">
+    <a href="#d1">Systems</a>
+    <a href="#d2">Actions</a>
+    <a href="#d3">Trail</a>
+    <a href="#d4">Data</a>
+    <a href="#d5">EU AI Act</a>
+    <a href="#d6">Access</a>
+    <a href="#d7">Incidents</a>
+    <a href="#scorecard">Scorecard</a>
+  </div>
+</nav>
+
+<!-- ALERT STRIP -->
+<div class="alert-strip">
+  <div class="alert-strip-dot"></div>
+  HIGH-RISK AI ENFORCEMENT DEADLINE · AUGUST 2026 · ALL HIGH-RISK SYSTEMS MUST BE FULLY COMPLIANT
+  <div class="alert-strip-dot"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-bg">AUDIT</div>
+    <div class="hero-eyebrow">Audit Framework · AI Agent Infrastructure</div>
+    <h1><em>AI Agent</em><br><span>Infrastructure</span><br>Audit</h1>
+    <p class="hero-sub">A complete audit framework for AI agent systems — covering infrastructure, autonomous actions, audit trails, data governance, EU AI Act compliance, access controls, and incident response.</p>
+    <div class="hero-stats">
+      <div class="stat-cell">
+        <div class="stat-num" style="color:var(--teal)">7</div>
+        <div class="stat-label">Audit Domains</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" style="color:var(--coral)">8</div>
+        <div class="stat-label">EU AI Act Obligations</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" style="color:var(--amber)">4</div>
+        <div class="stat-label">Risk Tiers Mapped</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" style="color:var(--red)">AUG<br><span style="font-size:28px">2026</span></div>
+        <div class="stat-label">High-Risk Deadline</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOMAIN STRIP -->
+  <div class="domain-strip">
+    <div class="ds-cell"><div class="ds-num" style="color:var(--accent)">D1</div><div class="ds-name">Infrastructure &amp; Systems</div></div>
+    <div class="ds-cell"><div class="ds-num" style="color:var(--teal)">D2</div><div class="ds-name">AI Actions &amp; Tool Use</div></div>
+    <div class="ds-cell"><div class="ds-num" style="color:var(--green)">D3</div><div class="ds-name">Audit Trail</div></div>
+    <div class="ds-cell"><div class="ds-num" style="color:var(--amber)">D4</div><div class="ds-name">Data &amp; Privacy</div></div>
+    <div class="ds-cell"><div class="ds-num" style="color:var(--red)">D5</div><div class="ds-name">EU AI Act</div></div>
+    <div class="ds-cell"><div class="ds-num" style="color:var(--purple)">D6</div><div class="ds-name">Access &amp; Identity</div></div>
+    <div class="ds-cell"><div class="ds-num" style="color:var(--coral)">D7</div><div class="ds-name">Incidents &amp; Failures</div></div>
+  </div>
+
+  <!-- ══════════════════════════════ D1: INFRASTRUCTURE -->
+  <div class="section" id="d1">
+    <div class="sec-hd">
+      <span class="sec-num">D1</span>
+      <h2 class="sec-title">AI AGENT INFRASTRUCTURE &amp; SYSTEMS AUDIT</h2>
+      <span class="sec-badge b-systems">Systems</span>
+    </div>
+
+    <div class="callout teal">
+      <strong>What makes this different from a standard IT audit:</strong> You are not just auditing servers — you are auditing an autonomous software stack that makes decisions and invokes real-world actions. Every component in the chain is a potential attack or failure surface.
+    </div>
+
+    <!-- Agent stack map -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">AI agent stack — what the auditor must map</span></div>
+    <div class="arch">
+      <div class="arch-header">Agent infrastructure — top-down component map</div>
+      <div class="arch-body">
+        <div class="arch-node">
+          <div class="arch-node-icon">[U]</div>
+          <div class="arch-node-name">User / Trigger</div>
+          <div class="arch-node-sub">Human input or automated event</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div><div class="arch-arrow-label">Input</div></div>
+        <div class="arch-node">
+          <div class="arch-node-icon">[O]</div>
+          <div class="arch-node-name">Orchestrator</div>
+          <div class="arch-node-sub">LangChain / AutoGen / CrewAI</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div><div class="arch-arrow-label">Prompt</div></div>
+        <div class="arch-node">
+          <div class="arch-node-icon">[L]</div>
+          <div class="arch-node-name">LLM API</div>
+          <div class="arch-node-sub">GPT-4 / Claude / Gemini</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div><div class="arch-arrow-label">Tool call</div></div>
+        <div class="arch-node">
+          <div class="arch-node-icon">[T]</div>
+          <div class="arch-node-name">Tool Layer</div>
+          <div class="arch-node-sub">APIs, DBs, file system, web</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div><div class="arch-arrow-label">Context</div></div>
+        <div class="arch-node">
+          <div class="arch-node-icon">[M]</div>
+          <div class="arch-node-name">Memory</div>
+          <div class="arch-node-sub">Vector DB / context store</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div><div class="arch-arrow-label">Output</div></div>
+        <div class="arch-node">
+          <div class="arch-node-icon">[R]</div>
+          <div class="arch-node-name">Response</div>
+          <div class="arch-node-sub">Action or returned answer</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit controls flow -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Infrastructure audit — test procedure per component</span></div>
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--accent)">Test 1</div><div class="fn-title">Orchestration layer review</div></div>
+        <div class="fn-right"><span class="pill p-accent">Framework version pinned?</span><span class="pill p-accent">Dependency SCA scan run?</span><span class="pill p-accent">Config stored in version control?</span><span class="pill p-accent">No hardcoded prompts in source?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--accent)">Test 2</div><div class="fn-title">LLM API connection security</div></div>
+        <div class="fn-right"><span class="pill p-accent">API keys stored in secrets manager?</span><span class="pill p-accent">Model version pinned (no auto-upgrade)?</span><span class="pill p-accent">Rate limits and spend caps enforced?</span><span class="pill p-accent">DPA signed with LLM provider?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--accent)">Test 3</div><div class="fn-title">Tool integration inventory</div></div>
+        <div class="fn-right"><span class="pill p-accent">Full list of tools agent can invoke?</span><span class="pill p-accent">Each tool documented with purpose?</span><span class="pill p-accent">Unused tools disabled?</span><span class="pill p-red">Any tool with write/delete access flagged?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--accent)">Test 4</div><div class="fn-title">Memory &amp; vector DB controls</div></div>
+        <div class="fn-right"><span class="pill p-accent">Access control on vector DB?</span><span class="pill p-accent">PII not stored in context store?</span><span class="pill p-accent">Retention policy on memory defined?</span><span class="pill p-amber">Data poisoning prevention in place?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--accent)">Test 5</div><div class="fn-title">Network segmentation</div></div>
+        <div class="fn-right"><span class="pill p-accent">Agent process isolated in own network segment?</span><span class="pill p-accent">Egress filtering on outbound tool calls?</span><span class="pill p-red">Agent cannot reach internal admin systems?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--accent)">Test 6</div><div class="fn-title">Supply chain &amp; dependencies</div></div>
+        <div class="fn-right"><span class="pill p-accent">All packages locked in requirements file?</span><span class="pill p-accent">SBOM (software bill of materials) exists?</span><span class="pill p-amber">Known CVEs scanned and patched?</span><span class="pill p-red">No unpinned pip install in CI/CD?</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="out-label">Outputs →</span>
+      <span class="out-doc">Agent Infrastructure Map</span>
+      <span class="out-doc">Systems Inventory</span>
+      <span class="out-doc">Integration Risk Register</span>
+      <span class="out-doc">Supply Chain Assessment</span>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:60px;">
+
+  <!-- ══════════════════════════════ D2: AI ACTIONS -->
+  <div class="section" id="d2">
+    <div class="sec-hd">
+      <span class="sec-num">D2</span>
+      <h2 class="sec-title">AI ACTIONS &amp; TOOL USE AUDIT</h2>
+      <span class="sec-badge b-ai">AI Behaviour</span>
+    </div>
+
+    <div class="callout amber">
+      <strong>The most novel audit domain.</strong> Traditional IT audits test whether humans followed procedures. Here you are testing whether an autonomous agent acted within permitted boundaries — without a human approving every step.
+    </div>
+
+    <!-- Tool permission matrix -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Tool permission matrix — what agents are allowed to invoke</span></div>
+    <div class="perm-matrix">
+      <div class="pm-row">
+        <div class="pm-cell hdr">Tool / Action</div>
+        <div class="pm-cell hdr">Read</div>
+        <div class="pm-cell hdr">Write</div>
+        <div class="pm-cell hdr">Delete</div>
+        <div class="pm-cell hdr">External Call</div>
+        <div class="pm-cell hdr">Financial</div>
+      </div>
+      <div class="pm-row">
+        <div class="pm-cell">Web search</div>
+        <div class="pm-cell"><span class="pm-allow">✓</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-allow">✓</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+      </div>
+      <div class="pm-row">
+        <div class="pm-cell">Database query</div>
+        <div class="pm-cell"><span class="pm-allow">✓</span></div>
+        <div class="pm-cell"><span class="pm-gate">HITL</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+      </div>
+      <div class="pm-row">
+        <div class="pm-cell">File system</div>
+        <div class="pm-cell"><span class="pm-allow">✓</span></div>
+        <div class="pm-cell"><span class="pm-gate">HITL</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+      </div>
+      <div class="pm-row">
+        <div class="pm-cell">Send email / message</div>
+        <div class="pm-cell"><span class="pm-allow">✓</span></div>
+        <div class="pm-cell"><span class="pm-gate">HITL</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-allow">✓</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+      </div>
+      <div class="pm-row">
+        <div class="pm-cell">Payment / transaction</div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-deny">✗</span></div>
+        <div class="pm-cell"><span class="pm-gate">HITL</span></div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-bottom:24px;">
+      <strong>Key:</strong> ✓ Permitted autonomously &nbsp;|&nbsp; ✗ Blocked by policy &nbsp;|&nbsp; <span style="color:var(--amber)">HITL</span> = Human-in-the-loop approval required before execution
+    </div>
+
+    <!-- Actions audit flow -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">AI actions audit — test procedure</span></div>
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--teal)">Test 1</div><div class="fn-title">Tool boundary enforcement</div></div>
+        <div class="fn-right"><span class="pill p-teal">Are tool permissions enforced in code, not just policy?</span><span class="pill p-teal">Can agent bypass permission by chaining tools?</span><span class="pill p-red">Test: attempt unauthorised action — is it blocked?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--teal)">Test 2</div><div class="fn-title">Human-in-the-loop (HITL) checkpoints</div></div>
+        <div class="fn-right"><span class="pill p-teal">All destructive actions require HITL?</span><span class="pill p-teal">HITL cannot be bypassed by prompt instruction?</span><span class="pill p-amber">Timeout on pending HITL — agent stops, not proceeds?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--teal)">Test 3</div><div class="fn-title">Prompt injection resistance</div></div>
+        <div class="fn-right"><span class="pill p-teal">Agent tested against indirect prompt injection?</span><span class="pill p-teal">Web-retrieved content cannot override system prompt?</span><span class="pill p-red">Input sanitisation on all external content?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--teal)">Test 4</div><div class="fn-title">Multi-agent trust chains</div></div>
+        <div class="fn-right"><span class="pill p-teal">Sub-agents cannot exceed orchestrator permissions?</span><span class="pill p-teal">Inter-agent communication authenticated?</span><span class="pill p-amber">Rogue sub-agent cannot elevate privilege?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--teal)">Test 5</div><div class="fn-title">Rate limiting &amp; scope caps</div></div>
+        <div class="fn-right"><span class="pill p-teal">Max tool calls per session defined?</span><span class="pill p-teal">Max tokens / cost per run capped?</span><span class="pill p-amber">Runaway loop detection in place?</span><span class="pill p-red">Spend cap enforced at API gateway level?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--teal)">Test 6</div><div class="fn-title">Output sanitisation</div></div>
+        <div class="fn-right"><span class="pill p-teal">Agent output filtered before downstream use?</span><span class="pill p-teal">PII stripped from outputs?</span><span class="pill p-amber">Code execution output sandboxed?</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="out-label">Outputs →</span>
+      <span class="out-doc">Tool Permission Matrix</span>
+      <span class="out-doc">Action Risk Register</span>
+      <span class="out-doc">HITL Gap Analysis</span>
+      <span class="out-doc">Injection Test Results</span>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:60px;">
+
+  <!-- ══════════════════════════════ D3: AUDIT TRAIL -->
+  <div class="section" id="d3">
+    <div class="sec-hd">
+      <span class="sec-num">D3</span>
+      <h2 class="sec-title">AUDIT TRAIL &amp; OBSERVABILITY</h2>
+      <span class="sec-badge b-trail">Traceability</span>
+    </div>
+
+    <div class="callout green">
+      <strong>The EU AI Act requires automatic logging of high-risk AI operations.</strong> Without a complete, tamper-evident audit trail, you cannot investigate incidents, prove compliance, or explain decisions to regulators.
+    </div>
+
+    <!-- Log chain diagram -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Complete log chain — every hop must be captured</span></div>
+    <div class="arch">
+      <div class="arch-header">Audit trail — required log events at each stage</div>
+      <div class="arch-body">
+        <div class="arch-node" style="border-color:var(--green)">
+          <div class="arch-node-icon" style="color:var(--green)">[1]</div>
+          <div class="arch-node-name">Session Start</div>
+          <div class="arch-node-sub">User ID, timestamp, trigger source</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div></div>
+        <div class="arch-node" style="border-color:var(--green)">
+          <div class="arch-node-icon" style="color:var(--green)">[2]</div>
+          <div class="arch-node-name">Prompt Log</div>
+          <div class="arch-node-sub">System prompt + user input hash</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div></div>
+        <div class="arch-node" style="border-color:var(--green)">
+          <div class="arch-node-icon" style="color:var(--green)">[3]</div>
+          <div class="arch-node-name">LLM Decision</div>
+          <div class="arch-node-sub">Model, version, token count, response</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div></div>
+        <div class="arch-node" style="border-color:var(--green)">
+          <div class="arch-node-icon" style="color:var(--green)">[4]</div>
+          <div class="arch-node-name">Tool Invocation</div>
+          <div class="arch-node-sub">Tool name, params, result, latency</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div></div>
+        <div class="arch-node" style="border-color:var(--green)">
+          <div class="arch-node-icon" style="color:var(--green)">[5]</div>
+          <div class="arch-node-name">HITL Event</div>
+          <div class="arch-node-sub">Approver ID, decision, timestamp</div>
+        </div>
+        <div class="arch-arrow"><div class="arch-arrow-line"></div><div class="arch-arrow-head">▶</div></div>
+        <div class="arch-node" style="border-color:var(--green)">
+          <div class="arch-node-icon" style="color:var(--green)">[6]</div>
+          <div class="arch-node-name">Final Output</div>
+          <div class="arch-node-sub">Action taken or response returned</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit trail controls -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Audit trail — test procedure</span></div>
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--green)">Test 1</div><div class="fn-title">Log completeness</div></div>
+        <div class="fn-right"><span class="pill p-green">Every tool call has a matching log entry?</span><span class="pill p-green">No gaps between session start and end?</span><span class="pill p-red">Replay 5 sessions — do logs reconstruct fully?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--green)">Test 2</div><div class="fn-title">Tamper-evidence</div></div>
+        <div class="fn-right"><span class="pill p-green">Logs written to write-once / append-only store?</span><span class="pill p-green">Hash chain or WORM storage enforced?</span><span class="pill p-amber">No admin can delete logs without dual approval?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--green)">Test 3</div><div class="fn-title">Retention compliance</div></div>
+        <div class="fn-right"><span class="pill p-green">Retention period defined per data type?</span><span class="pill p-green">High-risk AI logs retained minimum required period?</span><span class="pill p-amber">Automated deletion policy enforced at expiry?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--green)">Test 4</div><div class="fn-title">Searchability &amp; incident response</div></div>
+        <div class="fn-right"><span class="pill p-green">Logs indexed by session ID, user, tool, time?</span><span class="pill p-green">Can reconstruct full decision chain in &lt;30 min?</span><span class="pill p-amber">Tested during tabletop incident exercise?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--green)">Test 5</div><div class="fn-title">PII handling in logs</div></div>
+        <div class="fn-right"><span class="pill p-green">PII in prompts masked / pseudonymised?</span><span class="pill p-green">Log access restricted to authorised personnel?</span><span class="pill p-red">Raw prompt content not stored in plain text?</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="out-label">Outputs →</span>
+      <span class="out-doc">Observability Gap Report</span>
+      <span class="out-doc">Log Architecture Diagram</span>
+      <span class="out-doc">Retention Compliance Check</span>
+      <span class="out-doc">Incident Replay Test Result</span>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:60px;">
+
+  <!-- ══════════════════════════════ D4: DATA GOVERNANCE -->
+  <div class="section" id="d4">
+    <div class="sec-hd">
+      <span class="sec-num">D4</span>
+      <h2 class="sec-title">DATA GOVERNANCE &amp; PRIVACY</h2>
+      <span class="sec-badge b-data">GDPR · Data</span>
+    </div>
+
+    <div class="callout amber">
+      <strong>AI agents process personal data differently from traditional systems.</strong> Context windows, RAG pipelines, and memory stores create new data flows that standard GDPR assessments miss entirely.
+    </div>
+
+    <!-- Data flow map -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">AI-specific data flows — each requires a lawful basis and DPA</span></div>
+    <div class="domain-block">
+      <div class="db-col">
+        <div class="db-col-label">Data entering the agent</div>
+        <ul class="db-list">
+          <li>User input (may contain PII)</li>
+          <li>RAG retrieval from knowledge base</li>
+          <li>Tool responses (CRM, DB, email data)</li>
+          <li>Memory recall from prior sessions</li>
+          <li>System prompt (may embed user profile)</li>
+        </ul>
+      </div>
+      <div class="db-col">
+        <div class="db-col-label">Data processed by LLM</div>
+        <ul class="db-list">
+          <li>Full context window sent to external LLM</li>
+          <li>Fine-tuning datasets (if applicable)</li>
+          <li>Embedding generation for vector storage</li>
+          <li>Intermediate reasoning chains</li>
+          <li><strong>Every token sent = a data transfer</strong></li>
+        </ul>
+      </div>
+      <div class="db-col">
+        <div class="db-col-label">Data exiting the agent</div>
+        <ul class="db-list">
+          <li>Agent outputs stored in logs</li>
+          <li>Actions written to downstream systems</li>
+          <li>Memory persisted to vector DB</li>
+          <li>Reports or emails sent externally</li>
+          <li>Embeddings retained indefinitely?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--amber)">Test 1</div><div class="fn-title">LLM provider DPA</div></div>
+        <div class="fn-right"><span class="pill p-amber">Signed DPA with OpenAI / Anthropic / Google?</span><span class="pill p-amber">Data processing terms reviewed by legal?</span><span class="pill p-red">Provider certified for EU data processing?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--amber)">Test 2</div><div class="fn-title">PII detection before LLM</div></div>
+        <div class="fn-right"><span class="pill p-amber">PII scanner on all inputs before API call?</span><span class="pill p-amber">Names, emails, IDs masked or tokenised?</span><span class="pill p-red">Medical / financial data never sent to LLM?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--amber)">Test 3</div><div class="fn-title">RAG data governance</div></div>
+        <div class="fn-right"><span class="pill p-amber">RAG source documents classified by sensitivity?</span><span class="pill p-amber">Access control on vector DB by user role?</span><span class="pill p-amber">Deleted docs removed from embeddings too?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--amber)">Test 4</div><div class="fn-title">Right to erasure (GDPR Art. 17)</div></div>
+        <div class="fn-right"><span class="pill p-amber">Can a user's data be fully deleted from logs?</span><span class="pill p-amber">Embeddings containing PII can be removed?</span><span class="pill p-red">Test: submit erasure request — verify end-to-end</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--amber)">Test 5</div><div class="fn-title">Training data provenance</div></div>
+        <div class="fn-right"><span class="pill p-amber">Fine-tuning data has documented lawful basis?</span><span class="pill p-amber">No customer data used in training without consent?</span><span class="pill p-amber">Data lineage documented end-to-end?</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="out-label">Outputs →</span>
+      <span class="out-doc">AI Data Flow Map</span>
+      <span class="out-doc">GDPR Gap Report</span>
+      <span class="out-doc">Vendor DPA Register</span>
+      <span class="out-doc">Erasure Test Evidence</span>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:60px;">
+
+  <!-- ══════════════════════════════ D5: EU AI ACT -->
+  <div class="section" id="d5">
+    <div class="sec-hd">
+      <span class="sec-num">D5</span>
+      <h2 class="sec-title">EU AI ACT COMPLIANCE ASSESSMENT</h2>
+      <span class="sec-badge b-legal">Regulatory</span>
+    </div>
+
+    <div class="callout red">
+      <strong>First task: classify every AI agent by risk tier.</strong> The tier determines everything — obligations, deadlines, and whether third-party conformity assessment is required. Misclassification is itself a compliance failure.
+    </div>
+
+    <!-- Risk tiers -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Step 1 — classify each AI agent by risk tier</span></div>
+    <div class="tier-table">
+      <div class="tt-row tier-banned">
+        <div class="tt-left"><div class="tt-name">Banned</div><div class="tt-status">Prohibited Feb 2025</div></div>
+        <div class="tt-mid"><span class="pill p-red">Biometric surveillance in public</span><span class="pill p-red">Social scoring</span><span class="pill p-red">Subliminal manipulation</span><span class="pill p-red">Exploitation of vulnerable groups</span></div>
+        <div class="tt-right"><div class="tt-right-label">Audit action</div><ul><li>Confirm not deployed</li><li>Document classification decision</li></ul></div>
+      </div>
+      <div class="tt-row tier-high">
+        <div class="tt-left"><div class="tt-name">High Risk</div><div class="tt-status">Deadline: Aug 2026</div></div>
+        <div class="tt-mid"><span class="pill p-coral">CV screening agents</span><span class="pill p-coral">Credit risk agents</span><span class="pill p-coral">Medical decision agents</span><span class="pill p-coral">Fraud detection (financial)</span><span class="pill p-coral">Critical infrastructure ops</span></div>
+        <div class="tt-right"><div class="tt-right-label">Full compliance suite</div><ul><li>All 8 obligations apply</li><li>Conformity assessment required</li><li>EU AI database registration</li></ul></div>
+      </div>
+      <div class="tt-row tier-ltd">
+        <div class="tt-left"><div class="tt-name">Limited</div><div class="tt-status">Deadline: Aug 2026</div></div>
+        <div class="tt-mid"><span class="pill p-amber">Customer service chatbots</span><span class="pill p-amber">AI writing assistants</span><span class="pill p-amber">Content generation agents</span></div>
+        <div class="tt-right"><div class="tt-right-label">Transparency only</div><ul><li>Disclose AI interaction</li><li>Label AI-generated content</li></ul></div>
+      </div>
+      <div class="tt-row tier-min">
+        <div class="tt-left"><div class="tt-name">Minimal</div><div class="tt-status">No deadline</div></div>
+        <div class="tt-mid"><span class="pill p-green">Internal knowledge agents</span><span class="pill p-green">Code assistants (internal)</span><span class="pill p-green">Summarisation tools</span></div>
+        <div class="tt-right"><div class="tt-right-label">Voluntary best practice</div><ul><li>Document classification</li><li>Apply voluntary code</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 8 Obligations -->
+    <div style="margin:28px 0 8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Step 2 — test all 8 EU AI Act obligations for high-risk agents</span></div>
+    <div class="obl-table">
+      <div class="obl-row header">
+        <div class="obl-cell header-cell">Obligation</div>
+        <div class="obl-cell header-cell">Legal requirement</div>
+        <div class="obl-cell header-cell">Auditor tests</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">1. Risk management system</div>
+        <div class="obl-cell">Documented, iterative risk process covering full AI lifecycle</div>
+        <div class="obl-cell">Risk register exists? Updated at each model change? Reviewed by accountable owner?</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">2. Data governance</div>
+        <div class="obl-cell">Training data documented, bias-examined, quality-checked</div>
+        <div class="obl-cell">Data lineage documented? Bias metrics computed and within thresholds? Signed off?</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">3. Technical documentation</div>
+        <div class="obl-cell">Complete technical file covering capabilities, limitations, architecture</div>
+        <div class="obl-cell">Technical file current? Version-controlled? Accessible to regulators within 72hr?</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">4. Automatic logging</div>
+        <div class="obl-cell">AI system generates automatic logs of operations for traceability</div>
+        <div class="obl-cell">Logs auto-generated? Capture all decisions? Retained for required period? Tamper-evident?</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">5. Transparency to users</div>
+        <div class="obl-cell">Users informed they are interacting with an AI system</div>
+        <div class="obl-cell">Disclosure present before first interaction? Clear and prominent? Not buried in T&Cs?</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">6. Human oversight</div>
+        <div class="obl-cell">Human operators able to monitor, intervene, stop the system</div>
+        <div class="obl-cell">Kill switch tested? Override mechanism documented? Oversight role assigned and trained?</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">7. Accuracy &amp; robustness</div>
+        <div class="obl-cell">Consistent performance, resilience to errors and adversarial inputs</div>
+        <div class="obl-cell">Accuracy metrics documented? Adversarial testing done? Edge case behaviour defined?</div>
+      </div>
+      <div class="obl-row">
+        <div class="obl-cell obl-name">8. Conformity assessment</div>
+        <div class="obl-cell">Self-assessment or third-party audit + EU AI database registration</div>
+        <div class="obl-cell">Assessment completed? Registered in EU AI database? CE marking applied if required?</div>
+      </div>
+    </div>
+
+    <!-- Provider vs deployer -->
+    <div style="margin:28px 0 8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Step 3 — establish provider vs deployer obligations split</span></div>
+    <div class="card-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--accent)">PROVIDER — built the AI system</div>
+        <div class="cg-title">Obligations of the system builder</div>
+        <ul class="cg-list">
+          <li>Technical documentation and data governance</li>
+          <li>Conformity assessment before market placement</li>
+          <li>EU AI database registration</li>
+          <li>CE marking on high-risk systems</li>
+          <li>Post-market monitoring and incident reporting</li>
+        </ul>
+      </div>
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--coral)">DEPLOYER — uses the AI system in a specific context</div>
+        <div class="cg-title">Obligations of the user organisation</div>
+        <ul class="cg-list">
+          <li>Human oversight measures implemented</li>
+          <li>Input data quality and relevance maintained</li>
+          <li>Users informed of AI interaction</li>
+          <li>Fundamental rights impact assessment (FRIA)</li>
+          <li>Cannot deploy in ways that exceed intended purpose</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="out-label">Outputs →</span>
+      <span class="out-doc">Risk Tier Classification</span>
+      <span class="out-doc">EU AI Act Gap Analysis</span>
+      <span class="out-doc">Conformity File Readiness</span>
+      <span class="out-doc">Provider / Deployer Split</span>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:60px;">
+
+  <!-- ══════════════════════════════ D6: ACCESS & IDENTITY -->
+  <div class="section" id="d6">
+    <div class="sec-hd">
+      <span class="sec-num">D6</span>
+      <h2 class="sec-title">ACCESS, IDENTITY &amp; PRIVILEGE CONTROLS</h2>
+      <span class="sec-badge b-access">Access</span>
+    </div>
+
+    <div class="callout purple">
+      <strong>AI agents are identities.</strong> A service account that runs an AI agent must be treated with the same rigour as a privileged human user — potentially more, since it can act autonomously at machine speed.
+    </div>
+
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--purple)">Test 1</div><div class="fn-title">Agent service account review</div></div>
+        <div class="fn-right"><span class="pill p-purple">Every agent has a dedicated service account?</span><span class="pill p-purple">Least privilege enforced on each account?</span><span class="pill p-red">No shared credentials across multiple agents?</span><span class="pill p-red">No human account used as agent identity?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--purple)">Test 2</div><div class="fn-title">Secrets management</div></div>
+        <div class="fn-right"><span class="pill p-purple">All API keys stored in vault (not env vars)?</span><span class="pill p-purple">Key rotation enforced — max 90 day lifetime?</span><span class="pill p-red">No secrets in source code or config files?</span><span class="pill p-red">Secret scanning in CI/CD pipeline?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--purple)">Test 3</div><div class="fn-title">Deployment pipeline access</div></div>
+        <div class="fn-right"><span class="pill p-purple">Who can deploy or modify agent config?</span><span class="pill p-purple">MFA enforced on deployment pipeline?</span><span class="pill p-amber">Change approval required before prod deployment?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--purple)">Test 4</div><div class="fn-title">Agent-to-agent authentication</div></div>
+        <div class="fn-right"><span class="pill p-purple">Sub-agents must authenticate to orchestrator?</span><span class="pill p-purple">No implicit trust between agent processes?</span><span class="pill p-amber">Token-based auth with short expiry?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--purple)">Test 5</div><div class="fn-title">Access reviews</div></div>
+        <div class="fn-right"><span class="pill p-purple">Agent service accounts reviewed quarterly?</span><span class="pill p-purple">Unused agents decommissioned and deprovisioned?</span><span class="pill p-amber">Access review evidence retained?</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="out-label">Outputs →</span>
+      <span class="out-doc">Agent Access Matrix</span>
+      <span class="out-doc">Secrets Management Review</span>
+      <span class="out-doc">Privilege Escalation Risk Report</span>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:60px;">
+
+  <!-- ══════════════════════════════ D7: INCIDENT RESPONSE -->
+  <div class="section" id="d7">
+    <div class="sec-hd">
+      <span class="sec-num">D7</span>
+      <h2 class="sec-title">INCIDENT RESPONSE &amp; FAILURE MODES</h2>
+      <span class="sec-badge b-risk">Risk</span>
+    </div>
+
+    <div class="callout coral">
+      <strong>AI incidents are different from standard IT incidents.</strong> Hallucination, prompt injection, runaway loops, and cascading multi-agent failures require dedicated playbooks — and the EU AI Act requires serious incident reporting to regulators.
+    </div>
+
+    <!-- Failure modes -->
+    <div style="margin-bottom:8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">AI-specific failure modes the auditor must test</span></div>
+    <div class="card-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--red)">Hallucination</div>
+        <div class="cg-title">Confident incorrect output</div>
+        <ul class="cg-list">
+          <li>Detection: output validation layer?</li>
+          <li>Containment: human review before high-stakes action?</li>
+          <li>Is hallucination rate benchmarked and tracked?</li>
+        </ul>
+      </div>
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--amber)">Runaway Loop</div>
+        <div class="cg-title">Agent calls itself recursively</div>
+        <ul class="cg-list">
+          <li>Max iteration limit enforced in code?</li>
+          <li>Token / cost cap as secondary kill?</li>
+          <li>Loop detection alert fires within 60s?</li>
+        </ul>
+      </div>
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--coral)">Prompt Injection</div>
+        <div class="cg-title">Malicious instruction via input</div>
+        <ul class="cg-list">
+          <li>Indirect injection via retrieved content?</li>
+          <li>System prompt cannot be overridden?</li>
+          <li>Adversarial test suite run regularly?</li>
+        </ul>
+      </div>
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--purple)">Cascading Failure</div>
+        <div class="cg-title">Multi-agent chain collapse</div>
+        <ul class="cg-list">
+          <li>Failure in one agent isolated from others?</li>
+          <li>Circuit breaker pattern implemented?</li>
+          <li>Partial failure state handled gracefully?</li>
+        </ul>
+      </div>
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--teal)">Model Drift</div>
+        <div class="cg-title">LLM behaviour changes unexpectedly</div>
+        <ul class="cg-list">
+          <li>Model version pinned — no silent upgrades?</li>
+          <li>Regression tests run on model update?</li>
+          <li>Rollback procedure tested and documented?</li>
+        </ul>
+      </div>
+      <div class="cg-card">
+        <div class="cg-tag" style="color:var(--red)">Unauthorised Action</div>
+        <div class="cg-title">Agent acts outside permitted scope</div>
+        <ul class="cg-list">
+          <li>Kill switch tested and working?</li>
+          <li>Alert on out-of-scope tool invocation?</li>
+          <li>Rollback for side effects of actions?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- IR flow -->
+    <div style="margin:28px 0 8px;"><span style="font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);">Incident response — test procedure</span></div>
+    <div class="flow-chain">
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--coral)">Test 1</div><div class="fn-title">Kill switch test</div></div>
+        <div class="fn-right"><span class="pill p-coral">Emergency stop tested in staging within last 90 days?</span><span class="pill p-coral">Kill switch accessible to non-technical staff?</span><span class="pill p-red">Agent cannot restart itself after kill?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--coral)">Test 2</div><div class="fn-title">AI incident classification</div></div>
+        <div class="fn-right"><span class="pill p-coral">AI incidents have their own severity taxonomy?</span><span class="pill p-coral">Hallucination = classified as incident?</span><span class="pill p-amber">Runaway loop = P1 incident automatically?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--coral)">Test 3</div><div class="fn-title">EU AI Act serious incident reporting</div></div>
+        <div class="fn-right"><span class="pill p-coral">Serious incident definition per EU AI Act known?</span><span class="pill p-coral">Regulator notification process documented?</span><span class="pill p-red">Can notify regulator within required timeframe?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--coral)">Test 4</div><div class="fn-title">Rollback and remediation</div></div>
+        <div class="fn-right"><span class="pill p-coral">Model rollback tested — time to previous version?</span><span class="pill p-coral">Side effects of agent actions can be reversed?</span><span class="pill p-amber">Post-incident review process documented?</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="fn-left"><div class="fn-tag" style="color:var(--coral)">Test 5</div><div class="fn-title">Anomaly detection &amp; alerting</div></div>
+        <div class="fn-right"><span class="pill p-coral">Alerting on unusual token consumption?</span><span class="pill p-coral">Alert on unexpected tool call patterns?</span><span class="pill p-amber">On-call rotation covers AI incidents 24/7?</span></div>
+      </div>
+    </div>
+
+    <div class="output-row">
+      <span class="out-label">Outputs →</span>
+      <span class="out-doc">Failure Mode Register</span>
+      <span class="out-doc">AI Incident Playbook</span>
+      <span class="out-doc">Kill Switch Test Evidence</span>
+      <span class="out-doc">Regulatory Notification Procedure</span>
+    </div>
+  </div>
+
+  <hr class="divider" style="margin-top:60px;">
+
+  <!-- ══════════════════════════════ SCORECARD -->
+  <div class="section" id="scorecard">
+    <div class="sec-hd">
+      <span class="sec-num">SC</span>
+      <h2 class="sec-title">COMPLIANCE READINESS SCORECARD</h2>
+      <span class="sec-badge b-score">Executive Summary</span>
+    </div>
+
+    <div class="callout teal">
+      <strong>Use this scorecard as your audit executive summary.</strong> One row per domain — each scored against five compliance dimensions. Present this to the board before the detailed findings report.
+    </div>
+
+    <div class="scorecard">
+      <div class="sc-header">
+        <div class="sc-cell hdr">Audit Domain</div>
+        <div class="sc-cell hdr">Controls Exist</div>
+        <div class="sc-cell hdr">Designed Well</div>
+        <div class="sc-cell hdr">Operating</div>
+        <div class="sc-cell hdr">Logged</div>
+        <div class="sc-cell hdr">EU AI Act</div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-cell">D1 — Infrastructure &amp; Systems</div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-cell">D2 — AI Actions &amp; Tool Use</div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-cell">D3 — Audit Trail &amp; Observability</div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-cell">D4 — Data Governance &amp; Privacy</div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-cell">D5 — EU AI Act Assessment</div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-cell">D6 — Access &amp; Identity</div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-pass">PASS</span></div>
+        <div class="sc-cell"><span class="badge-na">N/A</span></div>
+      </div>
+      <div class="sc-row">
+        <div class="sc-cell">D7 — Incidents &amp; Failures</div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+        <div class="sc-cell"><span class="badge-gap">GAP</span></div>
+        <div class="sc-cell"><span class="badge-fail">FAIL</span></div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Scorecard key:</strong>
+      &nbsp;<span style="color:var(--green);font-family:'Courier Prime',monospace;font-size:10px;border:1px solid var(--green);padding:1px 6px;background:var(--green-bg)">PASS</span>&nbsp; Control exists and operating effectively &nbsp;|&nbsp;
+      <span style="color:var(--amber);font-family:'Courier Prime',monospace;font-size:10px;border:1px solid var(--amber);padding:1px 6px;background:var(--amber-bg)">GAP</span>&nbsp; Partial — improvement required &nbsp;|&nbsp;
+      <span style="color:var(--red);font-family:'Courier Prime',monospace;font-size:10px;border:1px solid var(--red);padding:1px 6px;background:var(--red-bg)">FAIL</span>&nbsp; Control absent or not operating — immediate action required
+    </div>
+
+    <div class="callout amber" style="margin-top:16px;">
+      <strong>Note:</strong> The scorecard above shows a representative example of findings for a typical early-stage AI deployment. Replace each cell with actual test results from your fieldwork. D5 and D4 most commonly produce FAIL ratings in first-time AI Act audits — organisations underestimate how new the GDPR and EU AI Act obligations are for AI-specific data flows.
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-brand">AI Agent Infrastructure Audit · EU AI Act Compliance</span>
+    <span>April 2026</span>
+    <span>7 Domains · 8 Obligations · Confidential</span>
+  </div>
+
+</div><!-- /wrap -->
+</body>
+</html>
