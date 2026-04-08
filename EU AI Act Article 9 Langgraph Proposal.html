@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU AI Act · Article 9 Compliance · LangGraph/LangChain Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b10;
+  --bg2: #0d1117;
+  --surface: #141b24;
+  --surface2: #1c2533;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #e8edf5;
+  --muted: #8b95a5;
+  --faint: #4a5568;
+  --eu: #003f8a;
+  --eu-light: #1a6dff;
+  --amber: #f59e0b;
+  --amber-glow: rgba(245,158,11,0.15);
+  --red: #ef4444;
+  --red-glow: rgba(239,68,68,0.12);
+  --green: #22c55e;
+  --green-glow: rgba(34,197,94,0.12);
+  --teal: #14b8a6;
+  --teal-glow: rgba(20,184,166,0.12);
+  --accent: #1a6dff;
+  --accent-glow: rgba(26,109,255,0.15);
+  --gold: #d4a843;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 14px;
+  line-height: 1.65;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ALERT STRIP */
+.alert-strip {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--eu);
+  border-bottom: 1px solid rgba(26,109,255,0.4);
+  padding: 8px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+}
+.alert-strip .pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--amber);
+  display: inline-block; margin-right: 8px;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+
+/* HERO */
+.hero {
+  padding: 64px 32px 48px;
+  max-width: 1100px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.hero-kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--eu-light);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-kicker::before {
+  content: ''; width: 28px; height: 1px; background: var(--eu-light);
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(40px, 7vw, 90px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.hero h1 span { color: var(--eu-light); }
+.hero-sub {
+  font-family: 'Fraunces', serif;
+  font-size: 16px; font-weight: 300; font-style: italic;
+  color: var(--muted);
+  max-width: 640px;
+  margin-bottom: 48px;
+  line-height: 1.7;
+}
+
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+  margin-bottom: 8px;
+}
+.stat-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  animation: fadeUp 0.6s ease both;
+}
+.stat-block:nth-child(1) { animation-delay: 0.1s; border-top: 2px solid var(--red); }
+.stat-block:nth-child(2) { animation-delay: 0.2s; border-top: 2px solid var(--amber); }
+.stat-block:nth-child(3) { animation-delay: 0.3s; border-top: 2px solid var(--green); }
+.stat-block:nth-child(4) { animation-delay: 0.4s; border-top: 2px solid var(--eu-light); }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px; line-height: 1;
+  color: var(--text);
+}
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-top: 4px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* MAIN LAYOUT */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 32px 80px; position: relative; z-index: 1; }
+
+/* SECTION HEADERS */
+.section-header {
+  display: flex; align-items: center; gap: 16px;
+  margin: 56px 0 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border2);
+}
+.section-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px; letter-spacing: 0.25em;
+  color: var(--faint); padding: 2px 8px;
+  border: 1px solid var(--border2);
+}
+.section-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--eu-light); background: var(--accent-glow);
+  padding: 3px 10px; border: 1px solid rgba(26,109,255,0.3);
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; letter-spacing: 0.04em;
+  color: var(--text); flex: 1;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+
+/* ARTICLE 9 REQUIREMENT CARDS */
+.req-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
+  margin-bottom: 4px;
+}
+.req-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+  animation: fadeUp 0.5s ease both;
+}
+.req-card:hover { border-color: var(--border2); background: var(--surface2); }
+.req-card.red  { border-left: 3px solid var(--red); }
+.req-card.amber { border-left: 3px solid var(--amber); }
+.req-card.green { border-left: 3px solid var(--green); }
+.req-card.teal { border-left: 3px solid var(--teal); }
+.req-card.blue { border-left: 3px solid var(--eu-light); }
+.req-para {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+.req-card h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+.req-card p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.req-challenge {
+  margin-top: 12px; padding: 10px 12px;
+  background: var(--red-glow);
+  border-left: 2px solid var(--red);
+  font-size: 11px; color: #fca5a5;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.req-challenge::before { content: '⚡ LangGraph Challenge: '; font-weight: 500; }
+
+/* ARCHITECTURE DIAGRAM */
+.arch-diagram {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  padding: 32px;
+  margin: 24px 0;
+}
+.arch-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px; text-align: center;
+}
+.arch-flow {
+  display: flex; align-items: stretch; gap: 0;
+  overflow-x: auto;
+}
+.arch-node {
+  flex: 1; min-width: 120px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  padding: 16px 12px;
+  text-align: center;
+  position: relative;
+}
+.arch-node:not(:last-child)::after {
+  content: '→';
+  position: absolute; right: -14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--eu-light); font-size: 18px; z-index: 2;
+  background: var(--bg);
+  padding: 0 2px;
+}
+.arch-node-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+.arch-node-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--eu-light);
+}
+.arch-node-name {
+  font-family: 'Fraunces', serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text); margin-top: 4px;
+}
+
+/* PILLARS */
+.pillar-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+}
+.pillar {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 28px 24px;
+  transition: transform 0.2s;
+  animation: fadeUp 0.6s ease both;
+}
+.pillar:hover { transform: translateY(-2px); }
+.pillar:nth-child(1) { animation-delay: 0.1s; }
+.pillar:nth-child(2) { animation-delay: 0.2s; }
+.pillar:nth-child(3) { animation-delay: 0.3s; }
+.pillar-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+.pillar-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 0.05em;
+  color: var(--text); margin-bottom: 8px;
+}
+.pillar-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--eu-light); margin-bottom: 12px;
+}
+.pillar p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* COMPONENT SPEC CARDS */
+.component-list { display: flex; flex-direction: column; gap: 2px; }
+.component-card {
+  background: var(--surface); border: 1px solid var(--border);
+  display: grid; grid-template-columns: 260px 1fr auto;
+  align-items: start; gap: 0;
+  animation: fadeUp 0.5s ease both;
+}
+.comp-name {
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
+}
+.comp-name h4 {
+  font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700;
+  color: var(--text); margin-bottom: 4px;
+}
+.comp-name .comp-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted);
+}
+.comp-detail {
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
+}
+.comp-detail p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.comp-detail .code-pill {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--green);
+  background: var(--green-glow);
+  border: 1px solid rgba(34,197,94,0.2);
+  padding: 2px 8px; margin: 2px 3px 0 0;
+}
+.comp-article {
+  padding: 20px 20px;
+  display: flex; flex-direction: column; gap: 4px; align-items: flex-end;
+}
+.art-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  background: var(--accent-glow); color: var(--eu-light);
+  border: 1px solid rgba(26,109,255,0.3);
+  padding: 3px 8px; white-space: nowrap;
+}
+
+/* CODE BLOCK */
+.code-block {
+  background: #050709;
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--green);
+  padding: 20px 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: #86efac;
+  line-height: 1.7;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.code-block .comment { color: var(--faint); }
+.code-block .keyword { color: var(--eu-light); }
+.code-block .string { color: var(--amber); }
+
+/* PHASE TIMELINE */
+.phase-list { display: flex; flex-direction: column; gap: 2px; }
+.phase {
+  display: grid; grid-template-columns: 80px 1fr;
+  background: var(--surface); border: 1px solid var(--border);
+  animation: fadeUp 0.5s ease both;
+}
+.phase-num {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px 16px;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+}
+.phase-num span:first-child {
+  font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--text); line-height: 1;
+}
+.phase-num span:last-child {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--muted);
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.phase-body { padding: 20px 24px; }
+.phase-body h3 {
+  font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 6px;
+}
+.phase-body p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.phase-deliverables {
+  margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px;
+}
+.phase-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; color: var(--teal); background: var(--teal-glow);
+  border: 1px solid rgba(20,184,166,0.25); padding: 2px 8px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+/* MAPPING TABLE */
+.mapping-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px;
+}
+.mapping-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); text-align: left;
+  padding: 12px 16px; border-bottom: 1px solid var(--border2);
+  background: var(--bg2);
+}
+.mapping-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text); vertical-align: top;
+}
+.mapping-table tr:hover td { background: var(--surface); }
+.mapping-table td:first-child {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  color: var(--eu-light); white-space: nowrap;
+}
+.mapping-table td:nth-child(2) { color: var(--muted); }
+.mapping-table td:last-child {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  color: var(--green);
+}
+
+/* CALLOUT */
+.callout {
+  padding: 20px 24px;
+  border-left: 3px solid var(--amber);
+  background: var(--amber-glow);
+  margin: 20px 0;
+}
+.callout-kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 6px;
+}
+.callout p { font-size: 13px; color: var(--text); line-height: 1.65; }
+
+/* RISK MATRIX */
+.risk-matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.risk-cell {
+  padding: 18px 20px;
+  background: var(--surface); border: 1px solid var(--border);
+}
+.risk-cell .risk-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px;
+}
+.risk-cell h4 { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.risk-cell p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.risk-cell.high { border-top: 2px solid var(--red); }
+.risk-cell.high .risk-label { color: var(--red); }
+.risk-cell.medium { border-top: 2px solid var(--amber); }
+.risk-cell.medium .risk-label { color: var(--amber); }
+.risk-cell.low { border-top: 2px solid var(--green); }
+.risk-cell.low .risk-label { color: var(--green); }
+
+/* FOOTER */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  padding: 24px 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--faint);
+  position: relative; z-index: 1;
+}
+
+/* WATERMARK */
+.hero-watermark {
+  position: absolute; right: -20px; top: 20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 220px; line-height: 1;
+  color: rgba(26,109,255,0.04);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -4px;
+}
+
+@media (max-width: 640px) {
+  .stats-row, .req-grid, .pillar-grid, .risk-matrix { grid-template-columns: 1fr; }
+  .component-card { grid-template-columns: 1fr; }
+  .phase { grid-template-columns: 60px 1fr; }
+  .arch-flow { flex-direction: column; }
+  .arch-node:not(:last-child)::after { display: none; }
+  .hero h1 { font-size: 44px; }
+  .alert-strip { flex-direction: column; gap: 4px; text-align: center; }
+}
+
+@media print {
+  body { background: white; color: #111; }
+  .alert-strip { background: #003f8a; }
+  .hero-watermark, body::before { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ALERT STRIP -->
+<div class="alert-strip">
+  <div><span class="pulse"></span>EU AI ACT · REGULATION (EU) 2024/1689 · ARTICLE 9 · HIGH-RISK COMPLIANCE</div>
+  <div>ENFORCEMENT DEADLINE: AUG 2, 2026 · LANGGRAPH / LANGCHAIN AGENTS</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-watermark">ART.9</div>
+  <div class="hero-kicker">Compliance Architecture Proposal</div>
+  <h1>EU AI ACT<br><span>ARTICLE 9</span><br>FOR LANGGRAPH</h1>
+  <p class="hero-sub">A technical proposal for building a continuous, documented risk management system into LangGraph and LangChain agents — satisfying all ten paragraphs of Article 9 of Regulation (EU) 2024/1689.</p>
+
+  <div class="stats-row">
+    <div class="stat-block">
+      <div class="stat-num">10</div>
+      <div class="stat-label">Art. 9 Paragraphs to address</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Core compliance pillars</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Build phases proposed</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Lifecycle — not one-and-done</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1: WHAT IS ARTICLE 9 -->
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <span class="section-badge">Regulatory Context</span>
+    <h2 class="section-title">What Article 9 Actually Requires</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <div class="callout">
+    <div class="callout-kicker">⚖️ Regulatory Definition</div>
+    <p>Article 9 mandates that every <strong>high-risk AI system</strong> must have a <strong>continuously running, documented, and maintained risk management system</strong> spanning its full lifecycle — from design through post-market. It is not a one-time audit. It is an ongoing engineering process. Compliance deadline: <strong>August 2, 2026</strong>.</p>
+  </div>
+
+  <div class="req-grid">
+    <div class="req-card red" style="animation-delay:0.1s">
+      <div class="req-para">§1 — Establishment</div>
+      <h3>Risk Management System Must Be Documented</h3>
+      <p>A formal RMS must be established, implemented, documented and <em>maintained</em>. Not a single report — an operational, living system.</p>
+      <div class="req-challenge">LangGraph has no built-in state for risk metadata or audit trails per run.</div>
+    </div>
+    <div class="req-card amber" style="animation-delay:0.2s">
+      <div class="req-para">§2 — Continuous Lifecycle Process</div>
+      <h3>Four-Step Iterative Loop</h3>
+      <p>The system must: (a) identify/analyze risks to health, safety, fundamental rights, (b) estimate/evaluate those risks, (c) evaluate risks from post-market monitoring data, and (d) adopt targeted mitigation measures.</p>
+      <div class="req-challenge">LangChain chains execute statelessly — no native risk context propagation between steps.</div>
+    </div>
+    <div class="req-card amber" style="animation-delay:0.3s">
+      <div class="req-para">§3 — Scope Limitation</div>
+      <h3>Only Mitigable Risks In Scope</h3>
+      <p>Article 9 only covers risks that can be reasonably mitigated or eliminated through design, development, or adequate technical information to deployers.</p>
+      <div class="req-challenge">Must define a risk taxonomy scoped to what the agent can actually control.</div>
+    </div>
+    <div class="req-card green" style="animation-delay:0.4s">
+      <div class="req-para">§4 — Interaction Effects</div>
+      <h3>Consider Combined Requirements</h3>
+      <p>Risk measures must consider interaction effects across the full set of requirements in Chapter III — not each requirement in isolation. Balance, don't over-engineer.</p>
+      <div class="req-challenge">Multi-node LangGraph graphs create emergent behaviors — risk must be assessed at the graph level.</div>
+    </div>
+    <div class="req-card teal" style="animation-delay:0.5s">
+      <div class="req-para">§5 — Residual Risk Acceptability</div>
+      <h3>Residual Risk Must Be Judged Acceptable</h3>
+      <p>After mitigation, the residual risk of each hazard and overall system residual risk must be judged acceptable. Requires a formal acceptability determination framework.</p>
+      <div class="req-challenge">No LangChain/LangGraph native concept of "risk score" or "acceptability threshold" per invocation.</div>
+    </div>
+    <div class="req-card blue" style="animation-delay:0.6s">
+      <div class="req-para">§6 — Mandatory Testing</div>
+      <h3>Pre-Deployment Testing Against Defined Metrics</h3>
+      <p>High-risk AI must be tested throughout development and before deployment. Testing must use predefined metrics and probabilistic thresholds appropriate to the intended purpose.</p>
+      <div class="req-challenge">LangChain evals exist but aren't tied to formal regulatory risk thresholds or documented per §6 requirements.</div>
+    </div>
+    <div class="req-card red" style="animation-delay:0.7s">
+      <div class="req-para">§7 — Timing of Testing</div>
+      <h3>Testing at Any Point + Pre-Launch Mandatory</h3>
+      <p>Testing must happen as appropriate at any time during development, and without exception before placing the system on the market or putting it into service.</p>
+      <div class="req-challenge">CI/CD pipelines for LangGraph agents rarely include regulatory risk testing gates.</div>
+    </div>
+    <div class="req-card amber" style="animation-delay:0.8s">
+      <div class="req-para">§8 — Post-Market Monitoring</div>
+      <h3>Continuous Feedback Loop from Live Data</h3>
+      <p>The RMS must incorporate post-market monitoring data (per Article 61) to re-evaluate and update risks. The system is never "finished."</p>
+      <div class="req-challenge">No standard pattern for feeding LangGraph production traces back into a risk re-evaluation loop.</div>
+    </div>
+    <div class="req-card teal" style="animation-delay:0.9s">
+      <div class="req-para">§9 — Vulnerable Groups</div>
+      <h3>Special Consideration: Minors and Vulnerable Users</h3>
+      <p>When the system's intended purpose may impact persons under 18 or other vulnerable groups, providers must give specific consideration to adverse impact vectors.</p>
+      <div class="req-challenge">User-segment risk profiling must be baked into the agent's invocation context.</div>
+    </div>
+    <div class="req-card green" style="animation-delay:1.0s">
+      <div class="req-para">§10 — Sectoral Integration</div>
+      <h3>May Merge With Existing RMS Under Other EU Law</h3>
+      <p>If the organization already has risk management processes mandated by other EU laws (finance, medical, etc.), Art. 9 requirements can be integrated into those procedures.</p>
+      <div class="req-challenge">Opportunity: build a composable RMS layer that plugs into existing compliance frameworks.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: THE PROBLEM FOR LANGGRAPH -->
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <span class="section-badge">Gap Analysis</span>
+    <h2 class="section-title">Why LangGraph/LangChain Don't Natively Comply</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <div class="risk-matrix">
+    <div class="risk-cell high">
+      <div class="risk-label">🔴 Critical Gap</div>
+      <h4>No Persistent Risk State</h4>
+      <p>LangGraph state checkpointing is functional, not regulatory. There is no native concept of a "risk event," a "mitigation decision," or a "residual risk score" per graph execution.</p>
+    </div>
+    <div class="risk-cell high">
+      <div class="risk-label">🔴 Critical Gap</div>
+      <h4>No Audit Trail Standard</h4>
+      <p>LangChain callbacks log execution events, but do not produce structured documentation that satisfies Article 9 §1's requirement for a <em>maintained</em> risk management system.</p>
+    </div>
+    <div class="risk-cell high">
+      <div class="risk-label">🔴 Critical Gap</div>
+      <h4>No Pre-Defined Risk Metrics</h4>
+      <p>LangSmith evaluators measure performance (quality, latency, accuracy) but are not structured around Article 9 §6's "prior defined metrics and probabilistic thresholds" for risk categories.</p>
+    </div>
+    <div class="risk-cell medium">
+      <div class="risk-label">🟡 Significant Gap</div>
+      <h4>No Post-Market Feedback Loop</h4>
+      <p>Production traces in LangSmith are not automatically routed into a risk re-evaluation system. §8 requires this loop to be operational, not optional.</p>
+    </div>
+    <div class="risk-cell medium">
+      <div class="risk-label">🟡 Significant Gap</div>
+      <h4>No Graph-Level Risk Composition</h4>
+      <p>LangGraph nodes are individually testable, but §4 requires risk assessment at the <em>combined application</em> level. Multi-agent graphs have emergent risk that node-level testing misses.</p>
+    </div>
+    <div class="risk-cell low">
+      <div class="risk-label">🟢 Manageable</div>
+      <h4>Human-in-the-Loop Hooks Exist</h4>
+      <p>LangGraph has interrupt/approval node patterns. These can be mapped to Article 14 (human oversight) requirements and partly address §5 residual risk acceptability via human review gates.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: PROPOSED ARCHITECTURE -->
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <span class="section-badge">Solution Proposal</span>
+    <h2 class="section-title">The Proposed Compliance Architecture</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <div class="callout">
+    <div class="callout-kicker">💡 Core Thesis</div>
+    <p>Build a <strong>Risk Management Middleware Layer</strong> that wraps your LangGraph agent. It adds four capabilities — risk context injection, structured event logging, evaluation gates, and post-market feedback routing — without modifying your core agent graph logic. Think of it as a compliance sidecar.</p>
+  </div>
+
+  <div class="arch-diagram">
+    <div class="arch-title">High-Level System Architecture — Article 9 Compliance Layer</div>
+    <div class="arch-flow">
+      <div class="arch-node">
+        <span class="arch-node-icon">🏗️</span>
+        <div class="arch-node-label">Input</div>
+        <div class="arch-node-name">Risk Context Injector</div>
+      </div>
+      <div class="arch-node">
+        <span class="arch-node-icon">🔍</span>
+        <div class="arch-node-label">Runtime</div>
+        <div class="arch-node-name">LangGraph Agent</div>
+      </div>
+      <div class="arch-node">
+        <span class="arch-node-icon">🛡️</span>
+        <div class="arch-node-label">Intercept</div>
+        <div class="arch-node-name">Risk Event Bus</div>
+      </div>
+      <div class="arch-node">
+        <span class="arch-node-icon">📊</span>
+        <div class="arch-node-label">Evaluate</div>
+        <div class="arch-node-name">Risk Scoring Engine</div>
+      </div>
+      <div class="arch-node">
+        <span class="arch-node-icon">🗄️</span>
+        <div class="arch-node-label">Persist</div>
+        <div class="arch-node-name">RMS Data Store</div>
+      </div>
+      <div class="arch-node">
+        <span class="arch-node-icon">🔁</span>
+        <div class="arch-node-label">Feedback</div>
+        <div class="arch-node-name">Post-Market Monitor</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: FOUR PILLARS -->
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <span class="section-badge">Core Components</span>
+    <h2 class="section-title">Four Pillars of the Solution</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <div class="pillar-grid">
+    <div class="pillar">
+      <span class="pillar-icon">🏷️</span>
+      <div class="pillar-name">Risk Context State</div>
+      <div class="pillar-sub">Addresses §1, §2, §3, §9</div>
+      <p>Extend LangGraph's <code>StateGraph</code> schema with a mandatory <code>risk_context</code> field. This carries risk metadata — user segment, hazard classes, active mitigations, invocation purpose — through every node. Makes risk a first-class citizen of agent state, not an afterthought.</p>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">📝</span>
+      <div class="pillar-name">Structured RMS Logger</div>
+      <div class="pillar-sub">Addresses §1, §2d, §7, §8</div>
+      <p>A LangChain callback handler that intercepts every node transition, tool call, and LLM invocation, emitting structured risk events to a persistent store. Events include hazard ID, mitigation applied, residual risk score, and operator decision. Produces the documented audit trail Article 9 demands.</p>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">🧪</span>
+      <div class="pillar-name">Regulatory Eval Suite</div>
+      <div class="pillar-sub">Addresses §6, §7</div>
+      <p>A pre-deployment test suite built on LangSmith evaluators, structured around pre-defined risk metrics and probabilistic thresholds (not just accuracy). Tests include: harmful output rate, fundamental-rights proxy scores, bias probes, and consistency-under-distribution-shift. Blocks deployment if thresholds breached.</p>
+    </div>
+    <div class="pillar">
+      <span class="pillar-icon">🔁</span>
+      <div class="pillar-name">Post-Market Monitor</div>
+      <div class="pillar-sub">Addresses §2c, §8</div>
+      <p>A production feedback pipeline that ingests LangSmith traces, flags anomalous risk events, and routes them back to the risk identification step. Triggers automatic risk re-evaluation when drift is detected. Closes the lifecycle loop that §2(c) and §8 explicitly require.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5: COMPONENT SPEC -->
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <span class="section-badge">Technical Specification</span>
+    <h2 class="section-title">Component-Level Build Specification</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <div class="component-list">
+    <div class="component-card" style="animation-delay:0.1s">
+      <div class="comp-name">
+        <h4>RiskStateSchema</h4>
+        <div class="comp-tag">LangGraph · State Extension</div>
+      </div>
+      <div class="comp-detail">
+        <p>Extend <code>TypedDict</code>-based LangGraph state with required fields: <code>risk_context</code> (hazard_classes, user_segment, intended_purpose), <code>active_mitigations</code> (list of applied controls), <code>risk_events</code> (append-only list), <code>residual_risk_score</code> (float, updated by scoring node). Add a dedicated <code>risk_assessment_node</code> that runs at graph entry and after any tool call with side effects.</p>
+        <div style="margin-top:8px">
+          <span class="code-pill">TypedDict</span>
+          <span class="code-pill">StateGraph</span>
+          <span class="code-pill">Annotated[list, operator.add]</span>
+        </div>
+      </div>
+      <div class="comp-article">
+        <span class="art-pill">Art. 9 §1</span>
+        <span class="art-pill">Art. 9 §2</span>
+        <span class="art-pill">Art. 9 §9</span>
+      </div>
+    </div>
+
+    <div class="component-card" style="animation-delay:0.2s">
+      <div class="comp-name">
+        <h4>RiskEventCallback</h4>
+        <div class="comp-tag">LangChain · BaseCallbackHandler</div>
+      </div>
+      <div class="comp-detail">
+        <p>Subclass <code>BaseCallbackHandler</code> (or AsyncCallbackHandler). Override <code>on_llm_end</code>, <code>on_tool_end</code>, <code>on_chain_end</code> to emit structured <code>RiskEvent</code> objects to a message queue or database. Each event carries: timestamp, node_id, hazard_id, mitigation_applied, residual_score, run_id (for traceability). Store events in append-only log (PostgreSQL / DynamoDB / BigQuery) for regulator access.</p>
+        <div style="margin-top:8px">
+          <span class="code-pill">BaseCallbackHandler</span>
+          <span class="code-pill">RiskEvent(dataclass)</span>
+          <span class="code-pill">append-only log</span>
+        </div>
+      </div>
+      <div class="comp-article">
+        <span class="art-pill">Art. 9 §1</span>
+        <span class="art-pill">Art. 9 §7</span>
+        <span class="art-pill">Art. 12</span>
+      </div>
+    </div>
+
+    <div class="component-card" style="animation-delay:0.3s">
+      <div class="comp-name">
+        <h4>HazardTaxonomy</h4>
+        <div class="comp-tag">Config · Risk Classification</div>
+      </div>
+      <div class="comp-detail">
+        <p>A YAML/JSON-defined taxonomy of hazard classes relevant to your agent's domain. Each hazard entry carries: hazard_id, description, fundamental_rights_vector (which EU rights could be affected), likelihood_prior, severity_rating, and linked mitigation controls. This taxonomy is the documented output of the §2(a) "identification and analysis" step and must be versioned alongside code.</p>
+        <div style="margin-top:8px">
+          <span class="code-pill">hazard_id: HAZ-001</span>
+          <span class="code-pill">severity: HIGH</span>
+          <span class="code-pill">mitigations: [MIT-003]</span>
+        </div>
+      </div>
+      <div class="comp-article">
+        <span class="art-pill">Art. 9 §2a</span>
+        <span class="art-pill">Art. 9 §2b</span>
+        <span class="art-pill">Art. 9 §3</span>
+      </div>
+    </div>
+
+    <div class="component-card" style="animation-delay:0.4s">
+      <div class="comp-name">
+        <h4>ResidualRiskScorer</h4>
+        <div class="comp-tag">LangGraph · Risk Node</div>
+      </div>
+      <div class="comp-detail">
+        <p>A graph node (or callable injected into the <code>should_continue</code> condition) that computes a composite residual risk score after mitigation controls have been applied. Compares score against pre-defined acceptability thresholds (set per intended purpose per §6). If residual risk exceeds threshold, routes to a <code>human_review_node</code> (interrupt) before execution continues. Satisfies §5 residual risk acceptability requirement.</p>
+        <div style="margin-top:8px">
+          <span class="code-pill">conditional_edge</span>
+          <span class="code-pill">interrupt()</span>
+          <span class="code-pill">risk_threshold.yaml</span>
+        </div>
+      </div>
+      <div class="comp-article">
+        <span class="art-pill">Art. 9 §4</span>
+        <span class="art-pill">Art. 9 §5</span>
+        <span class="art-pill">Art. 14</span>
+      </div>
+    </div>
+
+    <div class="component-card" style="animation-delay:0.5s">
+      <div class="comp-name">
+        <h4>RegulatoryEvalSuite</h4>
+        <div class="comp-tag">LangSmith · CI/CD Gate</div>
+      </div>
+      <div class="comp-detail">
+        <p>A LangSmith evaluator suite with custom metrics tied to the hazard taxonomy: (1) HarmfulOutputRate — proportion of runs triggering HAZ-class events, (2) FundamentalRightsProxy — LLM-graded assessment of output against a rights rubric, (3) BiasProbe — structured demographic parity tests, (4) ConsistencyUnderDrift — re-run with distribution-shifted inputs. Suite is run in CI/CD. Deployment is blocked if thresholds breach. Results are documented as §6/§7 evidence.</p>
+        <div style="margin-top:8px">
+          <span class="code-pill">run_on_dataset()</span>
+          <span class="code-pill">EvaluationResult</span>
+          <span class="code-pill">threshold_gate.py</span>
+        </div>
+      </div>
+      <div class="comp-article">
+        <span class="art-pill">Art. 9 §6</span>
+        <span class="art-pill">Art. 9 §7</span>
+        <span class="art-pill">Art. 15</span>
+      </div>
+    </div>
+
+    <div class="component-card" style="animation-delay:0.6s">
+      <div class="comp-name">
+        <h4>PostMarketMonitor</h4>
+        <div class="comp-tag">Async Pipeline · §8 Loop</div>
+      </div>
+      <div class="comp-detail">
+        <p>An async service (cron-based or event-driven) that pulls production <code>RiskEvent</code> logs, aggregates anomaly signals, and triggers a risk re-evaluation run when drift is detected — e.g. HarmfulOutputRate exceeds baseline by >2σ. Writes a timestamped risk re-evaluation report to the RMS datastore, closing the §2(c)/§8 feedback loop. Implements the Article 9 requirement that the RMS is "regularly reviewed and updated."</p>
+        <div style="margin-top:8px">
+          <span class="code-pill">drift_detector.py</span>
+          <span class="code-pill">anomaly_threshold</span>
+          <span class="code-pill">risk_re_eval_report</span>
+        </div>
+      </div>
+      <div class="comp-article">
+        <span class="art-pill">Art. 9 §2c</span>
+        <span class="art-pill">Art. 9 §8</span>
+        <span class="art-pill">Art. 72</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE SNIPPET -->
+  <div class="section-header" style="margin-top:48px">
+    <span class="section-num">06</span>
+    <span class="section-badge">Reference Implementation</span>
+    <h2 class="section-title">Skeleton: Risk-Aware LangGraph State</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <div class="code-block">
+<span class="comment"># risk_state.py — Article 9 §1, §2 compliant state schema</span>
+<span class="keyword">from</span> typing <span class="keyword">import</span> Annotated, TypedDict, List
+<span class="keyword">import</span> operator
+<span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass, field
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+@dataclass
+<span class="keyword">class</span> RiskEvent:
+    hazard_id: str          <span class="comment"># e.g. "HAZ-001-BIAS"</span>
+    triggered_at: datetime
+    node_id: str
+    mitigation_applied: str <span class="comment"># e.g. "MIT-003-FILTER"</span>
+    residual_score: float   <span class="comment"># 0.0 (no risk) → 1.0 (max risk)</span>
+    operator_reviewed: bool = False
+
+@dataclass
+<span class="keyword">class</span> RiskContext:
+    intended_purpose: str
+    user_segment: str       <span class="comment"># e.g. "general_public", "vulnerable_minor", "professional"</span>
+    hazard_classes: List[str] = field(default_factory=list)
+    active_mitigations: List[str] = field(default_factory=list)
+
+<span class="keyword">class</span> Article9State(TypedDict):
+    <span class="comment"># Your existing agent state fields:</span>
+    messages: Annotated[list, operator.add]
+    
+    <span class="comment"># Article 9 §1 — documented risk management fields:</span>
+    risk_context: RiskContext
+    risk_events: Annotated[List[RiskEvent], operator.add]  <span class="comment"># append-only log</span>
+    residual_risk_score: float                              <span class="comment"># §5 — must be judged acceptable</span>
+    risk_acceptance_status: str                             <span class="comment"># "pending" | "accepted" | "rejected"</span>
+    rms_run_id: str                                         <span class="comment"># links to RMS datastore record</span>
+  </div>
+
+  <div class="code-block">
+<span class="comment"># risk_callback.py — Article 9 §1 documented maintenance, §7 pre-deployment evidence</span>
+<span class="keyword">from</span> langchain_core.callbacks <span class="keyword">import</span> BaseCallbackHandler
+<span class="keyword">from</span> langchain_core.outputs <span class="keyword">import</span> LLMResult
+
+<span class="keyword">class</span> RiskEventCallback(BaseCallbackHandler):
+    <span class="keyword">def</span> __init__(self, rms_store, hazard_classifier):
+        self.rms_store = rms_store
+        self.hazard_classifier = hazard_classifier
+    
+    <span class="keyword">async def</span> on_llm_end(self, response: LLMResult, **kwargs):
+        <span class="comment"># Classify output against hazard taxonomy (Art. 9 §2a)</span>
+        hazards = <span class="keyword">await</span> self.hazard_classifier.classify(response.generations)
+        
+        <span class="keyword">for</span> hazard <span class="keyword">in</span> hazards:
+            event = RiskEvent(
+                hazard_id=hazard.id,
+                triggered_at=datetime.utcnow(),
+                node_id=kwargs.get(<span class="string">"run_id"</span>),
+                mitigation_applied=hazard.auto_mitigation,
+                residual_score=hazard.residual_score,
+            )
+            <span class="comment"># Persist to append-only RMS store — satisfies §1 "maintained" requirement</span>
+            <span class="keyword">await</span> self.rms_store.append_event(event)
+  </div>
+
+  <!-- SECTION 7: ARTICLE MAPPING -->
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <span class="section-badge">Compliance Mapping</span>
+    <h2 class="section-title">Article 9 Paragraph → Solution Component Mapping</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <table class="mapping-table">
+    <thead>
+      <tr>
+        <th>Article 9 Paragraph</th>
+        <th>Requirement Summary</th>
+        <th>Solution Component</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>§1 — Establishment</td>
+        <td>Documented, implemented and maintained RMS</td>
+        <td>RiskEventCallback + RMS DataStore</td>
+      </tr>
+      <tr>
+        <td>§2(a) — Identify</td>
+        <td>Identify/analyze known and foreseeable risks</td>
+        <td>HazardTaxonomy (versioned YAML)</td>
+      </tr>
+      <tr>
+        <td>§2(b) — Estimate</td>
+        <td>Estimate and evaluate risks</td>
+        <td>ResidualRiskScorer node</td>
+      </tr>
+      <tr>
+        <td>§2(c) — Post-Market</td>
+        <td>Evaluate risks from post-market monitoring data</td>
+        <td>PostMarketMonitor pipeline</td>
+      </tr>
+      <tr>
+        <td>§2(d) — Mitigate</td>
+        <td>Adopt targeted risk management measures</td>
+        <td>RiskContext.active_mitigations + HazardTaxonomy mitigations</td>
+      </tr>
+      <tr>
+        <td>§3 — Scope</td>
+        <td>Only mitigable risks in scope</td>
+        <td>HazardTaxonomy scope definition + risk classification filter</td>
+      </tr>
+      <tr>
+        <td>§4 — Interaction Effects</td>
+        <td>Consider combined application of requirements</td>
+        <td>Graph-level RiskScorer (not node-level); composite scoring formula</td>
+      </tr>
+      <tr>
+        <td>§5 — Residual Risk</td>
+        <td>Residual risk must be judged acceptable</td>
+        <td>ResidualRiskScorer + acceptability_threshold.yaml + human interrupt</td>
+      </tr>
+      <tr>
+        <td>§6 — Testing</td>
+        <td>Test against predefined metrics and thresholds</td>
+        <td>RegulatoryEvalSuite (LangSmith)</td>
+      </tr>
+      <tr>
+        <td>§7 — Testing Timing</td>
+        <td>Test throughout dev; mandatory before deployment</td>
+        <td>CI/CD gate blocking deployment on threshold breach</td>
+      </tr>
+      <tr>
+        <td>§8 — Continuity</td>
+        <td>Regularly reviewed, updated with live data</td>
+        <td>PostMarketMonitor + drift-triggered re-evaluation</td>
+      </tr>
+      <tr>
+        <td>§9 — Vulnerable Groups</td>
+        <td>Consider impact on minors and vulnerable users</td>
+        <td>RiskContext.user_segment field + segment-specific hazard weights</td>
+      </tr>
+      <tr>
+        <td>§10 — Sectoral Integration</td>
+        <td>May integrate with existing EU-law RMS</td>
+        <td>RMS DataStore designed as composable — plugs into DORA/MDR/GDPR audit systems</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 8: BUILD PHASES -->
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <span class="section-badge">Roadmap</span>
+    <h2 class="section-title">Three-Phase Build Plan</h2>
+    <span class="section-rule"></span>
+  </div>
+
+  <div class="phase-list">
+    <div class="phase" style="animation-delay:0.1s">
+      <div class="phase-num"><span>01</span><span>Weeks 1–4</span></div>
+      <div class="phase-body">
+        <h3>Foundation — Risk State & Taxonomy</h3>
+        <p>Extend your LangGraph StateGraph with <code>Article9State</code>. Author the HazardTaxonomy YAML for your specific agent domain — mapping hazard classes to fundamental rights vectors, likelihood priors, and mitigation controls. Wire up <code>RiskEventCallback</code> to an append-only event store. At the end of Phase 1, your agent produces a structured risk event log on every run. This alone satisfies §1 (documented, maintained) and §2(a/b) (identification/estimation).</p>
+        <div class="phase-deliverables">
+          <span class="phase-tag">Article9State schema</span>
+          <span class="phase-tag">HazardTaxonomy v1.0</span>
+          <span class="phase-tag">RiskEventCallback</span>
+          <span class="phase-tag">RMS DataStore schema</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase" style="animation-delay:0.2s">
+      <div class="phase-num"><span>02</span><span>Weeks 5–8</span></div>
+      <div class="phase-body">
+        <h3>Enforcement — Scoring, Thresholds & Eval Gates</h3>
+        <p>Build the ResidualRiskScorer node and wire it into your graph's conditional edges. Define acceptability thresholds per hazard class in <code>risk_thresholds.yaml</code>. Build the RegulatoryEvalSuite in LangSmith with HarmfulOutputRate, FundamentalRightsProxy, and BiasProbe metrics. Integrate the suite as a required CI/CD gate — deployment to production is blocked if any threshold is breached. Document all test runs as §6/§7 evidence artifacts.</p>
+        <div class="phase-deliverables">
+          <span class="phase-tag">ResidualRiskScorer node</span>
+          <span class="phase-tag">risk_thresholds.yaml</span>
+          <span class="phase-tag">RegulatoryEvalSuite</span>
+          <span class="phase-tag">CI/CD deployment gate</span>
+        </div>
+      </div>
+    </div>
+    <div class="phase" style="animation-delay:0.3s">
+      <div class="phase-num"><span>03</span><span>Weeks 9–12</span></div>
+      <div class="phase-body">
+        <h3>Lifecycle Closure — Post-Market Monitoring & Documentation</h3>
+        <p>Deploy the PostMarketMonitor as an async service. Configure drift detection thresholds per hazard class. Build the risk re-evaluation pipeline that triggers when drift is detected and writes timestamped re-evaluation reports to the RMS store. Generate a technical documentation bundle (Article 11) from RMS data — this is your compliance evidence package. Finally, validate §10 integration if other sectoral EU law applies: map RMS events into GDPR DPIA, DORA ICT risk log, or MDR QMS as appropriate.</p>
+        <div class="phase-deliverables">
+          <span class="phase-tag">PostMarketMonitor service</span>
+          <span class="phase-tag">drift_detector.py</span>
+          <span class="phase-tag">RMS Documentation Bundle</span>
+          <span class="phase-tag">§10 sectoral integration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER / SCOPE NOTE -->
+  <div class="callout" style="margin-top: 48px; border-color: var(--faint); background: var(--surface);">
+    <div class="callout-kicker" style="color: var(--muted);">📌 Scope Note</div>
+    <p style="color:var(--muted)">This proposal addresses Article 9 in isolation. A full high-risk AI system compliance program also requires: Article 10 (data governance), Article 11 (technical documentation), Article 12 (automatic logging), Article 13 (transparency), Article 14 (human oversight), and Article 15 (accuracy/cybersecurity). The components proposed here — particularly RiskEventCallback, the RMS DataStore, and the RegulatoryEvalSuite — are intentionally designed as foundations that future Articles 10–15 work can build on. This is not legal advice.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div>EU AI ACT · ART. 9 COMPLIANCE PROPOSAL · LANGGRAPH / LANGCHAIN</div>
+  <div>GENERATED: APRIL 2026 · NOT LEGAL ADVICE · FOR ENGINEERING USE</div>
+</footer>
+
+</body>
+</html>
