@@ -247,8 +247,33 @@
 
   <script>
     // Add new log entries here (newest first)
+    // content: embed the markdown directly as a string (works when opening file:// locally)
     const entries = [
-      { date: "2026-04-12", label: "April 12, 2026", file: "daily-logs/2026-04-12.md" },
+      {
+        date: "2026-04-12",
+        label: "April 12, 2026",
+        content: `# Daily Log — April 12, 2026
+
+## Yesterday (April 11)
+
+- Got the compliance test agent working
+- Cold messaged audit and risk professionals on LinkedIn
+- **Win:** Tested the graph agent on LookOver infrastructure for audit logging — worked great
+- LinkedIn outreach ongoing; no notable responses yet
+
+## Today (April 12)
+
+- Continue testing graph agent on LookOver infrastructure for audit logging
+- Keep improving compliance agent — make it usable for predicting compliance effects for AI builders, and use it to test LookOver's own infrastructure
+- Continue LinkedIn cold messaging
+
+**Top priority:** Find one customer willing to listen
+
+## State
+
+- **Energy / focus:** Okayish
+- **Blockers:** None`
+      },
     ];
 
     function parseMarkdown(md) {
