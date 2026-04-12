@@ -320,17 +320,6 @@
         .replace(/\*(.+?)\*/g, '<em>$1</em>');
     }
 
-    async function loadEntry(file, bodyEl) {
-      try {
-        const res = await fetch(file);
-        if (!res.ok) throw new Error('not found');
-        const text = await res.text();
-        bodyEl.innerHTML = `<div class="md">${parseMarkdown(text)}</div>`;
-      } catch {
-        bodyEl.innerHTML = `<p class="loading">Could not load entry.</p>`;
-      }
-    }
-
     const list = document.getElementById('entryList');
 
     entries.forEach(entry => {
@@ -344,19 +333,20 @@
           </div>
           <span class="entry-chevron">›</span>
         </div>
-        <div class="entry-body"><p class="loading">Loading…</p></div>
+        <div class="entry-body"></div>
       `;
 
       const header = el.querySelector('.entry-header');
       const body = el.querySelector('.entry-body');
-      let loaded = false;
+
+      // Render content inline (no fetch needed)
+      body.innerHTML = `<div class="md">${parseMarkdown(entry.content)}</div>`;
+
+      // Open the most recent entry (first in list) by default
+      if (list.children.length === 0) el.classList.add('open');
 
       header.addEventListener('click', () => {
-        const isOpen = el.classList.toggle('open');
-        if (isOpen && !loaded) {
-          loaded = true;
-          loadEntry(entry.file, body);
-        }
+        el.classList.toggle('open');
       });
 
       list.appendChild(el);
