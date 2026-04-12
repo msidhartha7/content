@@ -15,10 +15,7 @@
       --text-secondary: #6b6860;
       --text-muted: #a09d96;
       --accent: #2563eb;
-      --accent-hover: #1d4ed8;
       --journal-accent: #7c3aed;
-      --journal-accent-bg: #ede9fe;
-      --journal-accent-text: #4c1d95;
     }
 
     body {
@@ -29,200 +26,83 @@
       padding: 60px 20px 100px;
     }
 
-    .page {
-      max-width: 720px;
-      margin: 0 auto;
-    }
+    .page { max-width: 720px; margin: 0 auto; }
 
-    /* Back link */
     .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      margin-bottom: 40px;
-      transition: color 0.12s;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
+      margin-bottom: 40px; transition: color 0.12s;
     }
     .back-link:hover { color: var(--accent); }
 
-    /* Header */
-    .header {
-      margin-bottom: 48px;
-    }
-
+    .header { margin-bottom: 48px; }
     .header-eyebrow {
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--journal-accent);
-      margin-bottom: 12px;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--journal-accent); margin-bottom: 12px;
     }
-
     .header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-      line-height: 1.2;
-      margin-bottom: 12px;
+      font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--text-primary); line-height: 1.2; margin-bottom: 12px;
     }
+    .header p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
 
-    .header p {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* Entry list */
-    .entry-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .entry-list { display: flex; flex-direction: column; gap: 4px; }
 
     .entry {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--surface);
+      border: 1px solid var(--border); border-radius: 8px;
+      overflow: hidden; background: var(--surface);
     }
 
     .entry-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      cursor: pointer;
-      user-select: none;
-      gap: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; cursor: pointer; user-select: none; gap: 12px;
     }
+    .entry-header:hover .entry-date { color: var(--accent); }
 
-    .entry-header:hover .entry-date {
-      color: var(--accent);
-    }
-
-    .entry-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .entry-left { display: flex; align-items: center; gap: 12px; }
 
     .entry-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--journal-accent);
-      flex-shrink: 0;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--journal-accent); flex-shrink: 0;
     }
 
     .entry-date {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      transition: color 0.12s;
-    }
-
-    .entry-meta {
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      font-size: 0.95rem; font-weight: 500;
+      color: var(--text-primary); transition: color 0.12s;
     }
 
     .entry-chevron {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      transition: transform 0.2s;
-      flex-shrink: 0;
+      color: var(--text-muted); font-size: 0.8rem;
+      transition: transform 0.2s; flex-shrink: 0;
     }
+    .entry.open .entry-chevron { transform: rotate(90deg); }
 
-    .entry.open .entry-chevron {
-      transform: rotate(90deg);
-    }
-
-    /* Entry body */
     .entry-body {
-      display: none;
-      padding: 0 20px 20px;
+      display: none; padding: 0 20px 20px;
       border-top: 1px solid var(--border);
     }
+    .entry.open .entry-body { display: block; }
 
-    .entry.open .entry-body {
-      display: block;
-    }
-
-    /* Rendered markdown */
-    .md {
-      padding-top: 16px;
-    }
-
+    .md { padding-top: 16px; }
     .md h1, .md h2 {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin: 20px 0 8px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); margin: 20px 0 8px;
     }
-
-    .md h1:first-child, .md h2:first-child {
-      display: none; /* hide top-level date heading — shown in header already */
-    }
-
-    .md h3 {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin: 14px 0 6px;
-    }
-
-    .md p {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      margin-bottom: 6px;
-    }
-
-    .md ul {
-      list-style: none;
-      margin: 0 0 8px;
-      padding: 0;
-    }
-
+    .md h1:first-child, .md h2:first-child { display: none; }
+    .md h3 { font-size: 0.88rem; font-weight: 600; color: var(--text-secondary); margin: 14px 0 6px; }
+    .md p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 6px; }
+    .md ul { list-style: none; margin: 0 0 8px; padding: 0; }
     .md ul li {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      padding-left: 16px;
-      position: relative;
+      font-size: 0.9rem; color: var(--text-secondary);
+      line-height: 1.65; padding-left: 16px; position: relative;
     }
+    .md ul li::before { content: "–"; position: absolute; left: 0; color: var(--text-muted); }
+    .md strong { font-weight: 600; color: var(--text-primary); }
 
-    .md ul li::before {
-      content: "–";
-      position: absolute;
-      left: 0;
-      color: var(--text-muted);
-    }
-
-    .md strong {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .md .loading {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      padding-top: 12px;
-    }
-
-    /* Footer */
     .footer {
-      margin-top: 64px;
-      padding-top: 20px;
+      margin-top: 64px; padding-top: 20px;
       border-top: 1px solid var(--border);
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      font-size: 0.8rem; color: var(--text-muted);
     }
   </style>
 </head>
@@ -237,17 +117,13 @@
       <p>Daily logs — what happened, what's next, what I'm learning.</p>
     </header>
 
-    <div class="entry-list" id="entryList">
-      <!-- Entries injected by JS -->
-    </div>
+    <div class="entry-list" id="entryList"></div>
 
-    <footer class="footer" id="footer"></footer>
+    <footer class="footer">1 entry</footer>
 
   </div>
 
   <script>
-    // Add new log entries here (newest first)
-    // content: embed the markdown directly as a string (works when opening file:// locally)
     const entries = [
       {
         date: "2026-04-12",
@@ -272,59 +148,40 @@
 ## State
 
 - **Energy / focus:** Okayish
-- **Blockers:** None`
-      },
+- **Blockers:** None
+`
+      }
     ];
 
     function parseMarkdown(md) {
-      // Simple inline markdown → HTML (handles h1/h2/h3, ul, bold, paragraphs)
       const lines = md.split('\n');
-      let html = '';
-      let inList = false;
-
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-
+      let html = '', inList = false;
+      for (const line of lines) {
         const h1 = line.match(/^# (.+)/);
         const h2 = line.match(/^## (.+)/);
         const h3 = line.match(/^### (.+)/);
         const li = line.match(/^- (.+)/);
         const blank = line.trim() === '';
-
-        if (inList && !li) {
-          html += '</ul>';
-          inList = false;
-        }
-
-        if (h1) {
-          html += `<h1>${inline(h1[1])}</h1>`;
-        } else if (h2) {
-          html += `<h2>${inline(h2[1])}</h2>`;
-        } else if (h3) {
-          html += `<h3>${inline(h3[1])}</h3>`;
-        } else if (li) {
-          if (!inList) { html += '<ul>'; inList = true; }
-          html += `<li>${inline(li[1])}</li>`;
-        } else if (!blank) {
-          html += `<p>${inline(line)}</p>`;
-        }
+        if (inList && !li) { html += '</ul>'; inList = false; }
+        if (h1)       html += `<h1>${fmt(h1[1])}</h1>`;
+        else if (h2)  html += `<h2>${fmt(h2[1])}</h2>`;
+        else if (h3)  html += `<h3>${fmt(h3[1])}</h3>`;
+        else if (li)  { if (!inList) { html += '<ul>'; inList = true; } html += `<li>${fmt(li[1])}</li>`; }
+        else if (!blank) html += `<p>${fmt(line)}</p>`;
       }
-
       if (inList) html += '</ul>';
       return html;
     }
 
-    function inline(text) {
-      return text
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    function fmt(t) {
+      return t.replace(/[*][*](.+?)[*][*]/g, '<strong>$1</strong>')
+              .replace(/[*](.+?)[*]/g, '<em>$1</em>');
     }
 
     const list = document.getElementById('entryList');
-
-    entries.forEach(entry => {
+    entries.forEach((entry, i) => {
       const el = document.createElement('div');
-      el.className = 'entry';
+      el.className = 'entry' + (i === 0 ? ' open' : '');
       el.innerHTML = `
         <div class="entry-header">
           <div class="entry-left">
@@ -333,26 +190,11 @@
           </div>
           <span class="entry-chevron">›</span>
         </div>
-        <div class="entry-body"></div>
+        <div class="entry-body"><div class="md">${parseMarkdown(entry.content)}</div></div>
       `;
-
-      const header = el.querySelector('.entry-header');
-      const body = el.querySelector('.entry-body');
-
-      // Render content inline (no fetch needed)
-      body.innerHTML = `<div class="md">${parseMarkdown(entry.content)}</div>`;
-
-      // Open the most recent entry (first in list) by default
-      if (list.children.length === 0) el.classList.add('open');
-
-      header.addEventListener('click', () => {
-        el.classList.toggle('open');
-      });
-
+      el.querySelector('.entry-header').addEventListener('click', () => el.classList.toggle('open'));
       list.appendChild(el);
     });
-
-    document.getElementById('footer').textContent = `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`;
   </script>
 </body>
 </html>

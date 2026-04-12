@@ -56,31 +56,23 @@ Use this markdown template — fill in the founder's actual answers, keep it tig
 - **Blockers:** [Any blockers, or "None"]
 ```
 
-### Step 3: Update journal.html (surgical insert — do NOT read the whole file)
+### Step 3: Rebuild journal.html via script
 
-`/Users/sidhartha/projects/content/journal.html` maintains an inline `entries` array that powers the journal page. Each entry embeds the log content as a JS string so the page works when opened as a local file (no server needed).
+After saving the markdown file, run this command from the project root:
 
-**Do NOT read journal.html.** Instead, use the Edit tool with this exact anchor to prepend the new entry:
-
-- `old_string`: `const entries = [`
-- `new_string`: the same `const entries = [` followed immediately by the new entry block
-
-New entry format to insert right after `const entries = [`:
-```js
-      {
-        date: "YYYY-MM-DD",
-        label: "Month DD, YYYY",
-        content: `[full markdown content of the log, verbatim]`
-      },
+```bash
+python3 /Users/sidhartha/projects/content/build_journal.py
 ```
 
-This is a surgical prepend — only the anchor line and the new entry are touched. The rest of the file is untouched.
+This script reads all `daily-logs/*.md` files, sorts them newest-first, and regenerates `journal.html` with all entries embedded inline. It runs in under a second and requires no dependencies.
+
+**Do NOT read or edit journal.html manually** — the script owns it entirely.
 
 ### Step 4: Commit and Push
 
 Run from `/Users/sidhartha/projects/content/`:
 ```bash
-git add daily-logs/YYYY-MM-DD.md journal.html
+git add daily-logs/YYYY-MM-DD.md journal.html build_journal.py
 git commit -m "log: startup daily log YYYY-MM-DD"
 git push
 ```
@@ -89,8 +81,8 @@ Report success or any errors to the user.
 
 ## Key Constraints
 - **Never read existing log files** to save tokens — only write new ones.
-- **Never read `journal.html`** — use the surgical Edit anchor (`const entries = [`) to prepend entries without loading the file.
-- Only touch `daily-logs/YYYY-MM-DD.md` and `journal.html`. Do not modify other files.
+- **Never read or edit `journal.html` directly** — always regenerate it by running `build_journal.py`.
+- Only touch `daily-logs/YYYY-MM-DD.md` (your write) and `journal.html` (owned by the script). Do not modify other files.
 - Keep each interview session focused and quick — the founder is busy.
 - If today's log already exists, ask if they want to append or replace it.
 - Always use today's actual date for the filename and content.
