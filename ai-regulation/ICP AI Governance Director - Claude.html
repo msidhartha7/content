@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICP · AI Governance Director Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --bg2: #0d1117;
+    --surface: #131b24;
+    --surface2: #1a2433;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8edf2;
+    --muted: #7a8fa6;
+    --faint: #3d5068;
+    --accent: #2d6ef5;
+    --accent2: #4d8fff;
+    --accent-glow: rgba(45,110,245,0.15);
+    --gold: #e8b84b;
+    --gold-tint: rgba(232,184,75,0.08);
+    --red: #e85555;
+    --red-tint: rgba(232,85,85,0.08);
+    --green: #2ecc71;
+    --green-tint: rgba(46,204,113,0.08);
+    --amber: #f5a623;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Fraunces', serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ALERT STRIP */
+  .alert-strip {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--accent);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .alert-strip span { opacity: 0.7; }
+
+  /* LAYOUT */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 64px 0 56px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 7vw, 96px);
+    line-height: 0.92;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 640px;
+    font-style: italic;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .stat-block {
+    background: var(--surface);
+    padding: 24px 20px;
+    text-align: center;
+  }
+  .stat-block .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+  }
+  .stat-block .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+    animation: fadeIn 0.5s ease both;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--faint);
+    line-height: 1;
+  }
+  .section-title-block {}
+  .section-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 4px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--text);
+    letter-spacing: 0.03em;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    transition: border-color 0.2s, background 0.2s;
+    animation: fadeIn 0.5s ease both;
+  }
+  .card:hover { border-color: var(--border2); background: var(--surface2); }
+
+  .card.accent-gold { border-left: 3px solid var(--gold); background: var(--gold-tint); }
+  .card.accent-blue { border-left: 3px solid var(--accent); background: var(--accent-glow); }
+  .card.accent-red { border-left: 3px solid var(--red); background: var(--red-tint); }
+  .card.accent-green { border-left: 3px solid var(--green); background: var(--green-tint); }
+
+  .card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .card p, .card li {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .card ul { list-style: none; padding: 0; }
+  .card ul li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .card ul li:last-child { border: none; }
+  .card ul li::before { content: '→ '; color: var(--accent); font-size: 11px; }
+
+  /* PAIN POINTS */
+  .pain-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .pain-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 4px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: background 0.2s;
+  }
+  .pain-item:hover { background: var(--surface2); }
+  .pain-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .pain-content {}
+  .pain-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+  .pain-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* TRIGGER TABLE */
+  .trigger-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .trigger-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border2);
+  }
+  .trigger-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .trigger-table tr:hover td { background: var(--surface); }
+  .trigger-table td:first-child { color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+
+  /* PILL TAGS */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid;
+  }
+  .tag.blue { color: var(--accent2); border-color: rgba(77,143,255,0.3); background: rgba(77,143,255,0.07); }
+  .tag.gold { color: var(--gold); border-color: rgba(232,184,75,0.3); background: rgba(232,184,75,0.07); }
+  .tag.red { color: var(--red); border-color: rgba(232,85,85,0.3); background: rgba(232,85,85,0.07); }
+  .tag.green { color: var(--green); border-color: rgba(46,204,113,0.3); background: rgba(46,204,113,0.07); }
+
+  /* SCORE GRID */
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .score-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .score-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 44px;
+  }
+  .score-label {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .score-label strong { color: var(--text); display: block; font-size: 13px; margin-bottom: 2px; font-family: 'IBM Plex Mono', monospace; font-weight: 500; }
+
+  /* MESSAGE BLOCK */
+  .message-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text);
+    font-style: italic;
+  }
+  .message-block .msg-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-style: normal;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* PERSONA HERO CARD */
+  .persona-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .persona-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--accent);
+  }
+  .persona-meta {}
+  .persona-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .persona-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 14px;
+  }
+  .persona-bio {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 0 32px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--faint);
+    letter-spacing: 0.1em;
+  }
+  .footer-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--faint);
+    letter-spacing: 0.15em;
+    text-align: right;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+    .score-grid { grid-template-columns: 1fr; }
+    .persona-card { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 52px; }
+    .container { padding: 0 20px; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    .footer-meta { text-align: center; }
+    .trigger-table { font-size: 12px; }
+    .trigger-table th, .trigger-table td { padding: 8px 10px; }
+  }
+
+  @media print {
+    body { background: white; color: #111; }
+    .alert-strip { display: none; }
+    body::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="alert-strip">
+  <span>LOOKOVER.IO · ICP DOCUMENT</span>
+  <span>AI GOVERNANCE DIRECTOR PROFILE · APRIL 2026</span>
+  <span>INTERNAL USE</span>
+</div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Ideal Customer Profile · Tier 1 Buyer</div>
+    <h1>The <span>AI Governance</span><br>Director</h1>
+    <p class="hero-sub">Senior security and risk executives bridging Big4 advisory pedigree with enterprise AI governance mandates — sitting directly in the EU AI Act blast radius.</p>
+
+    <div class="stats-row">
+      <div class="stat-block">
+        <span class="num">10+</span>
+        <span class="label">Years in Role</span>
+      </div>
+      <div class="stat-block">
+        <span class="num">3–4</span>
+        <span class="label">Verticals Served</span>
+      </div>
+      <div class="stat-block">
+        <span class="num">$200K+</span>
+        <span class="label">Typical Comp Band</span>
+      </div>
+      <div class="stat-block">
+        <span class="num">127</span>
+        <span class="label">Days to EU Deadline</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONA -->
+  <div class="section" style="animation-delay:0.1s">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title-block">
+        <div class="section-badge">Persona Profile</div>
+        <div class="section-title">Who This Person Is</div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+        <div class="persona-avatar">AG</div>
+        <div style="text-align:center">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)">Archetype</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent2);margin-top:3px">The Governance Lead</div>
+        </div>
+      </div>
+      <div class="persona-meta">
+        <div class="persona-name">Alex Govind</div>
+        <div class="persona-title">Director, Information Security · AI Governance & Cyber Risk</div>
+        <div class="persona-bio">"I spent years at KPMG advising clients on cybersecurity and data privacy across regulated industries. Now I own the AI governance mandate in-house — and I have 13 different AI tools in production with zero audit trail, no explainability docs, and an EU AI Act deadline bearing down on me. I need a solution, not a consultant."</div>
+        <div class="tags">
+          <span class="tag blue">CISA / CISSP</span>
+          <span class="tag blue">AI Policy</span>
+          <span class="tag blue">Enterprise Risk Mgmt</span>
+          <span class="tag gold">Big4 Alumni</span>
+          <span class="tag gold">Multi-Jurisdiction</span>
+          <span class="tag red">EU AI Act Exposure</span>
+          <span class="tag green">Budget Owner</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card accent-blue">
+        <div class="card-label">Career Arc</div>
+        <h3>Background</h3>
+        <ul>
+          <li>3–5 yrs at Big4 (KPMG, Deloitte, PwC, EY) in Cyber/Risk practice</li>
+          <li>Transitioned to in-house Director role at multi-brand enterprise</li>
+          <li>Now owns AI governance + cyber risk + data protection under one mandate</li>
+          <li>Reports to CISO or CRO; presents to board on AI risk quarterly</li>
+        </ul>
+      </div>
+      <div class="card accent-gold">
+        <div class="card-label">Scope</div>
+        <h3>What They Own</h3>
+        <ul>
+          <li>Global AI policy, governance frameworks, and model inventory</li>
+          <li>Data protection (GDPR / EU AI Act / state laws)</li>
+          <li>Third-party AI vendor risk assessments</li>
+          <li>Internal AI audit readiness</li>
+          <li>Multi-geography compliance (NA + EU + APAC)</li>
+        </ul>
+      </div>
+      <div class="card accent-green">
+        <div class="card-label">Company Profile</div>
+        <h3>Their Org</h3>
+        <ul>
+          <li>$500M–$5B revenue enterprise</li>
+          <li>Retail, FinTech, HRTech, or multi-brand consumer</li>
+          <li>EU market exposure (sells to or operates in Europe)</li>
+          <li>Active AI deployments: 10–50+ models / agents in prod</li>
+          <li>Legal + compliance team of 5–30 people</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAIN POINTS -->
+  <div class="section" style="animation-delay:0.2s">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title-block">
+        <div class="section-badge">Problem Landscape</div>
+        <div class="section-title">Their Real Pain Points</div>
+      </div>
+    </div>
+
+    <div class="pain-row">
+      <div class="pain-item">
+        <div class="pain-icon">🗂️</div>
+        <div class="pain-content">
+          <div class="pain-title">No AI System Inventory</div>
+          <div class="pain-desc">They have AI in production but no central registry of what's deployed, what data it touches, or what risk tier it falls under. EU AI Act Article 9 requires documented risk management per system — they're starting from zero.</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🧾</div>
+        <div class="pain-content">
+          <div class="pain-title">No Observability on Model Behaviour</div>
+          <div class="pain-desc">When something goes wrong with an AI system (bias, data leak, unexpected output), there's no audit trail. They can't reconstruct what the model did or why — which is an immediate compliance failure under Article 12 (transparency logging).</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">📅</div>
+        <div class="pain-content">
+          <div class="pain-title">August 2026 Deadline Pressure</div>
+          <div class="pain-desc">High-risk AI system obligations under the EU AI Act come into force in August 2026. They need to classify, document, and evidence conformity for every in-scope system. Most are 6–12 months behind where they need to be.</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🧑‍⚖️</div>
+        <div class="pain-content">
+          <div class="pain-title">Auditors Are Asking Questions They Can't Answer</div>
+          <div class="pain-desc">Internal and external auditors are now including AI governance questions in scope. This person is getting asks for evidence, logs, and documentation they don't have. They need a tool — not a spreadsheet — to answer audit evidence requests.</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔗</div>
+        <div class="pain-content">
+          <div class="pain-title">Third-Party AI Vendor Blind Spot</div>
+          <div class="pain-desc">They procure AI from 10–30 vendors and have no systematic way to assess their EU AI Act compliance posture. Contractual obligations are shifting but their vendor risk process hasn't caught up.</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">💬</div>
+        <div class="pain-content">
+          <div class="pain-title">Board Reporting with No Data</div>
+          <div class="pain-desc">They're expected to present AI risk posture to the board or CISO quarterly. Right now that's a PowerPoint built on gut feel and spreadsheets. They need dashboards with real signal — and they'll pay for it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUYING TRIGGERS -->
+  <div class="section" style="animation-delay:0.25s">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title-block">
+        <div class="section-badge">Sales Intelligence</div>
+        <div class="section-title">Buying Triggers</div>
+      </div>
+    </div>
+
+    <table class="trigger-table">
+      <thead>
+        <tr>
+          <th>Trigger Type</th>
+          <th>What to Watch For</th>
+          <th>Why It Matters for Lookover</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>REGULATORY</td>
+          <td>EU AI Act enforcement dates approaching; regulator guidance published; notified body announcements</td>
+          <td>Creates external urgency that bypasses internal procurement friction</td>
+        </tr>
+        <tr>
+          <td>AUDIT EVENT</td>
+          <td>Company recently completed or failed an AI-related audit; new internal audit mandate for AI governance</td>
+          <td>They now have evidence of the gap — and budget to close it</td>
+        </tr>
+        <tr>
+          <td>ROLE CHANGE</td>
+          <td>Promoted or newly hired into AI governance mandate; inherited a messy AI portfolio</td>
+          <td>New mandate + zero existing tooling = immediate buying motion</td>
+        </tr>
+        <tr>
+          <td>INCIDENT</td>
+          <td>Public AI incident at a competitor; internal model failure surfaces; data protection authority inquiry</td>
+          <td>Risk-averse by nature — incidents unlock budget fast</td>
+        </tr>
+        <tr>
+          <td>EXPANSION</td>
+          <td>Company entering EU market; M&A with EU-based entity; new product with AI component</td>
+          <td>Compliance scope expands suddenly; tooling gap becomes critical path</td>
+        </tr>
+        <tr>
+          <td>CONTENT SIGNAL</td>
+          <td>Posts about EU AI Act on LinkedIn; shares articles about AI governance frameworks; asks community questions</td>
+          <td>Self-identified as active buyer — warm outreach window opens</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- QUALIFICATION -->
+  <div class="section" style="animation-delay:0.3s">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title-block">
+        <div class="section-badge">Lead Scoring</div>
+        <div class="section-title">Qualification Scorecard</div>
+      </div>
+    </div>
+
+    <div class="score-grid">
+      <div class="score-item"><div class="score-num">2</div><div class="score-label"><strong>Big4 / Advisory Alumni</strong>Understands compliance commercially; knows what good looks like; faster to trust a new vendor</div></div>
+      <div class="score-item"><div class="score-num">2</div><div class="score-label"><strong>EU AI Act Mandate</strong>Owns or co-owns the EU AI Act response program — not just awareness</div></div>
+      <div class="score-item"><div class="score-num">2</div><div class="score-label"><strong>10+ AI Systems in Prod</strong>Above this threshold the spreadsheet approach visibly breaks</div></div>
+      <div class="score-item"><div class="score-num">1</div><div class="score-label"><strong>Director Level or Above</strong>Has budget authority or direct line to it — not an analyst who needs 5 approvals</div></div>
+      <div class="score-item"><div class="score-num">1</div><div class="score-label"><strong>Multi-Geography Scope</strong>Cross-border compliance makes tooling ROI obvious</div></div>
+      <div class="score-item"><div class="score-num">1</div><div class="score-label"><strong>Active Content Signals</strong>Posting about AI governance, NIST AI RMF, EU AI Act on LinkedIn in last 90 days</div></div>
+      <div class="score-item"><div class="score-num">1</div><div class="score-label"><strong>Audit-Facing Role</strong>Deals with external auditors; evidence requests are a regular part of their job</div></div>
+      <div class="score-item" style="background:var(--accent-glow);border-color:var(--accent)"><div class="score-num" style="color:var(--gold)">10</div><div class="score-label"><strong>Perfect Score</strong>Score 8–10 = immediate outreach. Score 5–7 = warm sequence. Below 5 = monitor.</div></div>
+    </div>
+  </div>
+
+  <!-- CHANNELS & OUTREACH -->
+  <div class="section" style="animation-delay:0.35s">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title-block">
+        <div class="section-badge">Prospecting</div>
+        <div class="section-title">Where to Find Them</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card accent-blue">
+        <div class="card-label">Primary Channel</div>
+        <h3>LinkedIn</h3>
+        <p style="margin-bottom:12px">Boolean search strings:</p>
+        <div style="background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--green);padding:12px 14px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2ecc71;line-height:1.8;margin-bottom:10px">
+          ("AI governance" OR "AI policy") AND ("Director" OR "VP") AND ("EU AI Act" OR "GDPR")<br><br>
+          ("information security" OR "cybersecurity") AND "AI governance" AND ("CISA" OR "CISSP")<br><br>
+          ("risk management" OR "data protection") AND "AI" AND ("Big4" OR "KPMG" OR "Deloitte" OR "PwC")
+        </div>
+        <p style="font-size:12px;color:var(--muted)">Filter: 10+ years exp · Industry: Finance, Retail, HR Tech, Healthcare</p>
+      </div>
+      <div class="card accent-gold">
+        <div class="card-label">Warm Channels</div>
+        <h3>Events & Communities</h3>
+        <ul>
+          <li>ISACA annual conference (GRC / AI audit track)</li>
+          <li>Gartner Security & Risk Summit</li>
+          <li>IAPP Global Privacy Summit (EU AI Act track)</li>
+          <li>LinkedIn "AI Governance Professionals" groups</li>
+          <li>NIST AI RMF community calls</li>
+          <li>EU AI Act webinars (regulators publish speaker lists)</li>
+        </ul>
+      </div>
+      <div class="card accent-red">
+        <div class="card-label">Signal Monitoring</div>
+        <h3>Intent Signals</h3>
+        <ul>
+          <li>LinkedIn posts tagged #EUAIAct #AIGovernance</li>
+          <li>Job postings for "AI Compliance Manager" at their company</li>
+          <li>Glassdoor reviews mentioning AI audit/compliance chaos</li>
+          <li>Company press releases about EU market expansion</li>
+          <li>Regulatory filings mentioning AI risk</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTREACH MESSAGE -->
+  <div class="section" style="animation-delay:0.4s">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-title-block">
+        <div class="section-badge">Messaging Framework</div>
+        <div class="section-title">How to Reach Them</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)">LinkedIn Connection Note (300 char limit)</div>
+    <div class="message-block">
+      <span class="msg-label">Template A · Regulatory Urgency</span>
+      Hi [Name] — with EU AI Act high-risk obligations live in August, I'm building observability tooling for exactly your kind of mandate. Your background across Big4 advisory and in-house AI governance is the lens I need. Would love 15 minutes of honest feedback.
+    </div>
+
+    <div class="message-block" style="margin-top:12px">
+      <span class="msg-label">Template B · Audit Evidence Angle</span>
+      Hi [Name] — internal auditors are now asking for AI system logs and decision trails that most governance teams don't have. I'm building the tool that generates that evidence automatically. Given your background at KPMG + your current mandate, you'd see straight through whether it works. Up for a quick call?
+    </div>
+
+    <div class="message-block" style="margin-top:12px">
+      <span class="msg-label">Follow-up Message (post-connect)</span>
+      Thanks for connecting, [Name]. Quick context: I'm building Lookover — an AI agent observability platform designed for governance teams facing EU AI Act audit readiness. It gives you an audit trail, explainability logs, and risk dashboards without requiring dev resource from your AI teams.<br><br>
+      Given you're running AI governance across [company], I suspect the evidence-on-demand problem is real. Happy to show you a 10-minute demo — no sales deck, just the product. Worth a look?
+    </div>
+  </div>
+
+  <!-- OBJECTIONS -->
+  <div class="section" style="animation-delay:0.45s">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <div class="section-title-block">
+        <div class="section-badge">Sales Readiness</div>
+        <div class="section-title">Common Objections & Counters</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-label">Objection 01</div>
+        <h3>"We're building it internally"</h3>
+        <p>Counter: Internal builds take 12–18 months and don't come with pre-mapped EU AI Act Article 9/12 evidence templates. August 2026 won't wait for an internal roadmap. You need something deployable in weeks.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Objection 02</div>
+        <h3>"We already use LangSmith / similar"</h3>
+        <p>Counter: LangSmith is built for developers debugging pipelines. Lookover is built for compliance teams and auditors — different output format, different evidence structure, different user. Not competing, complementary — or replacing if they need audit-grade output.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Objection 03</div>
+        <h3>"Budget is frozen right now"</h3>
+        <p>Counter: What's the cost of a data protection authority investigation? One DPA fine under EU AI Act for a high-risk system can run €30M or 6% of global turnover. Compliance tooling is insurance, not a discretionary spend. Frame it that way to finance.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Objection 04</div>
+        <h3>"We're not sure we're in scope"</h3>
+        <p>Counter: That's exactly why observability matters — you can't assess scope without an inventory. Lookover gives you the system map first, then the risk classification, then the evidence layer. Start with visibility, not policy.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">LOOKOVER.IO</div>
+      <div class="footer-meta">
+        ICP · AI GOVERNANCE DIRECTOR · TIER 1<br>
+        GENERATED APRIL 2026 · INTERNAL USE ONLY
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
