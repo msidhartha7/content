@@ -1,0 +1,16 @@
+{% extends "layouts/base.njk" %}
+
+{% block body %}
+  <div class="workspace-shell">
+    {% include "partials/sidebar.njk" %}
+    <div class="workspace-main">
+      <header class="mobile-bar">
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="workspaceSidebar">Menu</button>
+        <a class="mobile-title" href="/">{{ site.title }}</a>
+      </header>
+      <main class="workspace-content">
+        {{ content | safe }}
+      </main>
+    </div>
+  </div>
+{% endblock %}

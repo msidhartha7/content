@@ -1,0 +1,81 @@
+---
+layout: layouts/workspace.njk
+title: Workspace
+permalink: /
+---
+{% set pinnedNotes = collections.notes | pinnedOnly %}
+{% set recentNotes = collections.notes | recent(6) %}
+{% set journalItems = collections.journal | recent(4) %}
+<section class="hero-panel">
+  <p class="hero-kicker">Workspace First</p>
+  <h1>Sidhartha's notes, organized like a calm operating system.</h1>
+  <p>Browse by topic, search lightly in the browser, and keep the daily journal in its own lane without maintaining manual HTML indexes.</p>
+</section>
+
+<section class="panel search-panel">
+  <div class="panel-header">
+    <h2 class="panel-title">Quick Find</h2>
+  </div>
+  <div class="search-row">
+    <input class="search-input" type="search" placeholder="{{ workspace.searchPlaceholder }}" data-search-input>
+    <select class="search-select" data-search-filter>
+      <option value="all">All content</option>
+      {% for topic in collections.topicBuckets %}
+        <option value="{{ topic.slug }}">{{ topic.label }}</option>
+      {% endfor %}
+      <option value="journal">Journal</option>
+    </select>
+  </div>
+  <div class="search-results" data-search-results></div>
+</section>
+
+<section class="panel-grid">
+  <section class="panel panel-wide">
+    <div class="panel-header">
+      <h2 class="panel-title">Pinned Notes</h2>
+      <a class="panel-link" href="/all-notes/">Browse all</a>
+    </div>
+    {% if pinnedNotes | length %}
+      {% set items = pinnedNotes %}
+      {% include "partials/note-list.njk" %}
+    {% else %}
+      <p class="brand-copy">Pinned notes will surface here as you mark them in frontmatter.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel panel-narrow journal-theme">
+    <div class="panel-header">
+      <h2 class="panel-title">{{ workspace.journalLabel }}</h2>
+      <a class="panel-link" href="/journal/">Open archive</a>
+    </div>
+    {% set items = journalItems %}
+    {% include "partials/note-list.njk" %}
+  </section>
+
+  <section class="panel panel-wide">
+    <div class="panel-header">
+      <h2 class="panel-title">Recent Notes</h2>
+    </div>
+    {% set items = recentNotes %}
+    {% include "partials/note-list.njk" %}
+  </section>
+
+  <section class="panel panel-narrow">
+    <div class="panel-header">
+      <h2 class="panel-title">Topics</h2>
+    </div>
+    <div class="note-list">
+      {% for topic in collections.topicBuckets %}
+        <a class="note-card" href="/topics/{{ topic.slug }}/">
+          <div class="note-card-copy">
+            <div class="note-card-header">
+              <span class="note-kind">{{ topic.label }}</span>
+            </div>
+            <h3>{{ topic.notes | length }} notes</h3>
+            <p>Open the {{ topic.label | lower }} collection.</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+</section>

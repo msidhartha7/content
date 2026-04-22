@@ -1,0 +1,8 @@
+<div class="meta-row">
+  {% if date %}<span class="meta-pill">Published {{ date | humanDate }}</span>{% endif %}
+  {% if updated %}<span class="meta-pill">Updated {{ updated | humanDate }}</span>{% endif %}
+  {% if status %}<span class="meta-pill">{{ status }}</span>{% endif %}
+  {% for tag in tags %}
+    <span class="meta-pill">{{ tag }}</span>
+  {% endfor %}
+</div>

@@ -1,0 +1,32 @@
+---
+layout: layouts/workspace.njk
+title: All Notes
+permalink: /all-notes/
+---
+<section class="hero-panel">
+  <p class="hero-kicker">All Notes</p>
+  <h1>Every public note in one dense index.</h1>
+  <p>Use search for fast retrieval or scan the list by recency and pin priority.</p>
+</section>
+
+<section class="panel search-panel">
+  <div class="search-row">
+    <input class="search-input" type="search" placeholder="{{ workspace.searchPlaceholder }}" data-search-input>
+    <select class="search-select" data-search-filter>
+      <option value="all">All content</option>
+      {% for topic in collections.topicBuckets %}
+        <option value="{{ topic.slug }}">{{ topic.label }}</option>
+      {% endfor %}
+      <option value="journal">Journal</option>
+    </select>
+  </div>
+  <div class="search-results" data-search-results></div>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2 class="panel-title">{{ collections.notes | length }} notes</h2>
+  </div>
+  {% set items = collections.notes %}
+  {% include "partials/note-list.njk" %}
+</section>

@@ -1,0 +1,19 @@
+---
+layout: layouts/workspace.njk
+pagination:
+  data: collections.topicBuckets
+  size: 1
+  alias: topicBucket
+permalink: "/topics/{{ topicBucket.slug }}/index.html"
+title: "{{ topicBucket.label }}"
+---
+<section class="hero-panel">
+  <p class="hero-kicker">Topic</p>
+  <h1>{{ topicBucket.label }}</h1>
+  <p>{{ topicBucket.notes | length }} note{% if topicBucket.notes | length != 1 %}s{% endif %} collected under this topic.</p>
+</section>
+
+<section class="panel">
+  {% set items = topicBucket.notes %}
+  {% include "partials/note-list.njk" %}
+</section>

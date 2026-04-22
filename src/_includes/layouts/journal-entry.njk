@@ -1,0 +1,17 @@
+---
+layout: layouts/workspace.njk
+bodyClass: journal-theme
+---
+<article class="document journal-document">
+  <header class="document-header">
+    <p class="document-eyebrow">{{ workspace.journalLabel }}</p>
+    <h1>{{ title }}</h1>
+    {% if summary %}<p class="document-summary">{{ summary }}</p>{% endif %}
+    <div class="meta-row">
+      <span class="meta-pill">{{ date | humanDate }}</span>
+    </div>
+  </header>
+  <div class="document-body">
+    {{ content | safe }}
+  </div>
+</article>

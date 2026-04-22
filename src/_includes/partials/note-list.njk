@@ -1,0 +1,26 @@
+<div class="note-list">
+  {% for item in items %}
+    <a class="note-card" href="{{ item.url }}">
+      <div class="note-card-copy">
+        <div class="note-card-header">
+          <span class="note-kind">
+            {% if item.kind == "journal" %}
+              {{ workspace.journalLabel }}
+            {% else %}
+              {{ item.topicLabel }}
+            {% endif %}
+          </span>
+          {% if item.pinned %}<span class="pin-badge">Pinned</span>{% endif %}
+        </div>
+        <h3>{{ item.title }}</h3>
+        {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+      </div>
+      <div class="note-card-meta">
+        {% if item.date %}<span>{{ item.date | humanDate }}</span>{% endif %}
+        {% if item.tags and item.tags.length %}
+          <span>{{ item.tags | join(", ") }}</span>
+        {% endif %}
+      </div>
+    </a>
+  {% endfor %}
+</div>

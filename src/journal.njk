@@ -1,0 +1,19 @@
+---
+layout: layouts/workspace.njk
+title: Startup Journal
+bodyClass: journal-theme
+permalink: /journal/
+---
+<section class="hero-panel">
+  <p class="hero-kicker">{{ workspace.journalLabel }}</p>
+  <h1>Daily logs with their own archive rhythm.</h1>
+  <p>The journal stays separate from evergreen notes, but it still shares the workspace shell and search index.</p>
+</section>
+
+<section class="panel journal-theme">
+  <div class="panel-header">
+    <h2 class="panel-title">{{ collections.journal | length }} entries</h2>
+  </div>
+  {% set items = collections.journal %}
+  {% include "partials/note-list.njk" %}
+</section>
