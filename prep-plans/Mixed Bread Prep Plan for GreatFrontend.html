@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mixedbread FE Prep · 4-Week Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0d0d0d;
+  --surface: #141414;
+  --surface2:#1c1c1c;
+  --surface3:#252525;
+  --border:  #2a2a2a;
+  --border2: #3a3a3a;
+  --text:    #e8e6e1;
+  --muted:   #888;
+  --faint:   #555;
+
+  --accent:      #ff5722;   /* Mixedbread-ish warm orange */
+  --accent2:     #ff7a4d;
+  --accent-glow: rgba(255,87,34,0.15);
+  --accent-bg:   rgba(255,87,34,0.08);
+
+  --green:   #3ecf8e;
+  --green-bg:rgba(62,207,142,0.08);
+  --blue:    #4a9eff;
+  --blue-bg: rgba(74,158,255,0.08);
+  --gold:    #e8b44b;
+  --gold-bg: rgba(232,180,75,0.08);
+  --purple:  #b57bff;
+  --purple-bg:rgba(181,123,255,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ---------- TOP BAR ---------- */
+.topbar {
+  background: #000;
+  border-bottom: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topbar .accent { color: var(--accent); }
+.blink { animation: blink 1.4s step-start infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ---------- HERO ---------- */
+.hero {
+  position: relative;
+  padding: 90px 0 60px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.hero-bg-text {
+  position: absolute;
+  top: 40px; right: -40px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(120px, 22vw, 280px);
+  color: rgba(255,87,34,0.04);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  line-height: 0.85;
+}
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border2);
+  max-width: 240px;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(38px, 7vw, 82px);
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  margin-bottom: 24px;
+  max-width: 900px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.hero-sub {
+  font-family: 'Lora', serif;
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 680px;
+  font-style: italic;
+  margin-bottom: 50px;
+  line-height: 1.5;
+}
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 30px;
+  max-width: 900px;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1;
+}
+.stat-num .unit { font-size: 18px; color: var(--accent); margin-left: 3px; }
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- SECTION ---------- */
+section {
+  padding: 70px 0;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.section-label .num {
+  color: var(--muted);
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(26px, 3.5vw, 40px);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 18px;
+  max-width: 820px;
+}
+.section-intro {
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 720px;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+/* ---------- JD BREAKDOWN ---------- */
+.jd-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.jd-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 22px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.jd-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.jd-card.green { border-left-color: var(--green); }
+.jd-card.blue { border-left-color: var(--blue); }
+.jd-card.gold { border-left-color: var(--gold); }
+.jd-card.purple { border-left-color: var(--purple); }
+.jd-card.muted { border-left-color: var(--faint); }
+
+.jd-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.jd-card h4 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 15.5px;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.jd-card p {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ---------- WEEK CARDS ---------- */
+.week {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 22px;
+  transition: border-color 0.2s;
+  overflow: hidden;
+}
+.week:hover { border-color: var(--border2); }
+.week-header {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  align-items: center;
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+  gap: 20px;
+}
+.week-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 38px;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.week-num .w {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+.week-meta h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 5px;
+  letter-spacing: -0.01em;
+}
+.week-meta .theme {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.week-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  background: var(--surface3);
+}
+.tag.hot { color: var(--accent); border-color: var(--accent); background: var(--accent-bg); }
+.tag.green { color: var(--green); border-color: var(--green); background: var(--green-bg); }
+.tag.blue { color: var(--blue); border-color: var(--blue); background: var(--blue-bg); }
+
+.week-body {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 0.9fr;
+  gap: 0;
+}
+.week-col {
+  padding: 24px 26px;
+  border-right: 1px solid var(--border);
+}
+.week-col:last-child { border-right: none; }
+.col-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.col-head.green { color: var(--green); }
+.col-head.blue { color: var(--blue); }
+
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.task-list li {
+  font-family: 'Lora', serif;
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.5;
+  padding-left: 18px;
+  position: relative;
+}
+.task-list li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+}
+.task-list li .sub {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: 0.02em;
+}
+
+.deliverable {
+  background: #000;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  padding: 14px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  line-height: 1.6;
+}
+.deliverable .label {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+/* ---------- GFE PATH ---------- */
+.gfe-callout {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--purple);
+  padding: 24px 28px;
+  margin-bottom: 40px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.gfe-callout .badge {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--purple);
+  padding: 14px 18px;
+  background: var(--purple-bg);
+  border: 1px solid var(--purple);
+  letter-spacing: -0.01em;
+}
+.gfe-callout p {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.gfe-callout strong { color: var(--text); font-weight: 600; }
+
+.gfe-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 28px;
+}
+.gfe-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px;
+  transition: all 0.2s;
+}
+.gfe-card:hover { border-color: var(--purple); transform: translateY(-2px); }
+.gfe-card .week-mark {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--purple);
+  margin-bottom: 10px;
+}
+.gfe-card h5 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 14.5px;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.gfe-card p {
+  font-family: 'Lora', serif;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ---------- PROJECT SPEC ---------- */
+.project {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 36px 40px;
+  margin-top: 20px;
+}
+.project h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+.project h3 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.project > p {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 30px;
+  max-width: 720px;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 10px;
+}
+.project-col h4 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.feature-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.feature-list li {
+  font-family: 'Lora', serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+  padding-left: 22px;
+  position: relative;
+  color: var(--text);
+}
+.feature-list li::before {
+  content: '■';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  color: var(--accent);
+  font-size: 9px;
+}
+.feature-list li strong { color: var(--accent); font-weight: 600; }
+.feature-list li .sub {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: 0.02em;
+}
+
+.stack {
+  background: #000;
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  margin-top: 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  line-height: 1.8;
+}
+.stack .label {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.stack span { color: var(--muted); }
+
+/* ---------- INTERVIEW LOOP ---------- */
+.loop-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.loop-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 22px 22px 26px;
+  position: relative;
+  transition: all 0.2s;
+}
+.loop-card:hover { border-color: var(--accent); }
+.loop-card .round {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.loop-card .round .r {
+  color: var(--accent);
+}
+.loop-card h4 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.loop-card .what {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.loop-card .prep-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+.loop-card .prep {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ---------- APPLICATION ANGLES ---------- */
+.angle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 22px 26px;
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+.angle .field {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+.angle .content {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.angle .content strong { color: var(--accent); font-weight: 600; }
+.angle .content em { color: var(--muted); font-style: italic; }
+
+/* ---------- RED FLAGS ---------- */
+.flag-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.flag {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  border-left: 3px solid;
+}
+.flag.do { border-left-color: var(--green); }
+.flag.dont { border-left-color: #d94040; }
+.flag-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.flag.do .flag-label { color: var(--green); }
+.flag.dont .flag-label { color: #d94040; }
+.flag ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.flag li {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  padding-left: 16px;
+  position: relative;
+}
+.flag.do li::before { content: '+'; position: absolute; left: 0; color: var(--green); font-family: 'IBM Plex Mono', monospace; font-weight: 500; }
+.flag.dont li::before { content: '−'; position: absolute; left: 0; color: #d94040; font-family: 'IBM Plex Mono', monospace; font-weight: 500; }
+
+/* ---------- FOOTER ---------- */
+footer {
+  padding: 50px 0 70px;
+  border-top: 1px solid var(--border);
+  background: #000;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-content .brand {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade:nth-child(1) { animation: fadeUp 0.5s ease 0.05s both; }
+.fade:nth-child(2) { animation: fadeUp 0.5s ease 0.10s both; }
+.fade:nth-child(3) { animation: fadeUp 0.5s ease 0.15s both; }
+.fade:nth-child(4) { animation: fadeUp 0.5s ease 0.20s both; }
+.fade:nth-child(5) { animation: fadeUp 0.5s ease 0.25s both; }
+.fade:nth-child(6) { animation: fadeUp 0.5s ease 0.30s both; }
+.fade:nth-child(7) { animation: fadeUp 0.5s ease 0.35s both; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 960px) {
+  .jd-grid { grid-template-columns: 1fr 1fr; }
+  .gfe-grid { grid-template-columns: 1fr 1fr; }
+  .loop-grid { grid-template-columns: 1fr 1fr; }
+  .week-body { grid-template-columns: 1fr; }
+  .week-col { border-right: none; border-bottom: 1px solid var(--border); }
+  .week-col:last-child { border-bottom: none; }
+  .project-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+
+@media (max-width: 640px) {
+  .jd-grid { grid-template-columns: 1fr; }
+  .gfe-grid { grid-template-columns: 1fr; }
+  .loop-grid { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr 1fr; }
+  .week-header { grid-template-columns: 1fr; gap: 12px; }
+  .week-tags { justify-content: flex-start; }
+  .angle { grid-template-columns: 1fr; gap: 10px; }
+  .flag-grid { grid-template-columns: 1fr; }
+  .topbar { font-size: 9.5px; padding: 10px 18px; }
+  .wrap { padding: 0 18px; }
+  .gfe-callout { grid-template-columns: 1fr; gap: 16px; }
+  .project { padding: 26px 22px; }
+}
+
+@media print {
+  body { background: white; color: #111; }
+  body::before { display: none; }
+  .topbar { position: static; background: #111; color: white; }
+  .surface, .week, .jd-card, .gfe-card, .loop-card, .flag, .angle, .project, .gfe-callout {
+    background: white !important;
+    border-color: #ccc !important;
+    color: #111 !important;
+  }
+  .hero-bg-text { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span><span class="blink accent">●</span> &nbsp; MIXEDBREAD · FRONTEND ENGINEER · PREP DOSSIER</span>
+  <span>4-WEEK PLAN · v1.0 · 21.04.2026</span>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-bg-text">MXBAI</div>
+    <div class="eyebrow">Role · Frontend Engineer · Remote · Full-time</div>
+    <h1>Ship a <em>portfolio-grade</em> proof you can build Mixedbread's playground — in 28 days.</h1>
+    <p class="hero-sub">This is not a generic frontend study plan. It's a targeted prep track built around the five gaps you flagged — Next.js App Router, Core Web Vitals, animation polish, AI/vector-search concepts, and frontend system design — with GreatFrontEnd as the spine and one killer portfolio project as the output.</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num">28<span class="unit">d</span></div>
+        <div class="stat-label">Total Runway</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Gap Areas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Flagship Project</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">~12<span class="unit">h/wk</span></div>
+        <div class="stat-label">Minimum Commit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 01 — JD DECODED ============ -->
+  <section id="jd">
+    <div class="section-label"><span class="num">01 /</span> JD Decoded — What They Actually Want</div>
+    <h2 class="section-title">Strip away the job-spec language. Mixedbread needs three things.</h2>
+    <p class="section-intro">Every "Frontend Engineer" JD sounds the same. This one isn't. Read between the lines and the role clusters into three pillars — production Next.js fluency, taste-level UI craft, and enough AI literacy to not embarrass yourself in a playground demo. Your prep should hit all three.</p>
+
+    <div class="jd-grid">
+      <div class="jd-card fade">
+        <div class="jd-tag">Pillar 01 · Non-negotiable</div>
+        <h4>Next.js App Router at production depth</h4>
+        <p>Server Components, streaming, parallel + intercepting routes, Route Handlers, Server Actions, caching layers. They said "App Router preferred" — it's a filter.</p>
+      </div>
+      <div class="jd-card green fade">
+        <div class="jd-tag">Pillar 02 · The differentiator</div>
+        <h4>Taste — design sense + animation polish</h4>
+        <p>"Beautiful, performant interfaces" and "intuitive and delightful" appear twice. They've lost candidates here before. Micro-interactions, motion, typography hierarchy.</p>
+      </div>
+      <div class="jd-card blue fade">
+        <div class="jd-tag">Pillar 03 · The bar raiser</div>
+        <h4>AI/vector literacy (nice-to-have, but)</h4>
+        <p>Playgrounds for embeddings + reranking is literally the job. Knowing what cosine similarity is and why rerankers exist puts you ahead of 80% of applicants.</p>
+      </div>
+      <div class="jd-card gold fade">
+        <div class="jd-tag">Support 01</div>
+        <h4>Core Web Vitals + perf</h4>
+        <p>"Sub-second page loads" — they measure. You'll need Lighthouse ≥ 95 and real answers on LCP, INP, CLS.</p>
+      </div>
+      <div class="jd-card purple fade">
+        <div class="jd-tag">Support 02</div>
+        <h4>shadcn/ui + design system thinking</h4>
+        <p>Composable component libraries. How to extend, theme, and maintain. Turborepo/pnpm workspace experience lands extra.</p>
+      </div>
+      <div class="jd-card muted fade">
+        <div class="jd-tag">Support 03</div>
+        <h4>Real-time + testing</h4>
+        <p>SSE/WebSockets for streaming AI responses. Vitest + Playwright for the engineering-culture signal. Both nice-to-haves that become credibility markers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 02 — GFE SPINE ============ -->
+  <section id="gfe">
+    <div class="section-label"><span class="num">02 /</span> GreatFrontEnd — Your Daily Spine</div>
+    <h2 class="section-title">You already have GFE. That's the backbone. Everything else layers on top.</h2>
+    <p class="section-intro">GreatFrontEnd covers the classic frontend interview stack — coding, system design, quiz, UI fundamentals. Don't grind it randomly. Map its modules to your weeks so it compounds with the portfolio work instead of competing with it.</p>
+
+    <div class="gfe-callout">
+      <div class="badge">GFE</div>
+      <p><strong>Daily rhythm:</strong> 30 min quiz questions before standup (trivia + rapid recall) + 60–90 min of one coding question or one system design study <em>every other day</em>. Weekends: do one full mock under timed conditions. Don't binge — consistency beats sprints for interview recall.</p>
+    </div>
+
+    <div class="gfe-grid">
+      <div class="gfe-card fade">
+        <div class="week-mark">Week 1 · Foundations</div>
+        <h5>JS Quiz + Coding Easy</h5>
+        <p>Closures, `this`, promises, event loop, debounce/throttle, deep clone. Build muscle memory on the fundamentals they'll probe in round 1.</p>
+      </div>
+      <div class="gfe-card fade">
+        <div class="week-mark">Week 2 · UI Components</div>
+        <h5>Coding Medium</h5>
+        <p>Autocomplete, modal, tabs, accordion, infinite scroll, data table. These are <em>exactly</em> the kind of components that live in a playground UI.</p>
+      </div>
+      <div class="gfe-card fade">
+        <div class="week-mark">Week 3 · System Design</div>
+        <h5>Frontend SD</h5>
+        <p>Work through News Feed, Autocomplete, Pinterest. Then apply the same framework to "Design an AI search playground" — that's the likely question.</p>
+      </div>
+      <div class="gfe-card fade">
+        <div class="week-mark">Week 4 · Mocks</div>
+        <h5>Full Timed Rounds</h5>
+        <p>Two full mock interviews. Coding medium + SD. Record yourself thinking out loud. Watch it back. This is where most people skip — don't.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 03 — 4 WEEK PLAN ============ -->
+  <section id="weeks">
+    <div class="section-label"><span class="num">03 /</span> The 4-Week Build</div>
+    <h2 class="section-title">Each week has one theme, three tracks, one deliverable.</h2>
+    <p class="section-intro">Three tracks run in parallel every week: GFE (recall), learning (depth), and building (the flagship project). By end of Week 4, you have a working AI search playground, a perf-optimised deploy, and enough recall to handle a live coding round cold.</p>
+
+    <!-- WEEK 1 -->
+    <div class="week">
+      <div class="week-header">
+        <div class="week-num"><span class="w">Week</span>01</div>
+        <div class="week-meta">
+          <h3>Next.js App Router — rebuild your mental model</h3>
+          <div class="theme">Foundations · Routing · Rendering · Data</div>
+        </div>
+        <div class="week-tags">
+          <span class="tag hot">PRIORITY</span>
+          <span class="tag">Next.js 15</span>
+          <span class="tag">React 19</span>
+        </div>
+      </div>
+      <div class="week-body">
+        <div class="week-col">
+          <div class="col-head">Learning Track</div>
+          <ul class="task-list">
+            <li>Read Next.js docs end-to-end (App Router only)
+              <span class="sub">routing → rendering → caching → styling → optimizing</span>
+            </li>
+            <li>Watch Lee Robinson's "Next.js App Router in 100 minutes"
+              <span class="sub">then rewatch 2x at pause points</span>
+            </li>
+            <li>Deep-dive: Server Components vs Client Components mental model
+              <span class="sub">the 'use client' boundary is the #1 thing to nail</span>
+            </li>
+            <li>Study: Suspense, streaming, loading.tsx, error.tsx</li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head green">GFE Track</div>
+          <ul class="task-list">
+            <li>Daily: 30 min JS quiz (closures, promises, event loop)</li>
+            <li>2x coding easy/medium: debounce, throttle, flatten, curry</li>
+            <li>Weekend: 1 full timed coding mock</li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head blue">Build Track</div>
+          <ul class="task-list">
+            <li>Scaffold the flagship project<span class="sub">see §04 — "AI Search Playground"</span></li>
+            <li>Next.js 15 + shadcn/ui + Tailwind + TypeScript strict</li>
+            <li>Set up Turborepo OR pnpm workspace</li>
+          </ul>
+          <div class="deliverable" style="margin-top: 18px;">
+            <span class="label">→ End-of-Week Deliverable</span>
+            Deployed "Hello World" on Vercel. Monorepo scaffold. One page routes correctly.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 2 -->
+    <div class="week">
+      <div class="week-header">
+        <div class="week-num"><span class="w">Week</span>02</div>
+        <div class="week-meta">
+          <h3>AI concepts + the playground build begins</h3>
+          <div class="theme">Embeddings · Reranking · Streaming · UI Components</div>
+        </div>
+        <div class="week-tags">
+          <span class="tag green">GAP FILL</span>
+          <span class="tag">AI/ML</span>
+          <span class="tag">SSE</span>
+        </div>
+      </div>
+      <div class="week-body">
+        <div class="week-col">
+          <div class="col-head">Learning Track</div>
+          <ul class="task-list">
+            <li>Jay Alammar: "Illustrated Word2Vec" + "Illustrated Transformer"
+              <span class="sub">read twice. this is your vocabulary foundation</span>
+            </li>
+            <li>What are embeddings? Vectors, cosine similarity, dimensionality
+              <span class="sub">use Mixedbread's own blog posts — literal homework signal</span>
+            </li>
+            <li>What is reranking? Why does it exist on top of vector search?</li>
+            <li>Play with Mixedbread's API for 1 hour. Hit /embed and /rerank endpoints.</li>
+            <li>Streaming UI patterns: SSE vs WebSockets, useChat from AI SDK</li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head green">GFE Track</div>
+          <ul class="task-list">
+            <li>Coding medium: autocomplete (debounced), modal, tabs</li>
+            <li>UI fundamentals module — accessibility, keyboard nav, ARIA</li>
+            <li>Weekend: build GFE's "type-ahead search" from scratch, no hints</li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head blue">Build Track</div>
+          <ul class="task-list">
+            <li>Playground: embeddings visualizer page
+              <span class="sub">input text → show vector → 2D projection (PCA/t-SNE)</span>
+            </li>
+            <li>Playground: reranker comparison page (query + docs in, ranked out)</li>
+            <li>Wire up streaming responses via SSE</li>
+          </ul>
+          <div class="deliverable" style="margin-top: 18px;">
+            <span class="label">→ End-of-Week Deliverable</span>
+            Two functional playground pages. API keys via env. Streaming works.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 3 -->
+    <div class="week">
+      <div class="week-header">
+        <div class="week-num"><span class="w">Week</span>03</div>
+        <div class="week-meta">
+          <h3>Perf, animation, and the polish pass</h3>
+          <div class="theme">Core Web Vitals · Framer Motion · Accessibility</div>
+        </div>
+        <div class="week-tags">
+          <span class="tag hot">DIFFERENTIATOR</span>
+          <span class="tag">CWV</span>
+          <span class="tag">Motion</span>
+        </div>
+      </div>
+      <div class="week-body">
+        <div class="week-col">
+          <div class="col-head">Learning Track</div>
+          <ul class="task-list">
+            <li>web.dev Core Web Vitals course (LCP, INP, CLS)
+              <span class="sub">INP replaced FID in 2024 — know the difference</span>
+            </li>
+            <li>Lighthouse CI + Vercel Speed Insights — run on your project</li>
+            <li>Framer Motion / Motion docs: layout, variants, AnimatePresence</li>
+            <li>Read: Josh W Comeau on animation easing + physics-based motion</li>
+            <li>next/image, next/font, next/dynamic — when + why</li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head green">GFE Track</div>
+          <ul class="task-list">
+            <li>Start frontend system design module</li>
+            <li>Deep study: "Design Autocomplete" + "Design News Feed"</li>
+            <li>Adapt both frameworks to "Design an AI playground"</li>
+            <li>Weekend: write your own SD doc for the flagship project</li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head blue">Build Track</div>
+          <ul class="task-list">
+            <li>Add animations: page transitions, card enters, loading states</li>
+            <li>Measure + optimize: LCP &lt; 1.2s, INP &lt; 200ms, CLS &lt; 0.1</li>
+            <li>Lighthouse target: 95+ on all four metrics</li>
+            <li>Add a11y pass: keyboard nav, focus states, ARIA labels, contrast</li>
+          </ul>
+          <div class="deliverable" style="margin-top: 18px;">
+            <span class="label">→ End-of-Week Deliverable</span>
+            Polished playground. Lighthouse ≥ 95. One "wow" interaction.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 4 -->
+    <div class="week">
+      <div class="week-header">
+        <div class="week-num"><span class="w">Week</span>04</div>
+        <div class="week-meta">
+          <h3>Testing, write-up, apply</h3>
+          <div class="theme">Vitest · Playwright · Case Study · Application</div>
+        </div>
+        <div class="week-tags">
+          <span class="tag blue">FINISH LINE</span>
+          <span class="tag">Testing</span>
+          <span class="tag">Apply</span>
+        </div>
+      </div>
+      <div class="week-body">
+        <div class="week-col">
+          <div class="col-head">Learning Track</div>
+          <ul class="task-list">
+            <li>Vitest basics: unit tests for utils + hooks</li>
+            <li>Playwright basics: one E2E flow (search → results → click)</li>
+            <li>Write a short case-study blog post on the playground
+              <span class="sub">architecture, tradeoffs, perf wins — this becomes your X/LI post</span>
+            </li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head green">GFE Track</div>
+          <ul class="task-list">
+            <li>2 full timed mocks: 1 coding + 1 system design</li>
+            <li>Record both, watch back, note filler words + unclear explanations</li>
+            <li>Revisit weak quiz areas identified across weeks 1–3</li>
+          </ul>
+        </div>
+        <div class="week-col">
+          <div class="col-head blue">Build Track</div>
+          <ul class="task-list">
+            <li>Add Vitest tests for 2 key utils/hooks (not exhaustive — signal)</li>
+            <li>Add 1 Playwright E2E covering the happy path</li>
+            <li>Deploy final version. Custom domain. Open-source on GitHub.</li>
+            <li>Write README with architecture diagram + tradeoffs</li>
+          </ul>
+          <div class="deliverable" style="margin-top: 18px;">
+            <span class="label">→ End-of-Week Deliverable</span>
+            Application submitted. Project live. Case study published. Two GFE mocks done.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 04 — FLAGSHIP PROJECT ============ -->
+  <section id="project">
+    <div class="section-label"><span class="num">04 /</span> The Flagship Project</div>
+    <h2 class="section-title">Build the interview. Not around it.</h2>
+    <p class="section-intro">The fastest path into Mixedbread is to ship something that looks like it could already be in their product. Not a clone — an adjacent tool that demonstrates you understand embeddings, reranking, streaming, and can design a UI around them. This becomes your answer to every application question and your warm intro to the hiring manager.</p>
+
+    <div class="project">
+      <h3>Project: <em>"Vectorscope"</em> — A Visual Playground for Embeddings &amp; Reranking</h3>
+      <p>An open-source playground that lets you feed text, see how different embedding models project it into vector space, run rerankers across result sets, and stream everything back with motion-rich UI. Positions you as someone who doesn't just consume AI APIs but designs thoughtful interfaces around them.</p>
+
+      <div class="project-grid">
+        <div class="project-col">
+          <h4>Must-have features</h4>
+          <ul class="feature-list">
+            <li><strong>Embedding Visualizer</strong> — paste text, see 2D projection (PCA or UMAP via WASM), hover to see raw vectors. Uses Mixedbread's embed API.</li>
+            <li><strong>Reranker Workbench</strong> — input a query + 10 candidate docs, watch the reranker sort them in real-time with animated row reorders (Framer Motion layout).</li>
+            <li><strong>Similarity Playground</strong> — drag two text chunks into a diff view, see cosine similarity score update live as you edit.</li>
+            <li><strong>Streaming Everything</strong> — SSE for all API calls, with skeleton + progressive reveal. No jumpy layouts.</li>
+            <li><strong>Performance</strong> — Lighthouse 95+, LCP &lt;1.2s. Instrumented with Speed Insights.</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Nice-to-have (time-permitting)</h4>
+          <ul class="feature-list">
+            <li><strong>Model Comparison</strong> — run the same query through 2–3 different embedding models, compare ranking deltas side-by-side.</li>
+            <li><strong>Shareable Sessions</strong> — URL state encoding so you can share a specific query+result config.</li>
+            <li><strong>Dark/Light themes</strong> — themed with CSS variables, demoing design-system thinking.</li>
+            <li><strong>Keyboard-first</strong> — full keyboard nav, cmd+k palette. Signals taste.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="stack">
+        <span class="label">→ Stack</span>
+        <span>framework: </span>Next.js 15 (App Router) + React 19<br>
+        <span>language: </span>TypeScript (strict mode)<br>
+        <span>styling: </span>Tailwind CSS + shadcn/ui<br>
+        <span>motion: </span>Framer Motion (Motion library)<br>
+        <span>monorepo: </span>Turborepo + pnpm workspaces<br>
+        <span>testing: </span>Vitest + Playwright<br>
+        <span>ai: </span>Mixedbread API (embed + rerank)<br>
+        <span>deploy: </span>Vercel + custom domain<br>
+        <span>analytics: </span>Vercel Speed Insights + PostHog (optional)
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 05 — INTERVIEW LOOP ============ -->
+  <section id="loop">
+    <div class="section-label"><span class="num">05 /</span> Likely Interview Loop</div>
+    <h2 class="section-title">What a Mixedbread-style loop looks like — and how to prep each round.</h2>
+    <p class="section-intro">Remote-first AI infra startups run tight loops: 4 rounds, ~4 hours total. Each one tests a different axis. Prep differently for each.</p>
+
+    <div class="loop-grid">
+      <div class="loop-card fade">
+        <div class="round"><span class="r">R1</span><span>30 min</span></div>
+        <h4>Recruiter / Hiring Manager</h4>
+        <p class="what">Background, motivation, why Mixedbread specifically. They're filtering for coherence and genuine interest.</p>
+        <div class="prep-label">→ Prep</div>
+        <div class="prep">Know their product line. Have a 90-sec pitch. Lead with the playground project.</div>
+      </div>
+      <div class="loop-card fade">
+        <div class="round"><span class="r">R2</span><span>60 min</span></div>
+        <h4>Live Coding (UI Component)</h4>
+        <p class="what">Build something real in 45 min — autocomplete, modal, infinite scroll, data table. JS or TS, React, vanilla browser APIs.</p>
+        <div class="prep-label">→ Prep</div>
+        <div class="prep">GFE coding medium module. Think out loud. Handle edge cases before asked.</div>
+      </div>
+      <div class="loop-card fade">
+        <div class="round"><span class="r">R3</span><span>60 min</span></div>
+        <h4>Frontend System Design</h4>
+        <p class="what">"Design the playground page for our API" or "Design a streaming chat interface." Whiteboard/Miro-style.</p>
+        <div class="prep-label">→ Prep</div>
+        <div class="prep">GFE SD module. Have a framework (requirements → architecture → components → data → optimize).</div>
+      </div>
+      <div class="loop-card fade">
+        <div class="round"><span class="r">R4</span><span>45–60 min</span></div>
+        <h4>Culture + Deep Dive</h4>
+        <p class="what">Walk through your flagship project. Hard technical follow-ups. Values fit. "What would you change about our site?"</p>
+        <div class="prep-label">→ Prep</div>
+        <div class="prep">Audit mixedbread.com yourself. Have 3 specific, kind critiques ready.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 06 — APPLICATION ============ -->
+  <section id="apply">
+    <div class="section-label"><span class="num">06 /</span> Application Angles</div>
+    <h2 class="section-title">The form has two open-ended questions. They matter more than the resume.</h2>
+    <p class="section-intro">Most candidates fill these out as afterthoughts. Treat them as mini-essays. Specificity beats eloquence.</p>
+
+    <div class="angle">
+      <div class="field">Proud Project</div>
+      <div class="content">
+        Lead with <strong>Vectorscope</strong> (the flagship you build in §04). Frame it around <em>one concrete tradeoff</em> — "I rebuilt the reranker viz from state-driven animations to layout animations to hit 60fps on long lists." Specificity signals engineering depth. Link the live demo, the repo, and the case-study post. End with one line on what you'd do next if given more time.
+      </div>
+    </div>
+    <div class="angle">
+      <div class="field">Why Mixedbread</div>
+      <div class="content">
+        Don't list their product names back at them. Pick <strong>one specific thing</strong> — e.g., "Your reranker + embedding positioning is the rare AI infra play where the frontend actually matters, because developers evaluate through the playground" — and build the answer around it. Mention someone on the team you've seen post online (if genuine). End with: <em>"I built Vectorscope specifically because I wanted to feel what building on your API is like before applying. Here's what I learned."</em>
+      </div>
+    </div>
+    <div class="angle">
+      <div class="field">LinkedIn / X / GitHub</div>
+      <div class="content">
+        Post the case study on both LinkedIn and X the day <em>before</em> you submit. Tag Mixedbread. This means when they check your profile, the top post is your project. Pin the GitHub repo. If your X bio still says "founder, Lookover" — fine, but add "building on @mixedbread this week" for 2 weeks. <strong>Signal fit before the form submits.</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 07 — DO / DONT ============ -->
+  <section id="flags">
+    <div class="section-label"><span class="num">07 /</span> Do / Don't</div>
+    <h2 class="section-title">The cheap mistakes that cost the offer.</h2>
+
+    <div class="flag-grid">
+      <div class="flag do">
+        <div class="flag-label">→ Do</div>
+        <ul>
+          <li>Ship the playground live on a custom domain before applying.</li>
+          <li>Record a 60-sec Loom walkthrough. Link it in the application.</li>
+          <li>Use Mixedbread's actual API, not OpenAI's — proof of product-fit.</li>
+          <li>Write one case-study post about the build. Link it.</li>
+          <li>Run Lighthouse publicly. Screenshot the scores. Paste them in the post.</li>
+          <li>Audit mixedbread.com and keep 3 polite critiques in your back pocket for R4.</li>
+        </ul>
+      </div>
+      <div class="flag dont">
+        <div class="flag-label">→ Don't</div>
+        <ul>
+          <li>Don't submit a generic resume. Tailor it to mention playground, perf, AI.</li>
+          <li>Don't skip the a11y pass. They ship to devs — devs notice.</li>
+          <li>Don't use `pages/` router in the flagship project. They said "App Router preferred."</li>
+          <li>Don't fake AI expertise. Saying "I understand what embeddings are for" beats jargon-stuffing.</li>
+          <li>Don't over-engineer. 4 polished features &gt; 12 half-built ones.</li>
+          <li>Don't forget the Lookover + agency context — frame it as founder-mode, not distraction.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-content">
+      <span><span class="brand">MIXEDBREAD PREP</span> · FRONTEND ENGINEER</span>
+      <span>v1.0 · 4-WEEK PLAN · 21.04.2026</span>
+      <span>OPERATIONAL</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lookover — Investor Outreach Plan 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --surface: #1c2330;
+  --surface2: #242d3d;
+  --border: rgba(48, 68, 108, 0.55);
+  --border2: rgba(100, 140, 220, 0.2);
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --faint: #484f58;
+  --accent: #4A90D9;
+  --accent2: #CADCFC;
+  --gold: #F5A623;
+  --gold2: #FAD27A;
+  --navy: #1E2761;
+  --green: #2ECC71;
+  --red: #E53935;
+  --eu: #003399;
+  --eu-gold: #FFCC00;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px);
+  pointer-events: none; z-index: 0;
+}
+
+/* ALERT STRIP */
+.alert-strip {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--gold);
+  padding: 8px 24px;
+  display: flex; align-items: center; justify-content: center; gap: 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  color: #0d1117;
+  letter-spacing: 0.12em;
+}
+.alert-strip .pulse {
+  display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #0d1117;
+  animation: pulse 1.5s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+/* HERO */
+.hero {
+  position: relative;
+  padding: 64px 48px 48px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.hero-bg-text {
+  position: absolute; top: 10px; right: -20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 14vw, 180px);
+  color: rgba(74,144,217,0.04);
+  white-space: nowrap; pointer-events: none; user-select: none;
+  letter-spacing: 0.04em;
+}
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1.05;
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+.hero h1 span { color: var(--gold); }
+.hero-sub {
+  font-size: 15px; color: var(--muted); max-width: 580px;
+  margin-bottom: 36px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 760px;
+}
+.stat-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
+  padding: 16px;
+  animation: fadeIn 0.5s ease both;
+}
+.stat-block.gold { border-top-color: var(--gold); }
+.stat-block.green { border-top-color: var(--green); }
+.stat-block.red { border-top-color: var(--red); }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px; color: var(--text);
+  line-height: 1;
+}
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 4px;
+}
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+/* LAYOUT */
+.container { max-width: 1040px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+.section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+.section:last-child { border-bottom: none; }
+
+/* SECTION HEADER */
+.section-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  margin-bottom: 32px;
+}
+.section-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  color: var(--accent);
+  background: rgba(74,144,217,0.1);
+  border: 1px solid rgba(74,144,217,0.25);
+  padding: 3px 8px;
+  flex-shrink: 0; margin-top: 5px;
+}
+.section-num.gold { color: var(--gold); background: rgba(245,166,35,0.1); border-color: rgba(245,166,35,0.25); }
+.section-num.green { color: var(--green); background: rgba(46,204,113,0.1); border-color: rgba(46,204,113,0.25); }
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; color: var(--text);
+  letter-spacing: 0.04em;
+}
+.section-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* CARDS */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 22px;
+  animation: fadeIn 0.5s ease both;
+  transition: border-color 0.2s, background 0.2s;
+}
+.card:hover { background: var(--surface2); border-color: var(--accent2); }
+.card.gold { border-left-color: var(--gold); }
+.card.green { border-left-color: var(--green); }
+.card.red { border-left-color: var(--red); }
+.card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.card-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 10px;
+}
+.card-body { font-size: 13px; color: var(--muted); }
+
+/* INVESTOR TABLE */
+.inv-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.inv-table thead tr { background: var(--surface2); }
+.inv-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.inv-table td {
+  padding: 11px 14px; border-bottom: 1px solid var(--border);
+  font-size: 13px; color: var(--text);
+  vertical-align: top;
+}
+.inv-table tr:hover td { background: var(--surface); }
+.inv-table .tier {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; padding: 2px 7px;
+  border-radius: 3px; letter-spacing: 0.1em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.tier-1 { background: rgba(74,144,217,0.15); color: var(--accent); border: 1px solid rgba(74,144,217,0.3); }
+.tier-2 { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+.tier-3 { background: rgba(46,204,113,0.15); color: var(--green); border: 1px solid rgba(46,204,113,0.3); }
+
+/* EMAIL TEMPLATES */
+.email-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  margin-bottom: 24px;
+  animation: fadeIn 0.5s ease both;
+}
+.email-block.gold { border-left-color: var(--gold); }
+.email-block.green { border-left-color: var(--green); }
+.email-header {
+  padding: 14px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.email-type {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent);
+}
+.email-block.gold .email-type { color: var(--gold); }
+.email-block.green .email-type { color: var(--green); }
+.email-usage {
+  font-size: 12px; color: var(--muted);
+}
+.email-subject {
+  padding: 12px 20px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.email-subject span { color: var(--muted); font-weight: 400; }
+.email-body {
+  padding: 20px;
+  font-size: 13px; color: var(--muted);
+  line-height: 1.8; white-space: pre-wrap;
+}
+.email-body strong { color: var(--text); }
+.email-note {
+  padding: 12px 20px;
+  background: rgba(74,144,217,0.05);
+  border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--faint);
+  letter-spacing: 0.05em;
+}
+
+/* TIMELINE */
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 9px; top: 0; bottom: 0;
+  width: 2px; background: var(--border);
+}
+.timeline-item { position: relative; margin-bottom: 28px; }
+.timeline-dot {
+  position: absolute; left: -32px; top: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  color: #0d1117; font-weight: 700;
+}
+.timeline-dot.gold { background: var(--gold); }
+.timeline-dot.green { background: var(--green); }
+.timeline-week {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 4px;
+}
+.timeline-item.gold .timeline-week { color: var(--gold); }
+.timeline-item.green .timeline-week { color: var(--green); }
+.timeline-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.timeline-body { font-size: 13px; color: var(--muted); }
+
+/* CALLOUT */
+.callout {
+  background: rgba(245,166,35,0.07);
+  border: 1px solid rgba(245,166,35,0.25);
+  border-left: 3px solid var(--gold);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-size: 13px; color: var(--text);
+}
+.callout strong { color: var(--gold); }
+.callout.blue {
+  background: rgba(74,144,217,0.07);
+  border-color: rgba(74,144,217,0.25); border-left-color: var(--accent);
+}
+.callout.blue strong { color: var(--accent2); }
+
+/* TAG ROW */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid var(--border); color: var(--muted);
+  background: var(--surface);
+}
+.tag.active { border-color: rgba(74,144,217,0.4); color: var(--accent); background: rgba(74,144,217,0.08); }
+.tag.gold { border-color: rgba(245,166,35,0.4); color: var(--gold); background: rgba(245,166,35,0.08); }
+
+/* FOOTER */
+footer {
+  padding: 32px 48px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; z-index: 1;
+}
+.footer-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 0.06em; color: var(--accent);
+}
+.footer-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--faint); letter-spacing: 0.1em; text-align: right;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .hero { padding: 40px 24px 32px; }
+  .container { padding: 0 20px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  .inv-table { font-size: 12px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+
+@media print {
+  body { background: white; color: #111; }
+  .alert-strip { background: #f5a623; color: #111; }
+  .hero-bg-text { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="alert-strip">
+  <span class="pulse"></span>
+  LOOKOVER.IO · SEED RAISE · $1.5M · EU AI ACT ENFORCEMENT: AUG 2, 2026 · 102 DAYS REMAINING
+  <span class="pulse"></span>
+</div>
+
+<div class="hero">
+  <div class="hero-bg-text">LOOKOVER</div>
+  <div class="container">
+    <div class="hero-eyebrow">Lookover.io · Investor Outreach Playbook · April 2026</div>
+    <h1>INVESTOR<br><span>OUTREACH PLAN</span></h1>
+    <p class="hero-sub">Target list, sequencing strategy, cadence, and ready-to-send email templates for the $1.5M seed round.</p>
+    <div class="stats-row">
+      <div class="stat-block">
+        <div class="stat-num">40+</div>
+        <div class="stat-label">Target investors</div>
+      </div>
+      <div class="stat-block gold">
+        <div class="stat-num">$1.5M</div>
+        <div class="stat-label">Seed raise</div>
+      </div>
+      <div class="stat-block green">
+        <div class="stat-num">8wk</div>
+        <div class="stat-label">Outreach window</div>
+      </div>
+      <div class="stat-block red">
+        <div class="stat-num">102</div>
+        <div class="stat-label">Days to EU enforcement</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 01: TARGETING STRATEGY -->
+<div class="container">
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <div>
+      <div class="section-title">TARGETING STRATEGY</div>
+      <div class="section-sub">Who to approach, in what order, and why</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>The core principle:</strong> Don't spray-and-pray. You're pre-traction with a strong narrative and tight timing. You need investors who already have a thesis on (a) AI governance/RegTech, (b) India-to-world B2B plays, or (c) compliance infrastructure. Generic VCs without this context will waste your time. Target 40 highly relevant investors across 3 tiers.
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-meta">Tier 1 · Primary</div>
+      <div class="card-title">EU/RegTech-Thesis Seed Funds</div>
+      <div class="card-body">VCs who have already bet on AI governance, GRC, or EU-regulation-driven plays. They understand the thesis without you explaining it. Highest conversion probability. Approach first with full deck.</div>
+      <div class="tag-row">
+        <span class="tag active">AI Governance</span>
+        <span class="tag active">RegTech</span>
+        <span class="tag active">EU focus</span>
+      </div>
+    </div>
+    <div class="card gold">
+      <div class="card-meta">Tier 2 · Secondary</div>
+      <div class="card-title">India-Origin Global B2B SaaS Funds</div>
+      <div class="card-body">Funds that back India-built, globally-sold enterprise SaaS. They know the GCC/cost-arbitrage story and the "India to the world" narrative deeply. Blume, Accel India, 3one4, Stellaris are key here.</div>
+      <div class="tag-row">
+        <span class="tag gold">India SaaS</span>
+        <span class="tag gold">Enterprise B2B</span>
+        <span class="tag gold">Global GTM</span>
+      </div>
+    </div>
+    <div class="card green">
+      <div class="card-meta">Tier 3 · Opportunistic</div>
+      <div class="card-title">Compliance/Legal Tech Angel Syndicates</div>
+      <div class="card-body">Ex-Big4 partners, in-house GCs, CCOs, and compliance tech angels. Lower check sizes but high strategic value — they become advisors, design partners, and door-openers to audit firms. Pursue in parallel.</div>
+      <div class="tag-row">
+        <span class="tag green">Angels</span>
+        <span class="tag green">Strategic value</span>
+        <span class="tag green">Domain experts</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 02: TARGET INVESTOR LIST -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num gold">02</span>
+    <div>
+      <div class="section-title">TARGET INVESTOR LIST</div>
+      <div class="section-sub">40 prioritized targets — firms, thesis fit, and approach angle</div>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <strong>Research note:</strong> Update firm names, partner names, and portfolio links before outreach. Personalize each pitch to reference a specific portfolio company in the adjacent space. "I saw you backed [X] — we're doing for EU AI Act compliance what [X] did for SOC2" is 10× more effective than a cold generic pitch.
+  </div>
+
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">TIER 1 — EU/REGTECH THESIS INVESTORS</p>
+  <table class="inv-table" style="margin-bottom:32px;">
+    <thead>
+      <tr>
+        <th>Firm / Investor</th>
+        <th>Type</th>
+        <th>Why Target</th>
+        <th>Approach Angle</th>
+        <th>Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Notion Capital</strong><br><span style="color:var(--muted);font-size:12px;">London/EU B2B SaaS</span></td>
+        <td>VC</td>
+        <td>EU enterprise SaaS focus, portfolio includes compliance-adjacent plays</td>
+        <td>EU AI Act deadline urgency + B2B2B auditor model</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+      <tr>
+        <td><strong>Dawn Capital</strong><br><span style="color:var(--muted);font-size:12px;">EU-focused B2B</span></td>
+        <td>VC</td>
+        <td>Deep EU market focus, backs infrastructure and compliance plays</td>
+        <td>India delivery cost + EU regulatory enforcement window</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+      <tr>
+        <td><strong>Connect Ventures</strong><br><span style="color:var(--muted);font-size:12px;">London seed</span></td>
+        <td>Seed VC</td>
+        <td>Backs founder-market fit, early B2B infrastructure plays</td>
+        <td>Solo technical founder + Aug 2026 market creation</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+      <tr>
+        <td><strong>Seedcamp</strong><br><span style="color:var(--muted);font-size:12px;">Pan-European seed</span></td>
+        <td>Seed VC</td>
+        <td>EU-origin founders, regulatory tech track record (Revolut era)</td>
+        <td>EU enforcement deadline + auditor distribution lever</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+      <tr>
+        <td><strong>Speedinvest</strong><br><span style="color:var(--muted);font-size:12px;">Vienna/EU deep tech</span></td>
+        <td>VC</td>
+        <td>Fintech/RegTech focus, EU-native thesis, portfolio includes governance tools</td>
+        <td>AI Act = GDPR moment for compliance infrastructure</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+      <tr>
+        <td><strong>Cavalry Ventures</strong><br><span style="color:var(--muted);font-size:12px;">Berlin B2B seed</span></td>
+        <td>Seed VC</td>
+        <td>DACH B2B focus, high exposure to Annex III enterprises (manufacturing, HealthTech)</td>
+        <td>DACH enterprises are prime Annex III targets — 4 of top 5 affected sectors are DACH-heavy</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+      <tr>
+        <td><strong>Credo AI investors</strong><br><span style="color:var(--muted);font-size:12px;">Decibel VC, Mozilla Ventures, FPV</span></td>
+        <td>VC</td>
+        <td>Already proven AI governance thesis, understand category. Lookover = their portfolio's missing EU/services layer</td>
+        <td>"We complement your existing AI governance portfolio — B2B2B channel they can't reach"</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+      <tr>
+        <td><strong>Antler EU</strong><br><span style="color:var(--muted);font-size:12px;">Global seed, EU active</span></td>
+        <td>Seed VC</td>
+        <td>Active in AI, backs solo founders, fast process</td>
+        <td>Strong technical founder, clear market urgency</td>
+        <td><span class="tier tier-1">Tier 1</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">TIER 2 — INDIA-ORIGIN GLOBAL B2B FUNDS</p>
+  <table class="inv-table" style="margin-bottom:32px;">
+    <thead>
+      <tr>
+        <th>Firm / Investor</th>
+        <th>Type</th>
+        <th>Why Target</th>
+        <th>Approach Angle</th>
+        <th>Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Blume Ventures</strong><br><span style="color:var(--muted);font-size:12px;">Bengaluru/Mumbai seed</span></td>
+        <td>Seed VC</td>
+        <td>Most active seed investor in India 2025, backs deep tech and enterprise, new AI thesis fund</td>
+        <td>India-to-EU regulatory SaaS — same playbook as SaaS GCC plays they've backed</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Accel India</strong><br><span style="color:var(--muted);font-size:12px;">Bengaluru</span></td>
+        <td>VC</td>
+        <td>Deep enterprise SaaS track record (Freshworks, Chargebee), AI thesis active</td>
+        <td>Compliance infrastructure is enterprise-grade, high NRR, low churn — Accel's sweet spot</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+      <tr>
+        <td><strong>3one4 Capital</strong><br><span style="color:var(--muted);font-size:12px;">Bengaluru seed</span></td>
+        <td>Seed VC</td>
+        <td>Strong thesis on global B2B from India, backed compliance-adjacent startups</td>
+        <td>Global compliance market + India cost base = outsized margin story</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Stellaris Venture</strong><br><span style="color:var(--muted);font-size:12px;">Bengaluru seed/Series A</span></td>
+        <td>Seed VC</td>
+        <td>Enterprise SaaS focus, known for backing "boring but critical" infrastructure plays</td>
+        <td>Compliance infra = recurring, expanding revenue — exactly their thesis</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Lightspeed India</strong><br><span style="color:var(--muted);font-size:12px;">Bengaluru</span></td>
+        <td>VC</td>
+        <td>Active in AI and enterprise, global network to help EU expansion</td>
+        <td>Category creation play — early in an enforcement-driven market cycle</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Peak XV (ex-Sequoia India)</strong><br><span style="color:var(--muted);font-size:12px;">Bengaluru</span></td>
+        <td>VC</td>
+        <td>Freshly independent, raising $1.4B fund, AI and enterprise focus</td>
+        <td>Position as category-defining play — they like to lead category-creation rounds</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Speciale Invest</strong><br><span style="color:var(--muted);font-size:12px;">Deep tech India seed</span></td>
+        <td>Seed VC</td>
+        <td>Deep tech + AI focus, part of India Deep Tech Alliance</td>
+        <td>AI compliance as critical infrastructure — fits deep tech thesis</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Better Tomorrow Ventures</strong><br><span style="color:var(--muted);font-size:12px;">US seed, backed Credo AI</span></td>
+        <td>Seed VC</td>
+        <td>Already invested in adjacent AI governance space</td>
+        <td>"We're your EU/services-layer complement to the Credo AI you already backed"</td>
+        <td><span class="tier tier-2">Tier 2</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">TIER 3 — ANGELS & STRATEGIC INVESTORS</p>
+  <table class="inv-table">
+    <thead>
+      <tr>
+        <th>Profile</th>
+        <th>Where to Find</th>
+        <th>Value Beyond Money</th>
+        <th>Tier</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Ex-Big4 Partner (AI/Risk practice)</strong><br><span style="color:var(--muted);font-size:12px;">Ex-EY, KPMG, PwC, Deloitte partners who ran AI assurance or data governance practices</span></td>
+        <td>LinkedIn · "AI Assurance" · "Risk Advisory Partner"</td>
+        <td>Brings immediate design-partner audit firm relationships + credibility</td>
+        <td><span class="tier tier-3">Tier 3</span></td>
+      </tr>
+      <tr>
+        <td><strong>In-house Chief Compliance Officer at EU FinTech/HealthTech</strong><br><span style="color:var(--muted);font-size:12px;">CCOs at companies deploying Annex III AI — they know the pain firsthand</span></td>
+        <td>LinkedIn · FinTech Belgium, FinTech Germany communities</td>
+        <td>Becomes first paying client + reference customer</td>
+        <td><span class="tier tier-3">Tier 3</span></td>
+      </tr>
+      <tr>
+        <td><strong>EU AI Policy / Notified Body Expert</strong><br><span style="color:var(--muted);font-size:12px;">Ex-EU AI Office staff, national competent authority, or Notified Body assessors</span></td>
+        <td>LinkedIn · EU AI Office alumni · Brussels policy networks</td>
+        <td>Regulatory credibility + direct network to first clients</td>
+        <td><span class="tier tier-3">Tier 3</span></td>
+      </tr>
+      <tr>
+        <td><strong>LegalTech/ComplianceTech Angel Syndicates</strong><br><span style="color:var(--muted);font-size:12px;">Groups like Legalist, FJ Labs (for compliance), or Antler alumni angels</span></td>
+        <td>AngelList · LegalTech Fund · OpenVC</td>
+        <td>Fast process, smaller checks, strong domain signal</td>
+        <td><span class="tier tier-3">Tier 3</span></td>
+      </tr>
+      <tr>
+        <td><strong>Indian Enterprise SaaS Founders (exited)</strong><br><span style="color:var(--muted);font-size:12px;">Founders from Chargebee, Freshworks, Postman, Leadsquared vintage who now angel</span></td>
+        <td>LinkedIn · SaaSBOOMi community · YourStory angel lists</td>
+        <td>Operational advice + India ecosystem network for enterprise deals</td>
+        <td><span class="tier tier-3">Tier 3</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECTION 03: OUTREACH CADENCE -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num green">03</span>
+    <div>
+      <div class="section-title">OUTREACH CADENCE</div>
+      <div class="section-sub">8-week campaign plan — build momentum, not confusion</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Key principle:</strong> Run your raise like a product launch. Create a compressed timeline, generate FOMO via parallel conversations, and always anchor the urgency on August 2, 2026 — not your fundraising timeline. Investors should feel like they're deciding before a regulatory window closes, not before your cash runs out.
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot">W1</div>
+      <div class="timeline-week">Week 1–2 · Tier 1 Warm Outreach</div>
+      <div class="timeline-title">Lead with your strongest connections — warm intros only</div>
+      <div class="timeline-body">Reach out to 8–10 Tier 1 investors via warm intro. Ask mutual connections (founders they've backed, LPs, advisors) to make the intro. Attach the deck one-pager only — full deck only if they ask. Your goal: 4–6 first calls booked. Do NOT cold-approach Tier 1 in week 1.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot">W3</div>
+      <div class="timeline-week">Week 3–4 · Tier 2 Parallel + First Calls</div>
+      <div class="timeline-title">Expand to India VCs + run first pitch meetings</div>
+      <div class="timeline-body">Begin cold outreach to Tier 2 India funds (email + LinkedIn). Run first pitch meetings from Week 1–2 outreach. Get specific on feedback — what objections come up? Refine deck accordingly. Target: 10–12 Tier 2 firms contacted, 6 first calls from Tier 1 booked or held.</div>
+    </div>
+    <div class="timeline-item gold">
+      <div class="timeline-dot gold">W5</div>
+      <div class="timeline-week">Week 5–6 · Second Meetings + Angels Parallel</div>
+      <div class="timeline-title">Convert first calls to second meetings + start angel conversations</div>
+      <div class="timeline-body">Follow up with Tier 1 who showed interest — send deck additions (competitive landscape, team hire plan). Begin angel outreach (LinkedIn DMs to ex-Big4 partners, CCOs). Aim for 3–4 "serious conversations" with term sheet potential in motion. Use language: "We have strong interest from a few firms — happy to intro you to the lead if you want to come alongside."</div>
+    </div>
+    <div class="timeline-item green">
+      <div class="timeline-dot green">W7</div>
+      <div class="timeline-week">Week 7–8 · Close + Negotiate</div>
+      <div class="timeline-title">Create close urgency around the August deadline</div>
+      <div class="timeline-body">Set a soft close date: "We're aiming to close by [date] to have capital deployed before the August enforcement window." Push for term sheets. For angels, aggregate via SAFE instruments with same cap. Don't let conversations linger — give 2-week decision windows.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 04: EMAIL TEMPLATES -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <div>
+      <div class="section-title">EMAIL TEMPLATES</div>
+      <div class="section-sub">Ready-to-adapt outreach for each scenario — personalize the [brackets] before sending</div>
+    </div>
+  </div>
+
+  <!-- Template 1: Warm Intro -->
+  <div class="email-block">
+    <div class="email-header">
+      <span class="email-type">Template 01 · Warm Intro Request</span>
+      <span class="email-usage">Send to mutual contact asking for intro — DO NOT skip this step for Tier 1</span>
+    </div>
+    <div class="email-subject"><span>Subject: </span>Quick favor — intro to [INVESTOR NAME] at [FUND]?</div>
+    <div class="email-body"><strong>Hi [MUTUAL CONTACT],</strong>
+
+Hope you're well. I'm raising a $1.5M seed for Lookover — we're building AI compliance tooling and services for audit firms ahead of the EU AI Act's August 2026 enforcement deadline.
+
+[INVESTOR NAME] backed [PORTFOLIO COMPANY IN ADJACENT SPACE] which is why I think they'd find this compelling. The timing is tight — we're one of the first India-based firms building specifically for the auditor channel, and the Aug 2026 deadline is creating urgent inbound demand we can't handle without capital.
+
+Would you be comfortable making a quick intro? I can send you a one-pager to forward if that's easier.
+
+Thanks so much — appreciate you.
+
+<strong>[Your name]</strong>
+Lookover.io · sid@lookover.io</div>
+    <div class="email-note">💡 NOTE: Always use warm intros for Tier 1. Cold-emailing top-tier VCs has &lt;1% response rate. Spend time finding the connection, not perfecting the cold email.</div>
+  </div>
+
+  <!-- Template 2: Cold Outreach -->
+  <div class="email-block gold">
+    <div class="email-header">
+      <span class="email-type">Template 02 · Cold Outreach (Tier 1–2)</span>
+      <span class="email-usage">When no warm intro is available — lead with a specific portfolio hook</span>
+    </div>
+    <div class="email-subject"><span>Subject: </span>AI Act enforcement in 102 days — building the audit infrastructure [FUND] should know about</div>
+    <div class="email-body"><strong>Hi [PARTNER NAME],</strong>
+
+I'm Sid, founder of Lookover.io. I'll be brief — I know you're busy.
+
+On August 2nd, 2026 (102 days from now), the EU AI Act's full high-risk AI obligations come into force. Every FinTech, HealthTech, and HRTech company using AI in EU-regulated categories must have a third-party audit or face fines up to €35M.
+
+The problem: audit firms have no tooling to do this. The Big4 are charging €250K–€500K for 100-day manual programs. Mid-tier and boutique firms have nothing.
+
+<strong>We're building the picks-and-shovels for auditors</strong> — AI compliance services + a SaaS observability platform (Lookover), positioned as the B2B2B layer that arms audit firms rather than competing with them. One Big4 partnership = access to hundreds of their clients.
+
+We're raising $1.5M seed. India-based delivery means 60–70% lower cost than EU competitors. Comparable: Credo AI raised $41M in this space — we're entering earlier with an auditor-channel GTM and a harder regulatory wedge.
+
+I saw you backed [RELEVANT PORTFOLIO COMPANY]. Happy to share the deck if the thesis resonates.
+
+<strong>Sid</strong>
+Lookover.io · sid@lookover.io</div>
+    <div class="email-note">💡 NOTE: Replace [RELEVANT PORTFOLIO COMPANY] with a specific portfolio company in compliance, enterprise SaaS, or AI governance. Generic emails don't work. This one should take 3 minutes to customize.</div>
+  </div>
+
+  <!-- Template 3: Follow-up after first call -->
+  <div class="email-block green">
+    <div class="email-header">
+      <span class="email-type">Template 03 · Post-First Call Follow-Up</span>
+      <span class="email-usage">Send within 24 hours of first meeting — include deck + specific next step</span>
+    </div>
+    <div class="email-subject"><span>Subject: </span>Lookover — deck + the two things you asked about</div>
+    <div class="email-body"><strong>Hi [NAME],</strong>
+
+Great speaking with you earlier. As promised, attaching the full deck.
+
+Two things you asked about specifically:
+
+<strong>1. Revenue model clarity:</strong> Agency services generate near-term cash (€15K–€45K per compliance assessment). Lookover SaaS creates the recurring layer (auditor white-label licenses + per-client monitoring fees). We're not betting on product revenue at seed — the agency funds the product build and validates the market.
+
+<strong>2. Pre-traction risk:</strong> You're right that we're pre-revenue. The thesis is: the August 2026 deadline means the first firm with a credible auditor-channel solution gets disproportionate distribution. We're raising to be that firm — specifically to hire an ex-Big4 compliance lead who brings the first 3 audit firm design partners at signing.
+
+Happy to set up a second call with your team. We're hoping to have term sheets in place within the next 3–4 weeks — a few other conversations are progressing well and we want to give you time to move if this fits your thesis.
+
+<strong>Sid</strong>
+Lookover.io · +91 [your number]</div>
+    <div class="email-note">💡 NOTE: Always reference specific objections from the call. Shows you listened and are thoughtful. The "a few other conversations progressing" line is social proof — use it once you have ≥2 active conversations.</div>
+  </div>
+
+  <!-- Template 4: Angel/Strategic -->
+  <div class="email-block">
+    <div class="email-header">
+      <span class="email-type">Template 04 · Angel / Strategic Investor (ex-Big4 / CCO profile)</span>
+      <span class="email-usage">For domain-expert angels — lead with their specific pain, not your product</span>
+    </div>
+    <div class="email-subject"><span>Subject: </span>Building the AI audit tooling you probably wished existed — quick 15min?</div>
+    <div class="email-body"><strong>Hi [NAME],</strong>
+
+I came across your profile after reading about your work at [COMPANY/FIRM] — specifically your [AI assurance / compliance / risk practice] background.
+
+I'm building Lookover — an AI compliance platform designed for audit firms, not enterprises. The thesis: audit firms are being asked to run EU AI Act audits starting August 2026 but have zero AI-native tooling or methodology. You likely know this problem from the inside.
+
+We provide the picks-and-shovels: standardized audit methodology, automated evidence collection (Article 72, Annex III), a white-label auditor portal, and a compliance agency arm that delivers engagements at 60–70% lower cost than Big4.
+
+I'm raising a $1.5M seed and would love to have a strategic investor who understands the audit side of this equation — even at a modest check size ($25K–$100K range), your domain credibility and network would be as valuable as the capital.
+
+Would you be open to a 15-minute call this week?
+
+<strong>Sid</strong>
+Lookover.io · sid@lookover.io</div>
+    <div class="email-note">💡 NOTE: For angels, the check size range ($25K–$100K) removes the "am I big enough?" anxiety. Lead with their expertise being valuable — not just their money. This profile often becomes your first design-partner audit firm intro.</div>
+  </div>
+</div>
+
+<!-- SECTION 05: OBJECTION HANDLING -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num gold">05</span>
+    <div>
+      <div class="section-title">OBJECTION HANDLING</div>
+      <div class="section-sub">The 6 objections you'll hear — and how to answer them</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card red">
+      <div class="card-title">"You're pre-traction. Too early for us."</div>
+      <div class="card-body" style="margin-top:8px;"><strong style="color:var(--accent2);">Answer:</strong> "Correct — we're raising <em>to create</em> traction, not after we have it. The window is defined by an external deadline, not our timeline. Our first use of funds is hiring an ex-Big4 compliance lead who brings design-partner relationships at signing. That's not a typical pre-traction risk profile — the hire <em>is</em> the traction."</div>
+    </div>
+    <div class="card red">
+      <div class="card-title">"Audit firms are slow. Long sales cycles."</div>
+      <div class="card-body" style="margin-top:8px;"><strong style="color:var(--accent2);">Answer:</strong> "True for cold outreach. Not true when an ex-Big4 partner walks into their former firm with a ready-made product. The compliance lead hire solves the sales cycle objection — they're not selling to strangers, they're equipping colleagues."</div>
+    </div>
+    <div class="card gold">
+      <div class="card-title">"Credo AI / Holistic AI already exist."</div>
+      <div class="card-body" style="margin-top:8px;"><strong style="color:var(--accent2);">Answer:</strong> "Credo AI is product-only, US-enterprise-focused, $41M raised — they've proven the category. We're EU-specific, services + product, and selling through auditors not direct to enterprises. We're not competing with Credo AI — we're the layer below them that audit firms use to run client engagements."</div>
+    </div>
+    <div class="card gold">
+      <div class="card-title">"What if Big4 build this themselves?"</div>
+      <div class="card-body" style="margin-top:8px;"><strong style="color:var(--accent2);">Answer:</strong> "They won't. They're already charging €250–500K for manual delivery and can't build software fast enough for August 2026. They need a vendor. This is a classic 'arms dealer' dynamic — we've seen it with Vanta/Drata for SOC2, where Big4 audit firms recommend the tooling rather than competing with it."</div>
+    </div>
+    <div class="card">
+      <div class="card-title">"Is the EU AI Act enforcement real?"</div>
+      <div class="card-body" style="margin-top:8px;"><strong style="color:var(--accent2);">Answer:</strong> "Finland activated its national enforcement authority in January 2026. Other NCAs are activating throughout H1. M&A deals are already pricing in Annex III compliance gaps — a €180M deal closed at €173M in Q1 2026 specifically due to AI Act exposure. This is not a theoretical risk."</div>
+    </div>
+    <div class="card">
+      <div class="card-title">"$6–8M valuation cap seems high pre-traction."</div>
+      <div class="card-body" style="margin-top:8px;"><strong style="color:var(--accent2);">Answer:</strong> "We're flexible on cap and structure. For the right partner with domain expertise in compliance or EU enterprise, we'll work with you. What we need is a lead who gets the regulatory timing — that's more valuable than getting a lower cap on a company that misses its window."</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 06: SUPPORTING MATERIALS -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num green">06</span>
+    <div>
+      <div class="section-title">SUPPORTING MATERIALS CHECKLIST</div>
+      <div class="section-sub">What to have ready before you start outreach</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-meta">Must-have before Week 1</div>
+      <div class="card-title">Core Deck Package</div>
+      <div class="card-body">
+        ✓ Full 16-slide pitch deck (complete)<br>
+        ✗ One-page PDF teaser (create from slide 1 + 5 + 14)<br>
+        ✗ Executive summary email-ready paragraph (3 sentences)<br>
+        ✗ Calendly or Savvycal booking link<br>
+        ✗ lookover.io investor page (basic, with deck form)
+      </div>
+    </div>
+    <div class="card gold">
+      <div class="card-meta">Must-have before Week 3</div>
+      <div class="card-title">Diligence Materials</div>
+      <div class="card-body">
+        ✗ Cap table (clean, with founder shares + ESOP pool)<br>
+        ✗ Financial model: 18-month burn, revenue projections<br>
+        ✗ Technical architecture diagram (Lookover platform)<br>
+        ✗ Compliance lead job description (ready to share)<br>
+        ✗ Competitive landscape 1-pager
+      </div>
+    </div>
+    <div class="card green">
+      <div class="card-meta">Nice-to-have</div>
+      <div class="card-title">Social Proof</div>
+      <div class="card-body">
+        ✗ LinkedIn post about raising (creates inbound)<br>
+        ✗ EU AI Act explainer content (builds authority)<br>
+        ✗ 2–3 testimonial quotes from compliance professionals<br>
+        ✗ Press/media mention if possible (EU AI Act coverage)<br>
+        ✗ Design partner LOI even if unpaid (shows pull)
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <div class="footer-brand">LOOKOVER.IO</div>
+  <div class="footer-meta">
+    SEED RAISE · $1.5M · APRIL 2026<br>
+    CONFIDENTIAL · INVESTOR USE ONLY<br>
+    sid@lookover.io
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HLD Prep Plan — AI Systems Focus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:      #0d0d0d;
+  --surface: #141414;
+  --surface2:#1c1c1c;
+  --surface3:#232323;
+  --border:  #2a2a2a;
+  --border2: #3a3a3a;
+  --text:    #e8e6e1;
+  --muted:   #9a9a95;
+  --faint:   #5a5a5a;
+
+  --accent:       #ff6534;
+  --accent2:      #ff8a5c;
+  --accent-glow:  rgba(255,101,52,0.15);
+  --green:   #3ecf8e;
+  --blue:    #4a9eff;
+  --gold:    #e8b44b;
+  --purple:  #b57dff;
+  --red:     #ff5a65;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { background: var(--bg); color: var(--text); }
+
+body {
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.5;
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Top bar */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.topbar .tag { color: var(--accent); }
+.topbar .right { color: var(--faint); }
+
+/* Hero */
+.hero {
+  padding: 80px 0 60px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 28px; height: 1px;
+  background: var(--accent);
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(38px, 7vw, 84px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 720px;
+  margin-bottom: 48px;
+  line-height: 1.55;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.stat {
+  padding: 24px 20px 24px 0;
+  border-right: 1px solid var(--border);
+}
+.stat:last-child { border-right: none; padding-right: 0; }
+.stat:not(:first-child) { padding-left: 20px; }
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 1;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.stat-num .unit { color: var(--accent); }
+
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Section */
+section {
+  padding: 72px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(26px, 3.5vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 18px;
+  color: var(--text);
+}
+
+.section-intro {
+  color: var(--muted);
+  max-width: 780px;
+  margin-bottom: 44px;
+  font-size: 16px;
+}
+
+h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.005em;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+h4 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+p { margin-bottom: 14px; }
+
+/* Phase cards (roadmap) */
+.phase-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.phase {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 22px;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+.phase:hover { border-color: var(--accent); background: var(--surface2); }
+
+.phase-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--faint);
+  margin-bottom: 8px;
+}
+
+.phase-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.phase-days {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.phase-body {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* Topic card — the main workhorse */
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.topic:hover { border-color: var(--border2); }
+
+.topic-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.topic-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topic-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--faint);
+  letter-spacing: 0.2em;
+  border: 1px solid var(--border2);
+  padding: 4px 10px;
+}
+
+.topic-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+}
+.pill.ai { color: var(--accent); border-color: rgba(255,101,52,0.4); background: var(--accent-glow); }
+.pill.core { color: var(--blue); border-color: rgba(74,158,255,0.4); background: rgba(74,158,255,0.08); }
+.pill.hot { color: var(--red); border-color: rgba(255,90,101,0.4); background: rgba(255,90,101,0.08); }
+
+.topic-body {
+  padding: 24px 28px 28px;
+}
+
+.topic-summary {
+  color: var(--text);
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+.topic-summary em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.subsection {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border);
+}
+.subsection:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+
+/* AI angle callout */
+.ai-angle {
+  background: rgba(255,101,52,0.06);
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px;
+  margin: 18px 0;
+  font-size: 14px;
+  color: var(--text);
+}
+.ai-angle strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Resources list */
+.resources {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.resources li {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+.resources li:hover { background: var(--surface3); border-color: var(--border2); }
+
+.res-type {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border2);
+  padding: 4px 8px;
+  text-align: center;
+}
+.res-type.video { color: var(--red); border-color: rgba(255,90,101,0.4); }
+.res-type.blog  { color: var(--green); border-color: rgba(62,207,142,0.4); }
+.res-type.book  { color: var(--purple); border-color: rgba(181,125,255,0.4); }
+.res-type.docs  { color: var(--blue); border-color: rgba(74,158,255,0.4); }
+.res-type.paper { color: var(--gold); border-color: rgba(232,180,75,0.4); }
+.res-type.code  { color: var(--accent); border-color: rgba(255,101,52,0.4); }
+
+.res-title {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.res-title .by {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.res-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid rgba(255,101,52,0.4);
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.res-link:hover { background: var(--accent-glow); }
+
+/* Inline two-column */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.split .panel {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.panel h4 { margin-bottom: 12px; }
+.panel ul {
+  list-style: none;
+  padding: 0;
+}
+.panel ul li {
+  position: relative;
+  padding: 6px 0 6px 18px;
+  font-size: 14px;
+  color: var(--text);
+  border-bottom: 1px dashed var(--border);
+}
+.panel ul li:last-child { border-bottom: none; }
+.panel ul li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Code block */
+pre {
+  background: #070707;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--green);
+  overflow-x: auto;
+  margin: 16px 0;
+  line-height: 1.5;
+}
+
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.88em;
+  background: var(--surface2);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+pre code { background: none; padding: 0; border: none; color: inherit; }
+
+/* Interview question list */
+.questions {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 22px 26px;
+  margin-top: 18px;
+  counter-reset: qcount;
+  list-style: none;
+}
+.questions li {
+  counter-increment: qcount;
+  padding: 10px 0 10px 42px;
+  position: relative;
+  font-size: 14px;
+  color: var(--text);
+  border-bottom: 1px dashed var(--border);
+}
+.questions li:last-child { border-bottom: none; }
+.questions li::before {
+  content: 'Q' counter(qcount, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+th {
+  background: var(--surface3);
+  text-align: left;
+  padding: 12px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+tr:last-child td { border-bottom: none; }
+
+/* Weekly schedule */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.week {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-top: 3px solid var(--accent);
+}
+
+.week-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.week-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.week ul {
+  list-style: none;
+  padding: 0;
+}
+.week ul li {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 4px 0 4px 14px;
+  position: relative;
+}
+.week ul li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Tab of contents */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  margin-bottom: 36px;
+}
+
+.toc-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+.toc-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 24px;
+  list-style: none;
+  padding: 0;
+}
+
+.toc-list li {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text);
+  border-bottom: 1px dashed var(--border);
+  align-items: center;
+}
+.toc-list li:hover { color: var(--accent); }
+.toc-list .n { color: var(--faint); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+.toc-list a { color: inherit; text-decoration: none; }
+.toc-list a:hover { color: var(--accent); }
+.toc-list .tag-ai {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+}
+
+/* Footer */
+footer {
+  padding: 40px 0 60px;
+  text-align: center;
+  color: var(--faint);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+footer .line {
+  display: inline-block;
+  width: 40px;
+  height: 1px;
+  background: var(--border2);
+  margin: 0 14px;
+  vertical-align: middle;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.phase:nth-child(1) { animation: fadeUp 0.4s ease 0.05s both; }
+.phase:nth-child(2) { animation: fadeUp 0.4s ease 0.10s both; }
+.phase:nth-child(3) { animation: fadeUp 0.4s ease 0.15s both; }
+.phase:nth-child(4) { animation: fadeUp 0.4s ease 0.20s both; }
+
+.week:nth-child(1) { animation: fadeUp 0.4s ease 0.05s both; }
+.week:nth-child(2) { animation: fadeUp 0.4s ease 0.10s both; }
+.week:nth-child(3) { animation: fadeUp 0.4s ease 0.15s both; }
+.week:nth-child(4) { animation: fadeUp 0.4s ease 0.20s both; }
+
+/* Responsive */
+@media (max-width: 860px) {
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-stats .stat:nth-child(2) { border-right: none; }
+  .hero-stats .stat:nth-child(1), .hero-stats .stat:nth-child(2) { border-bottom: 1px solid var(--border); }
+  .phase-grid { grid-template-columns: repeat(2, 1fr); }
+  .split { grid-template-columns: 1fr; }
+  .week-grid { grid-template-columns: repeat(2, 1fr); }
+  .toc-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .hero-stats { grid-template-columns: 1fr; }
+  .hero-stats .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 18px 0 !important; }
+  .phase-grid { grid-template-columns: 1fr; }
+  .week-grid { grid-template-columns: 1fr; }
+  .resources li { grid-template-columns: 1fr; gap: 8px; }
+  .resources li .res-type { justify-self: start; }
+  .topic-head { flex-direction: column; }
+  section { padding: 48px 0; }
+}
+
+@media print {
+  body { background: white; color: #111; }
+  .topbar { position: static; background: #eee; color: #333; }
+  .topic, .phase, .week, .toc, .questions, .panel, .resources li, .ai-angle {
+    background: white !important;
+    border-color: #ccc !important;
+    color: #111 !important;
+  }
+  pre { background: #f4f4f4 !important; color: #111 !important; }
+  body::before { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><span class="tag">● HLD PREP</span> &nbsp; AI SYSTEMS TRACK &nbsp; · &nbsp; 13 CORE TOPICS</div>
+  <div class="right">DOCUMENT v1 · PERSONAL · SID</div>
+</div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero" style="border-bottom: 1px solid var(--border); padding-top: 72px;">
+    <div class="hero-eyebrow">Preparation Dossier / System Design Interviews</div>
+    <h1>High-Level Design.<br/>For <em>AI-native</em> engineers.</h1>
+    <p class="hero-sub">
+      A structured 8-week prep plan covering the 13 core HLD topics you listed — each one reframed through the lens of modern AI infrastructure: LLM inference, RAG pipelines, agentic systems, GPU autoscaling, and observability for non-deterministic workloads. Every topic has curated resources (books, blogs, YouTube, papers, docs), an AI-specific angle, and interview questions to self-test against.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">13<span class="unit">+1</span></div>
+        <div class="stat-label">Core Topics</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">8<span class="unit">wk</span></div>
+        <div class="stat-label">Study Plan</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">80<span class="unit">+</span></div>
+        <div class="stat-label">Curated Resources</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">40<span class="unit">h</span></div>
+        <div class="stat-label">Mock Design Time</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOC -->
+  <section style="padding-top: 56px;">
+    <div class="section-label">Index / Jump To</div>
+    <h2>Table of contents</h2>
+    <div class="toc" style="margin-top: 28px;">
+      <div class="toc-title">▾ Thirteen topics, an add-on, and a schedule</div>
+      <ul class="toc-list">
+        <li><span class="n">01</span><a href="#t1">Language &amp; Concurrency</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">02</span><a href="#t2">CI/CD for AI Systems</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">03</span><a href="#t3">Observability &amp; Dashboards</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">04</span><a href="#t4">Databases — Partition, Shard, Tune</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">05</span><a href="#t5">Kubernetes &amp; GPU Autoscaling</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">06</span><a href="#t6">Load Balancers</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">07</span><a href="#t7">Rate Limiting — Leaky Bucket et al.</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">08</span><a href="#t8">Idempotency</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">09</span><a href="#t9">Caching &amp; Invalidation</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">10</span><a href="#t10">Distributed Systems</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">11</span><a href="#t11">Event-Driven — Kafka, RabbitMQ</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">12</span><a href="#t12">DNS &amp; CDN</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">13</span><a href="#t13">RPC &amp; gRPC</a><span class="tag-ai">⌃ AI</span></li>
+        <li><span class="n">14</span><a href="#t14">AI Add-on — RAG, Serving, Agents</a><span class="tag-ai">⌃ NEW</span></li>
+        <li><span class="n">15</span><a href="#schedule">8-Week Schedule</a><span class="tag-ai">⌃ PLAN</span></li>
+        <li><span class="n">16</span><a href="#practice">Practice Problems</a><span class="tag-ai">⌃ MOCK</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap">
+    <div class="section-label">Overview / 8-Week Structure</div>
+    <h2>The plan, in four phases</h2>
+    <p class="section-intro">Treat this like a curriculum. Don't jump ahead — each phase assumes comfort with the previous. Phase 1 gives you the vocabulary; Phase 2 gives you the plumbing; Phase 3 makes it scale; Phase 4 is where you combine everything into full AI systems you can defend in an interview.</p>
+
+    <div class="phase-grid">
+      <div class="phase">
+        <div class="phase-num">PHASE 01</div>
+        <div class="phase-name">Foundations</div>
+        <div class="phase-days">Weeks 1–2</div>
+        <div class="phase-body">Language &amp; concurrency primitives, core distributed-systems vocabulary, RPC/gRPC basics. The stuff every other topic depends on.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">PHASE 02</div>
+        <div class="phase-name">Plumbing</div>
+        <div class="phase-days">Weeks 3–4</div>
+        <div class="phase-body">Databases (partition, shard, tune), caching, load balancers, rate limiting, idempotency. The stateful machinery.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">PHASE 03</div>
+        <div class="phase-name">Scale &amp; Ops</div>
+        <div class="phase-days">Weeks 5–6</div>
+        <div class="phase-body">Kubernetes &amp; GPU autoscaling, CI/CD, observability, DNS/CDN, event-driven architectures with Kafka/RabbitMQ.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">PHASE 04</div>
+        <div class="phase-name">AI Systems</div>
+        <div class="phase-days">Weeks 7–8</div>
+        <div class="phase-body">LLM serving (vLLM, SGLang), RAG pipelines, agent infra, semantic caching, evals. Mock interviews end-to-end.</div>
+      </div>
+    </div>
+
+    <div class="ai-angle">
+      <strong>⌃ How to use this doc</strong>
+      For each topic: read the summary, study the resources, write down the AI-specific twist, then answer the practice questions out loud as if in an interview. The goal isn't memorization — it's being able to reason about trade-offs when the interviewer says <em>"but what if the traffic spikes 10x?"</em> or <em>"what breaks when you move from one GPU to a fleet?"</em>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 01                                   -->
+  <!-- =================================================================== -->
+  <section id="t1">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">01</span>Language skills &amp; concurrency</div>
+        <div class="topic-pills">
+          <span class="pill core">FOUNDATION</span>
+          <span class="pill ai">AI-RELEVANT</span>
+        </div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">Concurrency is the first filter in HLD interviews. Expect questions on goroutines vs threads, async/await, GIL behaviour, channels, mutexes, context cancellation, and how your language model handles backpressure. <em>For AI systems specifically:</em> async I/O matters enormously because LLM calls are slow (seconds) and parallel tool calls are common.</p>
+
+        <div class="subsection">
+          <h4>Core concepts to nail</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>Primitives</h4>
+              <ul>
+                <li>Processes vs threads vs coroutines</li>
+                <li>Shared memory vs message passing</li>
+                <li>Mutex, semaphore, RWLock, atomic ops</li>
+                <li>Channels (Go), Futures (Rust), Promises (JS)</li>
+                <li>Actor model (Erlang, Akka)</li>
+                <li>Context cancellation, deadlines, timeouts</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>Traps</h4>
+              <ul>
+                <li>Deadlock, livelock, starvation</li>
+                <li>Race conditions, memory visibility, reordering</li>
+                <li>Thread pool exhaustion under slow I/O</li>
+                <li>Python GIL — when it hurts, when it doesn't</li>
+                <li>Async-over-sync contamination ("coloured functions")</li>
+                <li>Goroutine leaks from un-cancelled contexts</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle</strong>
+          Your LangGraph agents fan out to multiple tools in parallel. You need <code>asyncio.gather</code> with per-task timeouts, bounded semaphores to cap concurrent LLM calls (so you don't blow your rate limit), and proper cancellation so a slow tool doesn't hold up the orchestrator. In Go, this is errgroup + context.WithTimeout. Know this pattern cold — it comes up in every agent system design.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Concurrency in Go <span class="by">— Katherine Cox-Buday</span></span><a class="res-link" href="https://www.oreilly.com/library/view/concurrency-in-go/9781491941294/" target="_blank">O'REILLY →</a></li>
+            <li><span class="res-type book">Book</span><span class="res-title">Designing Data-Intensive Applications, Ch. 7 &amp; 8 <span class="by">— Martin Kleppmann</span></span><a class="res-link" href="https://dataintensive.net/" target="_blank">DDIA →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Rob Pike — Concurrency Is Not Parallelism</span><a class="res-link" href="https://www.youtube.com/watch?v=oV9rvDllKEg" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">What Color Is Your Function? <span class="by">— Bob Nystrom (on async)</span></span><a class="res-link" href="https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/" target="_blank">READ →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">Python asyncio patterns &amp; pitfalls</span><a class="res-link" href="https://docs.python.org/3/library/asyncio.html" target="_blank">DOCS →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: concurrent LLM fan-out with timeouts + semaphore + error aggregation</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 02                                   -->
+  <!-- =================================================================== -->
+  <section id="t2">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">02</span>CI/CD — depth for AI deployments</div>
+        <div class="topic-pills">
+          <span class="pill core">FOUNDATION</span>
+          <span class="pill ai">AI-RELEVANT</span>
+        </div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">Classic CI/CD is well-trodden. The AI twist is: <em>what do you test when the output is probabilistic?</em> Canary by eval score, shadow deployments, prompt versioning, model rollbacks, and feature-flagged prompts are all fair game.</p>
+
+        <div class="subsection">
+          <h4>Standard pillars</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>CI concepts</h4>
+              <ul>
+                <li>Build, test, lint, SAST, SCA stages</li>
+                <li>Matrix builds, caching, artefact stores</li>
+                <li>Trunk-based vs GitFlow</li>
+                <li>PR-preview environments</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>CD strategies</h4>
+              <ul>
+                <li>Blue/green, canary, rolling, recreate</li>
+                <li>Feature flags (LaunchDarkly, Unleash)</li>
+                <li>GitOps with ArgoCD / Flux</li>
+                <li>Progressive delivery (Flagger, Argo Rollouts)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — what's different</strong>
+          A prompt change is a deploy. A model version bump is a deploy. Fine-tune an adapter — deploy. You need: (1) an <strong>eval suite</strong> that runs in CI (golden datasets, LLM-as-judge, pairwise prefs) and gates promotion; (2) <strong>shadow traffic</strong> to compare new prompt/model against prod without affecting users; (3) <strong>canary</strong> by percentage with auto-rollback on quality regression, not just on 5xx rate. This is the modern MLOps/LLMOps delivery loop.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Continuous Delivery <span class="by">— Humble &amp; Farley (the canonical text)</span></span><a class="res-link" href="https://continuousdelivery.com/" target="_blank">SITE →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Google SRE Workbook — chapter on canarying releases</span><a class="res-link" href="https://sre.google/workbook/canarying-releases/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Martin Fowler — Continuous Delivery for ML (CD4ML)</span><a class="res-link" href="https://martinfowler.com/articles/cd4ml.html" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Chip Huyen — CI/CD for machine learning</span><a class="res-link" href="https://huyenchip.com/2021/09/13/data-distribution-shifts-and-monitoring.html" target="_blank">HUYENCHIP →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">ArgoCD GitOps in 100 seconds &amp; full walkthrough <span class="by">— TechWorld with Nana</span></span><a class="res-link" href="https://www.youtube.com/watch?v=MeU5_k9ssrs" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">Argo Rollouts — analysis-based promotion</span><a class="res-link" href="https://argoproj.github.io/argo-rollouts/" target="_blank">DOCS →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: GitHub Actions pipeline that runs LLM evals on PR &amp; blocks merge on regression</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 03                                   -->
+  <!-- =================================================================== -->
+  <section id="t3">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">03</span>Observability — setup, query, visualise</div>
+        <div class="topic-pills">
+          <span class="pill core">FOUNDATION</span>
+          <span class="pill ai">AI-RELEVANT</span>
+          <span class="pill hot">HIGH-YIELD</span>
+        </div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">The three pillars: metrics, logs, traces. Interviewers want to hear you say Prometheus + Grafana for metrics, OpenTelemetry for traces, Loki / ELK for logs. <em>For AI:</em> you also need per-request token counts, TTFT, p95 generation latency, KV-cache utilisation, and quality metrics (hallucination rate, groundedness). Lookover's whole thesis sits here.</p>
+
+        <div class="subsection">
+          <h4>Core stack to know cold</h4>
+          <table>
+            <thead>
+              <tr><th>Pillar</th><th>Tool</th><th>What to practise</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Metrics</td><td>Prometheus + Grafana</td><td>Write PromQL: rate(), histogram_quantile, recording rules, alerts</td></tr>
+              <tr><td>Traces</td><td>OpenTelemetry + Jaeger/Tempo</td><td>Propagate trace context across async boundaries, span attributes</td></tr>
+              <tr><td>Logs</td><td>Loki or ELK</td><td>Structured JSON logs, correlation IDs, log-to-trace linking</td></tr>
+              <tr><td>Profiling</td><td>Pyroscope / pprof</td><td>Continuous profiling in production</td></tr>
+              <tr><td>LLM-specific</td><td>Langfuse, LangSmith, Helicone</td><td>Prompt/response tracing, cost, eval runs</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — the metrics that matter</strong>
+          For LLM inference: <code>TTFT (time-to-first-token)</code>, <code>tokens/sec</code>, <code>queue duration</code>, <code>KV cache utilisation</code>, <code>prompt tokens</code>, <code>completion tokens</code>, <code>$/request</code>. vLLM and TGI expose most of these as Prometheus metrics natively. Your Grafana dashboard should answer: <em>"Is latency degrading because the queue is growing, or because prompts are getting longer?"</em>
+        </div>
+
+        <pre><code># Example PromQL for LLM serving
+# p95 TTFT by model
+histogram_quantile(0.95,
+  sum by (le, model) (rate(vllm_time_to_first_token_seconds_bucket[5m]))
+)
+
+# GPU memory pressure
+DCGM_FI_DEV_FB_USED / DCGM_FI_DEV_FB_TOTAL * 100
+
+# Queue depth (scale trigger)
+sum(vllm_num_requests_waiting) by (model)</code></pre>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Observability Engineering <span class="by">— Majors, Fong-Jones, Miranda (Honeycomb)</span></span><a class="res-link" href="https://www.oreilly.com/library/view/observability-engineering/9781492076438/" target="_blank">O'REILLY →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Zerodha — Monitoring stack with Prometheus, Grafana, VictoriaMetrics</span><a class="res-link" href="https://zerodha.tech/blog/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Monitor LLM inference with Prometheus &amp; Grafana (vLLM, TGI, llama.cpp)</span><a class="res-link" href="https://logicalf.blogspot.com/2026/04/monitor-llm-inference-in-production.html" target="_blank">READ →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Prometheus + Grafana crash course <span class="by">— TechWorld with Nana</span></span><a class="res-link" href="https://www.youtube.com/watch?v=h4Sl21AKiDg" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">OpenTelemetry — concepts &amp; semantic conventions for GenAI</span><a class="res-link" href="https://opentelemetry.io/docs/specs/semconv/gen-ai/" target="_blank">DOCS →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">Langfuse — open-source LLM observability</span><a class="res-link" href="https://langfuse.com/docs" target="_blank">DOCS →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: vLLM + Prometheus + Grafana locally; design a dashboard for one model</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 04                                   -->
+  <!-- =================================================================== -->
+  <section id="t4">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">04</span>Databases — partitioning, sharding, tuning</div>
+        <div class="topic-pills">
+          <span class="pill core">FOUNDATION</span>
+          <span class="pill ai">AI-RELEVANT</span>
+          <span class="pill hot">HIGH-YIELD</span>
+        </div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">This is a multi-topic, high-yield area. You need to distinguish <em>partitioning</em> (logical split within one DB) from <em>sharding</em> (horizontal split across nodes), speak fluently about tuning, and for AI systems specifically — vector databases, hybrid search, and why pgvector-on-Postgres vs a dedicated vector DB matters.</p>
+
+        <div class="subsection">
+          <h4>4.1 Partitioning</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>Strategies</h4>
+              <ul>
+                <li>Range (date-based — most common)</li>
+                <li>List (discrete values: region, tenant)</li>
+                <li>Hash (uniform distribution)</li>
+                <li>Composite (range + hash)</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>Wins</h4>
+              <ul>
+                <li>Partition pruning — query only relevant chunks</li>
+                <li>Parallel query plans</li>
+                <li>Drop old partitions for archival (fast!)</li>
+                <li>Index size stays manageable</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h4>4.2 Sharding</h4>
+          <p>Key decisions: <strong>shard key</strong> (avoid hotspots), <strong>resharding strategy</strong> (consistent hashing vs range splits), <strong>cross-shard queries</strong> (scatter-gather or avoid). Know Vitess (MySQL), Citus (Postgres), MongoDB native sharding, and how Discord reshards.</p>
+        </div>
+
+        <div class="subsection">
+          <h4>4.3 Tuning — the Zerodha playbook</h4>
+          <p>You asked specifically for the Zerodha Postgres blog. Here it is, plus more.</p>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — vector &amp; hybrid search</strong>
+          RAG systems need vector search. Know the trade-offs: <code>pgvector</code> (Postgres extension — keeps metadata JOINs easy) vs dedicated engines (Pinecone, Weaviate, Qdrant, Milvus). Understand IVFFlat vs HNSW indexes. Understand <em>hybrid search</em> (BM25 + vector, fused with Reciprocal Rank Fusion). For most startup-scale RAG, pgvector on Postgres is the right answer — and that's a strong, defensible interview take.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type blog">Blog</span><span class="res-title">Zerodha — Scaling with common sense <span class="by">— Kailash Nadh</span></span><a class="res-link" href="https://zerodha.tech/blog/scaling-with-common-sense/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Zerodha — Working with PostgreSQL (the definitive tuning post)</span><a class="res-link" href="https://zerodha.tech/blog/working-with-postgresql/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Zerodha — 7M Postgres tables reporting hack</span><a class="res-link" href="https://engineeringatscale.substack.com/p/zerodha-seven-million-postgresql-tables" target="_blank">READ →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Kailash Nadh — Scaling 7M+ Postgres Tables (talk)</span><a class="res-link" href="https://www.youtube.com/watch?v=4TE1xErXwGc" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type book">Book</span><span class="res-title">Designing Data-Intensive Applications, Ch. 5 &amp; 6 <span class="by">— Martin Kleppmann</span></span><a class="res-link" href="https://dataintensive.net/" target="_blank">DDIA →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Use the Index, Luke — the practical SQL index guide</span><a class="res-link" href="https://use-the-index-luke.com/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Discord — How we reshard trillions of messages</span><a class="res-link" href="https://discord.com/blog/how-discord-stores-trillions-of-messages" target="_blank">READ →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">pgvector — HNSW &amp; IVFFlat index docs</span><a class="res-link" href="https://github.com/pgvector/pgvector" target="_blank">GITHUB →</a></li>
+            <li><span class="res-type paper">Paper</span><span class="res-title">HNSW: Efficient &amp; robust approximate nearest neighbour search <span class="by">— Malkov &amp; Yashunin</span></span><a class="res-link" href="https://arxiv.org/abs/1603.09320" target="_blank">ARXIV →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: partition a time-series table in pg, run EXPLAIN ANALYZE before/after</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 05                                   -->
+  <!-- =================================================================== -->
+  <section id="t5">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">05</span>Kubernetes — deploy, scale, GPUs</div>
+        <div class="topic-pills">
+          <span class="pill core">FOUNDATION</span>
+          <span class="pill ai">AI-RELEVANT</span>
+          <span class="pill hot">HIGH-YIELD</span>
+        </div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">Classic K8s topics: Deployments, Services, Ingress, ConfigMaps, probes, HPA. <em>For AI:</em> GPU scheduling, MIG (multi-instance GPU), KEDA for scale-to-zero, and DCGM metrics. This is the hottest intersection in interviews right now — GPU-aware autoscaling is a real skill gap in the market.</p>
+
+        <div class="subsection">
+          <h4>5.1 Deployment fundamentals</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>Must-know</h4>
+              <ul>
+                <li>Pod / Deployment / StatefulSet / DaemonSet</li>
+                <li>Service types: ClusterIP, NodePort, LoadBalancer</li>
+                <li>Ingress + ingress controllers (nginx, traefik)</li>
+                <li>Liveness, readiness, startup probes</li>
+                <li>Resource requests vs limits, QoS classes</li>
+                <li>RollingUpdate strategy, maxSurge, maxUnavailable</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>Production concerns</h4>
+              <ul>
+                <li>Pod Disruption Budgets (PDBs)</li>
+                <li>PodAntiAffinity for HA</li>
+                <li>NetworkPolicies for zero-trust</li>
+                <li>ServiceAccounts + RBAC</li>
+                <li>Secrets (sealed-secrets or external-secrets)</li>
+                <li>Graceful shutdown + preStop hooks</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h4>5.2 Minikube for local dev</h4>
+          <p>For practice, <code>minikube</code> or <code>kind</code> is sufficient — but if you want to touch GPUs locally, use <code>kind</code> with the NVIDIA device plugin or just run vLLM in Docker with <code>--gpus all</code>. For production-like labs, GKE, EKS and AKS all have free-tier-ish GPU nodes.</p>
+        </div>
+
+        <div class="subsection">
+          <h4>5.3 Autoscaling — the deep cut</h4>
+          <p>HPA scales on CPU/memory. For AI, that's useless. Your LLM pod is GPU-bound and queue-bound. You need <strong>KEDA</strong> with Prometheus-based triggers.</p>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — scale on queue depth, not CPU</strong>
+          The 2026 interview answer for "how do you scale LLM inference?" is: HPA on custom metrics (<code>vllm_num_requests_waiting</code>, TTFT, GPU utilisation via DCGM exporter) or <strong>KEDA</strong> to scale to zero during idle windows. Combine with <strong>MIG</strong> on A100/H100 for multi-tenant isolation. For cold starts, pre-pull images and cache model weights on a PVC. Know these numbers: 7B model cold start ≈ 30–60s with cached weights; 70B ≈ 2–5 min.
+        </div>
+
+        <pre><code># KEDA ScaledObject — scale vLLM from 0–8 on queue depth
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: vllm-scaler
+spec:
+  scaleTargetRef:
+    name: vllm-deployment
+  minReplicaCount: 0         # scale to zero when idle
+  maxReplicaCount: 8
+  cooldownPeriod: 300
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus:9090
+      metricName: vllm_queue_depth
+      query: sum(vllm_num_requests_waiting)
+      threshold: "5"</code></pre>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Kubernetes in Action <span class="by">— Marko Lukša (the definitive book)</span></span><a class="res-link" href="https://www.manning.com/books/kubernetes-in-action-second-edition" target="_blank">MANNING →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Kubernetes full course <span class="by">— TechWorld with Nana (free, 4+ hours)</span></span><a class="res-link" href="https://www.youtube.com/watch?v=X48VuDVv0do" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Deploying LLMs on Kubernetes: vLLM, Ray Serve &amp; GPU scheduling (2026)</span><a class="res-link" href="https://blog.premai.io/deploying-llms-on-kubernetes-vllm-ray-serve-gpu-scheduling-guide-2026/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Autoscaling K8s GPU workloads — a complete production guide</span><a class="res-link" href="https://medium.com/@penkow/autoscaling-k8s-gpu-workloads-in-production-a-complete-5777843d300f" target="_blank">MEDIUM →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Auto-scaling GPU inference pods with KEDA + cost guards</span><a class="res-link" href="https://markaicode.com/auto-scaling-gpu-inference-kubernetes/" target="_blank">READ →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">KEDA — scalers catalogue (Prometheus, Kafka, HTTP, RabbitMQ…)</span><a class="res-link" href="https://keda.sh/docs/latest/scalers/" target="_blank">DOCS →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">NVIDIA DCGM exporter — GPU metrics for Prometheus</span><a class="res-link" href="https://github.com/NVIDIA/dcgm-exporter" target="_blank">GITHUB →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: deploy vLLM on minikube/kind with HPA on a custom metric</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 06                                   -->
+  <!-- =================================================================== -->
+  <section id="t6">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">06</span>Load balancers</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">L4 vs L7. Algorithms (round-robin, least-conns, weighted, consistent hashing, EWMA). Health checks. Session affinity. <em>For AI:</em> least-request balancing is rarely right for LLM servers — you need <strong>KV-cache-aware routing</strong> because directing a conversation continuation to a worker that already has the prefix cached is an order-of-magnitude latency win.</p>
+
+        <div class="subsection">
+          <h4>Core concepts</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>Types</h4>
+              <ul>
+                <li>L4 (TCP/UDP) — HAProxy, AWS NLB</li>
+                <li>L7 (HTTP) — nginx, Envoy, Traefik, AWS ALB</li>
+                <li>DSR (direct server return)</li>
+                <li>GSLB — global/geo-based (covered in DNS)</li>
+                <li>Service mesh sidecar LB (Envoy via Istio/Linkerd)</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>Algorithms</h4>
+              <ul>
+                <li>Round-robin, weighted round-robin</li>
+                <li>Least connections, least response time</li>
+                <li>IP hash / consistent hashing (sticky)</li>
+                <li>Power-of-two-choices (P2C)</li>
+                <li>EWMA (exponentially-weighted moving average)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — prefix-aware routing</strong>
+          Modern LLM routers (vLLM Production Stack, llm-d, NVIDIA Dynamo) implement <strong>KV-cache-aware</strong> routing: hash the prompt prefix and prefer a worker whose cache already holds it. Combined with <strong>prefill/decode disaggregation</strong> (some workers do the one-shot prefill, others do token-by-token decode), this is the cutting edge of LLM load balancing. If you can explain this in an interview, you'll stand out.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type blog">Blog</span><span class="res-title">Cloudflare — Load balancing at the edge (technical deep dive)</span><a class="res-link" href="https://blog.cloudflare.com/tag/load-balancing/" target="_blank">BLOG →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Netflix — Rethinking Netflix's Edge Load Balancing</span><a class="res-link" href="https://netflixtechblog.com/netflix-edge-load-balancing-695308b5548c" target="_blank">READ →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">System Design — L4 vs L7 Load Balancers <span class="by">— ByteByteGo</span></span><a class="res-link" href="https://www.youtube.com/watch?v=sCR3SAVdyCc" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">Envoy Proxy — HTTP load balancing configuration</span><a class="res-link" href="https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing" target="_blank">DOCS →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">The New Stack — Six frameworks for efficient LLM inferencing (covers routing)</span><a class="res-link" href="https://thenewstack.io/six-frameworks-for-efficient-llm-inferencing/" target="_blank">READ →</a></li>
+            <li><span class="res-type paper">Paper</span><span class="res-title">The Power of Two Choices in Randomized Load Balancing <span class="by">— Mitzenmacher</span></span><a class="res-link" href="https://www.eecs.harvard.edu/~michaelm/postscripts/mythesis.pdf" target="_blank">PDF →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 07                                   -->
+  <!-- =================================================================== -->
+  <section id="t7">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">07</span>Rate limiting — leaky &amp; token bucket</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">Know all five classic algorithms: <em>fixed window, sliding window, sliding window log, token bucket, leaky bucket</em>. Know where you apply them (client, edge, service, DB). For AI systems, rate-limit by <em>tokens</em>, not just requests — otherwise one 100k-token prompt can starve a thousand small ones.</p>
+
+        <div class="subsection">
+          <h4>Algorithm cheatsheet</h4>
+          <table>
+            <thead>
+              <tr><th>Algorithm</th><th>Gist</th><th>Pros / Cons</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fixed window</td><td>Counter per time bucket</td><td>Simple; burst at bucket edges</td></tr>
+              <tr><td>Sliding window log</td><td>Store every timestamp</td><td>Accurate; high memory</td></tr>
+              <tr><td>Sliding window counter</td><td>Weighted average of adjacent windows</td><td>Good balance — most common</td></tr>
+              <tr><td>Token bucket</td><td>Tokens refill at rate <code>r</code>, burst to <code>b</code></td><td>Allows controlled bursts</td></tr>
+              <tr><td>Leaky bucket</td><td>Queue drained at constant rate</td><td>Smooths output; may add latency</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — token-based limits</strong>
+          OpenAI, Anthropic, Google all rate-limit on <strong>tokens per minute (TPM)</strong> in addition to requests per minute (RPM). Your proxy needs to pre-estimate token count from the prompt and reserve capacity. Design a <em>fair-queueing</em> scheme so a big prompt doesn't monopolise — weighted fair queueing with token-cost weights. Also: implement <strong>exponential backoff with jitter</strong> for 429s from upstream providers.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type blog">Blog</span><span class="res-title">Stripe — Scaling your API with rate limiters</span><a class="res-link" href="https://stripe.com/blog/rate-limiters" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Figma — An alternative approach to rate limiting</span><a class="res-link" href="https://www.figma.com/blog/an-alternative-approach-to-rate-limiting/" target="_blank">READ →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Rate Limiting Fundamentals <span class="by">— System Design Interview (Alex Xu/ByteByteGo)</span></span><a class="res-link" href="https://www.youtube.com/watch?v=FU4WlwfS3G0" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Cloudflare — How we built rate limiting capable of scaling to millions</span><a class="res-link" href="https://blog.cloudflare.com/counting-things-a-lot-of-different-things/" target="_blank">READ →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">OpenAI cookbook — how to handle rate limits</span><a class="res-link" href="https://cookbook.openai.com/examples/how_to_handle_rate_limits" target="_blank">COOKBOOK →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: token-bucket rate limiter in Redis that rate-limits by estimated LLM tokens</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 08                                   -->
+  <!-- =================================================================== -->
+  <section id="t8">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">08</span>Idempotency</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">Idempotency keys, dedup windows, retries with exponential backoff + jitter, at-least-once vs exactly-once semantics. Every payment system you've built at DodoPayments lives or dies by this. <em>For AI:</em> agents retry tool calls constantly, and a non-idempotent "send email" tool is a disaster waiting to happen.</p>
+
+        <div class="subsection">
+          <h4>Key patterns</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>Producer side</h4>
+              <ul>
+                <li>Generate idempotency-key on the client</li>
+                <li>Include in request header (e.g. <code>Idempotency-Key</code>)</li>
+                <li>Retry with same key on failure</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>Consumer side</h4>
+              <ul>
+                <li>Dedup store (Redis, DynamoDB) with TTL</li>
+                <li>Unique constraint at DB level as backstop</li>
+                <li>Outbox pattern for transactional publishing</li>
+                <li>Transactional inbox for consumers</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — tool-call idempotency</strong>
+          When an agent calls <code>send_email(to=X, subject=Y, body=Z)</code> and times out, did the email send? Design your tool interface so every call takes an idempotency-key derived from the agent's thought-hash. The orchestrator dedupes on this. This is crucial for your LangGraph agents — the DodoPayments Refund Orchestrator cannot double-refund, ever.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type blog">Blog</span><span class="res-title">Stripe — Designing robust and predictable APIs with idempotency</span><a class="res-link" href="https://stripe.com/blog/idempotency" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Brandur Leach — Implementing Stripe-like idempotency keys in Postgres</span><a class="res-link" href="https://brandur.org/idempotency-keys" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Microservices.io — Transactional outbox &amp; inbox patterns</span><a class="res-link" href="https://microservices.io/patterns/data/transactional-outbox.html" target="_blank">READ →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Designing for failure: exactly-once semantics explained <span class="by">— Arjan Codes / ByteByteGo</span></span><a class="res-link" href="https://www.youtube.com/watch?v=Dz4HxM8fpnU" target="_blank">YOUTUBE →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 09                                   -->
+  <!-- =================================================================== -->
+  <section id="t9">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">09</span>Caching &amp; invalidation</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span><span class="pill hot">HIGH-YIELD</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">Read-through, write-through, write-behind, cache-aside. TTL vs LRU vs LFU eviction. Stampede (thundering herd) prevention. <em>For AI:</em> two massive wins — <strong>prompt caching</strong> (Anthropic &amp; OpenAI both expose it) and <strong>semantic caching</strong> (embed the query, look up near-matches, return cached response if cosine similarity &gt; threshold).</p>
+
+        <div class="subsection">
+          <h4>9.1 Strategies</h4>
+          <table>
+            <thead>
+              <tr><th>Pattern</th><th>Flow</th><th>Trade-off</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Cache-aside (lazy)</td><td>App checks cache → miss → load from DB → populate cache</td><td>Simple; first request slow</td></tr>
+              <tr><td>Read-through</td><td>Cache loads from DB on miss transparently</td><td>Client doesn't know about DB</td></tr>
+              <tr><td>Write-through</td><td>Write to cache &amp; DB synchronously</td><td>Slow writes; strong consistency</td></tr>
+              <tr><td>Write-behind (back)</td><td>Write to cache; flush async to DB</td><td>Fast writes; risk on cache loss</td></tr>
+              <tr><td>Refresh-ahead</td><td>Cache proactively refreshes before TTL</td><td>Hides latency; may over-fetch</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="subsection">
+          <h4>9.2 Invalidation — the hard part</h4>
+          <p>The two hardest things in CS are cache invalidation, naming things, and off-by-one errors. Strategies: <em>TTL</em> (lazy), <em>event-driven invalidation</em> (publish change events), <em>versioned keys</em> (bump version on write), <em>write-through</em> (trivially consistent but slow).</p>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — three caches that matter</strong>
+          <strong>1. Prompt caching</strong> — Anthropic/OpenAI cache repeated prompt prefixes, cutting cost &amp; latency. Use it for system prompts + long context docs. <br/>
+          <strong>2. KV-cache reuse</strong> — at the serving layer (vLLM PagedAttention), tokens you've already seen don't need recomputation. <br/>
+          <strong>3. Semantic caching</strong> — embed the user query, check vector store for a near-match past response. Ship only if similarity &gt; 0.95 and the cached answer is still fresh. Watch out: semantic cache poisoning is real.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Designing Data-Intensive Applications, Ch. 3 <span class="by">— Martin Kleppmann</span></span><a class="res-link" href="https://dataintensive.net/" target="_blank">DDIA →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Facebook — Scaling Memcache at Facebook (classic paper-blog)</span><a class="res-link" href="https://research.facebook.com/publications/scaling-memcache-at-facebook/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Redis — Client-side caching &amp; invalidation</span><a class="res-link" href="https://redis.io/docs/latest/develop/reference/client-side-caching/" target="_blank">DOCS →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Anthropic — Prompt caching (official guide)</span><a class="res-link" href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching" target="_blank">DOCS →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Semantic caching in LLM pipelines <span class="by">— Redis blog</span></span><a class="res-link" href="https://redis.io/blog/what-is-semantic-caching/" target="_blank">READ →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Cache patterns explained <span class="by">— ByteByteGo</span></span><a class="res-link" href="https://www.youtube.com/watch?v=dGAgxozNWFE" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: semantic cache with Redis + pgvector, measure hit rate on real prompts</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 10                                   -->
+  <!-- =================================================================== -->
+  <section id="t10">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">10</span>Distributed systems</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span><span class="pill hot">HIGH-YIELD</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">The broadest topic. CAP, PACELC, consistency models, consensus (Raft, Paxos), leader election, replication, 2PC/3PC/sagas, vector clocks, CRDTs. This is the "speak the language fluently" topic — you won't be asked to implement Raft, but you must reason about what breaks when a network partitions during your RAG write.</p>
+
+        <div class="subsection">
+          <h4>Mental models to own</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>Foundational</h4>
+              <ul>
+                <li>CAP &amp; PACELC theorem</li>
+                <li>Consistency: linearizable, sequential, causal, eventual</li>
+                <li>Consensus: Raft, Paxos, ZAB (roughly, when to use)</li>
+                <li>Leader election vs leaderless (Dynamo-style)</li>
+                <li>Quorum reads/writes (W + R &gt; N)</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>Practical</h4>
+              <ul>
+                <li>Sagas (orchestration vs choreography)</li>
+                <li>Two-phase commit &amp; why it's rare</li>
+                <li>Outbox pattern &amp; change data capture (CDC)</li>
+                <li>Distributed tracing &amp; clock skew (Lamport, vector clocks)</li>
+                <li>Partition tolerance strategies: retries, hedging, fallback</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — your agents are distributed systems</strong>
+          A multi-step LangGraph agent running 4 tool calls across 3 external APIs <em>is</em> a distributed system. You'll be asked: what happens if tool call 3 of 4 succeeds but the agent crashes before committing state? Answer: <strong>durable execution</strong> (Temporal, Restate, AWS Step Functions) or your own checkpointing. For multi-agent systems, you have a consensus problem: which agent's answer wins? Know this vocabulary.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Designing Data-Intensive Applications <span class="by">— Martin Kleppmann (the entire book)</span></span><a class="res-link" href="https://dataintensive.net/" target="_blank">DDIA →</a></li>
+            <li><span class="res-type book">Book</span><span class="res-title">Understanding Distributed Systems <span class="by">— Roberto Vitillo</span></span><a class="res-link" href="https://understandingdistributed.systems/" target="_blank">SITE →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">MIT 6.824 Distributed Systems lectures <span class="by">— Robert Morris (free on YT)</span></span><a class="res-link" href="https://www.youtube.com/watch?v=cQP8WApzIQQ&list=PLrw6a1wE39_tb2fErI4-WkMbsvGQk9_UB" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type paper">Paper</span><span class="res-title">In Search of an Understandable Consensus Algorithm (Raft)</span><a class="res-link" href="https://raft.github.io/raft.pdf" target="_blank">PDF →</a></li>
+            <li><span class="res-type paper">Paper</span><span class="res-title">Dynamo: Amazon's Highly Available Key-value Store</span><a class="res-link" href="https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf" target="_blank">PDF →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Jepsen — consistency analyses (the gold standard)</span><a class="res-link" href="https://jepsen.io/analyses" target="_blank">JEPSEN →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">Temporal — durable execution for agents &amp; workflows</span><a class="res-link" href="https://docs.temporal.io/" target="_blank">DOCS →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 11                                   -->
+  <!-- =================================================================== -->
+  <section id="t11">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">11</span>Event-driven architectures — Kafka &amp; RabbitMQ</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">Kafka and RabbitMQ solve different problems. Kafka is a <em>distributed log</em> — durable, replayable, high throughput, good for streams and CDC. RabbitMQ is a <em>message broker</em> — flexible routing, lower throughput, good for task queues. For AI workloads: Kafka for ingestion &amp; evaluation streams, RabbitMQ (or SQS) for inference task queues.</p>
+
+        <div class="subsection">
+          <h4>Core differences</h4>
+          <table>
+            <thead>
+              <tr><th></th><th>Kafka</th><th>RabbitMQ</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Model</td><td>Distributed log (consumer pull)</td><td>Broker (push, routing)</td></tr>
+              <tr><td>Ordering</td><td>Per-partition</td><td>Per-queue (with caveats)</td></tr>
+              <tr><td>Throughput</td><td>100k–1M+ msg/s</td><td>10k–50k msg/s</td></tr>
+              <tr><td>Retention</td><td>Days/weeks/forever</td><td>Until consumed</td></tr>
+              <tr><td>Replay</td><td>Yes, native</td><td>No (dead-letter workaround)</td></tr>
+              <tr><td>Best fit</td><td>Event streaming, CDC, analytics, audit logs</td><td>Task queues, work distribution, RPC-ish</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — where each fits</strong>
+          <strong>Kafka:</strong> stream all LLM request/response pairs for offline evaluation &amp; fine-tuning dataset building. Use Kafka Streams or Flink for real-time drift detection on embeddings. <strong>RabbitMQ/SQS:</strong> async document ingestion for RAG (user uploads PDF → queue → worker chunks + embeds + stores), and long-running inference jobs (image gen, batch transcription). KEDA can scale both Kafka and RabbitMQ consumers natively.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Kafka: The Definitive Guide <span class="by">— Shapira et al. (O'Reilly)</span></span><a class="res-link" href="https://www.oreilly.com/library/view/kafka-the-definitive/9781492043072/" target="_blank">O'REILLY →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Confluent — Kafka fundamentals &amp; design patterns</span><a class="res-link" href="https://developer.confluent.io/" target="_blank">CONFLUENT →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Apache Kafka in 6 minutes + deep dives <span class="by">— ByteByteGo</span></span><a class="res-link" href="https://www.youtube.com/watch?v=Ch5VhJzaoaI" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">RabbitMQ vs Kafka — when to use which <span class="by">— Jack Vanlightly</span></span><a class="res-link" href="https://jack-vanlightly.com/blog/2017/12/3/rabbitmq-vs-kafka-series-introduction" target="_blank">READ →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">RabbitMQ — work queues tutorial</span><a class="res-link" href="https://www.rabbitmq.com/tutorials/tutorial-two-python.html" target="_blank">DOCS →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Uber — Real-time data infrastructure with Kafka</span><a class="res-link" href="https://www.uber.com/en-IN/blog/real-time-exactly-once-ad-event-processing/" target="_blank">READ →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: RAG ingestion pipeline — upload → RabbitMQ → worker → pgvector</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 12                                   -->
+  <!-- =================================================================== -->
+  <section id="t12">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">12</span>DNS &amp; CDN</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">DNS: recursive resolvers, authoritative, TTL, DNS-based load balancing (GeoDNS), anycast. CDNs: edge vs origin, cache-control, origin shield, signed URLs, Workers/edge functions. <em>For AI:</em> edge inference is becoming real (Cloudflare Workers AI, Vercel AI SDK on edge). Know it.</p>
+
+        <div class="subsection">
+          <h4>Essentials</h4>
+          <div class="split">
+            <div class="panel">
+              <h4>DNS</h4>
+              <ul>
+                <li>Record types (A, AAAA, CNAME, MX, TXT, SRV)</li>
+                <li>Recursive vs iterative resolution</li>
+                <li>TTL trade-offs (low = flexibility, high = resilience)</li>
+                <li>GeoDNS / latency-based routing (Route53, NS1)</li>
+                <li>Anycast for global presence</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h4>CDN</h4>
+              <ul>
+                <li>Cache-Control, Surrogate-Control, ETag</li>
+                <li>Origin shield, tiered caching</li>
+                <li>Stale-while-revalidate, stale-if-error</li>
+                <li>Signed URLs for private assets</li>
+                <li>Edge functions (Cloudflare Workers, CloudFront Functions)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — edge inference &amp; regional serving</strong>
+          CDNs now run LLMs at the edge: Cloudflare Workers AI, Vercel AI Gateway, AWS Bedrock with regional endpoints. For global apps, route users to the closest model region via latency-based DNS. Cache <em>embeddings</em> at the edge (they're small, static, cacheable). Cache model responses behind a Vary: Authorization header. These are all high-signal details in a senior interview.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type video">Video</span><span class="res-title">DNS explained in depth <span class="by">— Julia Evans (zines + blog)</span></span><a class="res-link" href="https://jvns.ca/blog/how-dns-works/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Cloudflare Learning Center — DNS, CDN, anycast (free, excellent)</span><a class="res-link" href="https://www.cloudflare.com/learning/" target="_blank">LEARN →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">High Scalability — How CDNs work at scale</span><a class="res-link" href="http://highscalability.com/" target="_blank">BLOG →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">Cloudflare Workers AI — LLMs at the edge</span><a class="res-link" href="https://developers.cloudflare.com/workers-ai/" target="_blank">DOCS →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">CDN Design <span class="by">— ByteByteGo</span></span><a class="res-link" href="https://www.youtube.com/watch?v=RI9SCwj8-zM" target="_blank">YOUTUBE →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 13                                   -->
+  <!-- =================================================================== -->
+  <section id="t13">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">13</span>RPC &amp; gRPC</div>
+        <div class="topic-pills"><span class="pill core">FOUNDATION</span><span class="pill ai">AI-RELEVANT</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">REST vs gRPC vs GraphQL vs tRPC. Know when gRPC wins: internal service-to-service, streaming, strict typing, polyglot. Protobuf schema evolution. Interceptors, deadlines, metadata. <em>For AI:</em> server-sent events (SSE) and gRPC streams for token streaming; Model Context Protocol (MCP) is the new standard for tool calls.</p>
+
+        <div class="subsection">
+          <h4>REST vs gRPC — when to use what</h4>
+          <table>
+            <thead>
+              <tr><th>Criterion</th><th>REST</th><th>gRPC</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Transport</td><td>HTTP/1.1 or /2, JSON</td><td>HTTP/2, Protobuf (binary)</td></tr>
+              <tr><td>Typing</td><td>OpenAPI (optional)</td><td>Strict, via .proto</td></tr>
+              <tr><td>Streaming</td><td>SSE or WebSockets</td><td>Native bi-di streams</td></tr>
+              <tr><td>Browser</td><td>First class</td><td>Needs gRPC-Web proxy</td></tr>
+              <tr><td>Best fit</td><td>Public APIs, browser clients</td><td>Internal microservices, low-latency</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ AI Angle — streaming protocols for LLMs</strong>
+          Token-by-token streaming is non-negotiable for UX. Three options: <strong>SSE</strong> (simple, HTTP-compatible, browser-friendly — the OpenAI/Anthropic default), <strong>WebSockets</strong> (bi-directional, good for voice/interrupt), <strong>gRPC streaming</strong> (internal service mesh). For tool-calling, <strong>MCP (Model Context Protocol)</strong> is Anthropic's open standard — worth reading their spec, it's essentially a structured RPC layer for LLM tools.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">gRPC: Up and Running <span class="by">— Kasun Indrasiri (O'Reilly)</span></span><a class="res-link" href="https://www.oreilly.com/library/view/grpc-up-and/9781492058328/" target="_blank">O'REILLY →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">gRPC vs REST — which one should you use? <span class="by">— ByteByteGo</span></span><a class="res-link" href="https://www.youtube.com/watch?v=RoXT_Rkg8LA" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">gRPC official — concepts, streaming, interceptors</span><a class="res-link" href="https://grpc.io/docs/what-is-grpc/core-concepts/" target="_blank">DOCS →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">Model Context Protocol (MCP) — Anthropic spec</span><a class="res-link" href="https://modelcontextprotocol.io/" target="_blank">MCP →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Netflix — gRPC at Netflix (service mesh + observability)</span><a class="res-link" href="https://netflixtechblog.com/practical-api-design-at-netflix-part-1-using-protobuf-fieldmask-35cfdc606518" target="_blank">READ →</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          TOPIC 14 — AI ADD-ON                        -->
+  <!-- =================================================================== -->
+  <section id="t14">
+    <div class="topic">
+      <div class="topic-head">
+        <div class="topic-title"><span class="topic-num">14</span>AI add-on — serving, RAG, agents (must cover)</div>
+        <div class="topic-pills"><span class="pill ai">AI-NATIVE</span><span class="pill hot">CRITICAL</span></div>
+      </div>
+      <div class="topic-body">
+        <p class="topic-summary">You said "tweak the plan around AI" — this entire section is the tweak. GenAI/LLM system design is now a <em>standalone</em> interview category at OpenAI, Anthropic, Google, Meta, and every startup hiring AI engineers. Three sub-topics: LLM serving, RAG, and agents.</p>
+
+        <div class="subsection">
+          <h4>14.1 LLM Inference &amp; Serving</h4>
+          <p>Know the landscape: <strong>vLLM</strong> (open-source, PagedAttention, highest throughput), <strong>TensorRT-LLM</strong> (NVIDIA, best perf on their hardware), <strong>Hugging Face TGI</strong> (ecosystem integration), <strong>SGLang</strong> (structured generation, prefix caching), <strong>llama.cpp / Ollama</strong> (local &amp; edge). Key concepts: <em>continuous batching</em>, <em>PagedAttention</em>, <em>speculative decoding</em>, <em>tensor parallelism</em>, <em>prefill/decode disaggregation</em>.</p>
+        </div>
+
+        <div class="subsection">
+          <h4>14.2 RAG — Retrieval-Augmented Generation</h4>
+          <p>End-to-end pipeline: <em>parse → chunk → embed → store → retrieve → rerank → prompt → generate</em>. For each stage, know 2–3 options and their trade-offs. Chunking strategy is where most RAG systems die — semantic chunking beats fixed-size for most document types but costs more. Always implement hybrid search (BM25 + vector) + reranking.</p>
+        </div>
+
+        <div class="subsection">
+          <h4>14.3 Agents &amp; Tool-Use</h4>
+          <p>An agent is an LLM with an execution loop, tools, memory, and guardrails. The LLM is ~20% of the system — the rest is infrastructure: orchestrator (LangGraph, custom), tool registry, sandbox, policy engine, observability. This is squarely in Lookover's wheelhouse — and your Claude dossier on the LangGraph automation stack reflects exactly the right mental model.</p>
+        </div>
+
+        <div class="ai-angle">
+          <strong>⌃ The must-know system designs</strong>
+          <br/>1. "Design an LLM chatbot with RAG over 10M docs."
+          <br/>2. "Design the inference serving layer for a popular open-source LLM."
+          <br/>3. "Design an AI agent that can take actions on behalf of users safely."
+          <br/>4. "Design an eval &amp; observability platform for production LLM apps." (literally Lookover)
+          <br/>5. "Design a semantic cache for an LLM API proxy."
+          <br/><br/>You should be able to whiteboard each of these, naming components, trade-offs, and failure modes.
+        </div>
+
+        <div class="subsection">
+          <h4>Resources — essential</h4>
+          <ul class="resources">
+            <li><span class="res-type book">Book</span><span class="res-title">Designing Machine Learning Systems <span class="by">— Chip Huyen (O'Reilly, 2022)</span></span><a class="res-link" href="https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/" target="_blank">O'REILLY →</a></li>
+            <li><span class="res-type book">Book</span><span class="res-title">AI Engineering: Building Applications with Foundation Models <span class="by">— Chip Huyen (O'Reilly, 2024)</span></span><a class="res-link" href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank">O'REILLY →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Chip Huyen — huyenchip.com (entire blog)</span><a class="res-link" href="https://huyenchip.com/blog/" target="_blank">BLOG →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Eugene Yan — Patterns for building LLM-based systems &amp; products</span><a class="res-link" href="https://eugeneyan.com/writing/llm-patterns/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Lilian Weng — LLM Powered Autonomous Agents (the canonical post)</span><a class="res-link" href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Anthropic — Building effective agents</span><a class="res-link" href="https://www.anthropic.com/research/building-effective-agents" target="_blank">ANTHROPIC →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Generative AI System Design Interview Guide 2026 <span class="by">— PracHub</span></span><a class="res-link" href="https://prachub.com/resources/genai-llm-system-design-interview-guide-2026" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">IGotAnOffer — GenAI system design interview (examples &amp; framework)</span><a class="res-link" href="https://igotanoffer.com/en/advice/generative-ai-system-design-interview" target="_blank">READ →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Agentic AI System Design Interview Guide 2026</span><a class="res-link" href="https://atul4u.medium.com/the-complete-agentic-ai-system-design-interview-guide-2026-f95d0cfeb7cf" target="_blank">MEDIUM →</a></li>
+            <li><span class="res-type docs">Docs</span><span class="res-title">vLLM documentation — PagedAttention, continuous batching, serving</span><a class="res-link" href="https://docs.vllm.ai/" target="_blank">DOCS →</a></li>
+            <li><span class="res-type blog">Blog</span><span class="res-title">Best LLM Inference Engines 2026 — vLLM, TensorRT-LLM, TGI, SGLang</span><a class="res-link" href="https://www.yottalabs.ai/post/best-llm-inference-engines-in-2026-vllm-tensorrt-llm-tgi-and-sglang-compared" target="_blank">READ →</a></li>
+            <li><span class="res-type paper">Paper</span><span class="res-title">Efficient Memory Management for LLM Serving with PagedAttention <span class="by">— Kwon et al. (vLLM paper)</span></span><a class="res-link" href="https://arxiv.org/abs/2309.06180" target="_blank">ARXIV →</a></li>
+            <li><span class="res-type paper">Paper</span><span class="res-title">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks <span class="by">— Lewis et al.</span></span><a class="res-link" href="https://arxiv.org/abs/2005.11401" target="_blank">ARXIV →</a></li>
+            <li><span class="res-type paper">Paper</span><span class="res-title">ReAct: Synergizing Reasoning and Acting in Language Models</span><a class="res-link" href="https://arxiv.org/abs/2210.03629" target="_blank">ARXIV →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Andrej Karpathy — Let's build a GPT + Deep Dive into LLMs</span><a class="res-link" href="https://www.youtube.com/@AndrejKarpathy" target="_blank">YOUTUBE →</a></li>
+            <li><span class="res-type video">Video</span><span class="res-title">Full-stack LLM Bootcamp <span class="by">— Charles Frye et al. (free)</span></span><a class="res-link" href="https://fullstackdeeplearning.com/llm-bootcamp/" target="_blank">FSDL →</a></li>
+            <li><span class="res-type code">Hands-on</span><span class="res-title">Build: end-to-end RAG on your Lookover compliance docs — measure precision@k</span><span class="res-link" style="cursor: default;">YOUR CODE</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          SCHEDULE                                   -->
+  <!-- =================================================================== -->
+  <section id="schedule">
+    <div class="section-label">Week-by-week / Plan</div>
+    <h2>The 8-week schedule</h2>
+    <p class="section-intro">Aim for ~10 hours a week: 5 hours reading/watching, 3 hours hands-on building, 2 hours mock interviewing (out loud, whiteboard on paper). If 10h/week is too much, stretch to 12 weeks — don't compress below 8.</p>
+
+    <div class="week-grid">
+      <div class="week">
+        <div class="week-head">WEEK 01 · FOUNDATIONS</div>
+        <div class="week-title">Language &amp; concurrency</div>
+        <ul>
+          <li>Read DDIA ch. 7–8</li>
+          <li>Watch Rob Pike concurrency</li>
+          <li>Build: concurrent LLM fan-out</li>
+          <li>Mock: "design a URL shortener"</li>
+        </ul>
+      </div>
+      <div class="week">
+        <div class="week-head">WEEK 02 · FOUNDATIONS</div>
+        <div class="week-title">Distributed systems + RPC</div>
+        <ul>
+          <li>Start MIT 6.824 lectures 1–4</li>
+          <li>Read CAP, PACELC, Dynamo paper</li>
+          <li>gRPC tutorial + MCP spec</li>
+          <li>Mock: "design a chat system"</li>
+        </ul>
+      </div>
+      <div class="week">
+        <div class="week-head">WEEK 03 · PLUMBING</div>
+        <div class="week-title">Databases deep-dive</div>
+        <ul>
+          <li>Zerodha Postgres blog trio</li>
+          <li>DDIA ch. 5–6 (replication, partitioning)</li>
+          <li>pgvector hands-on</li>
+          <li>Mock: "design news feed storage"</li>
+        </ul>
+      </div>
+      <div class="week">
+        <div class="week-head">WEEK 04 · PLUMBING</div>
+        <div class="week-title">Caching, LB, rate limits, idempotency</div>
+        <ul>
+          <li>Stripe rate limits &amp; idempotency posts</li>
+          <li>Facebook memcache paper</li>
+          <li>Build: semantic cache prototype</li>
+          <li>Mock: "design payment processor"</li>
+        </ul>
+      </div>
+      <div class="week">
+        <div class="week-head">WEEK 05 · SCALE</div>
+        <div class="week-title">Kubernetes &amp; GPU autoscaling</div>
+        <ul>
+          <li>Nana K8s crash course</li>
+          <li>PreMAI LLM-on-K8s guide</li>
+          <li>Build: vLLM on minikube + HPA</li>
+          <li>Mock: "design YouTube video upload"</li>
+        </ul>
+      </div>
+      <div class="week">
+        <div class="week-head">WEEK 06 · SCALE</div>
+        <div class="week-title">CI/CD, observability, DNS/CDN, events</div>
+        <ul>
+          <li>Martin Fowler CD4ML</li>
+          <li>Observability Engineering (skim)</li>
+          <li>Kafka fundamentals</li>
+          <li>Mock: "design Twitter/X timeline"</li>
+        </ul>
+      </div>
+      <div class="week">
+        <div class="week-head">WEEK 07 · AI</div>
+        <div class="week-title">LLM serving + RAG</div>
+        <ul>
+          <li>Chip Huyen — AI Engineering ch. 4–8</li>
+          <li>vLLM paper + docs</li>
+          <li>Build: RAG over your own docs</li>
+          <li>Mock: "design a doc-QA chatbot"</li>
+        </ul>
+      </div>
+      <div class="week">
+        <div class="week-head">WEEK 08 · AI</div>
+        <div class="week-title">Agents + end-to-end mocks</div>
+        <ul>
+          <li>Lilian Weng agents post</li>
+          <li>Anthropic building-effective-agents</li>
+          <li>5× 45-min mock interviews</li>
+          <li>Write your own Lookover design doc</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================== -->
+  <!--                          PRACTICE                                   -->
+  <!-- =================================================================== -->
+  <section id="practice">
+    <div class="section-label">Practice / Self-test</div>
+    <h2>30 practice problems</h2>
+    <p class="section-intro">Drill these over weeks 4–8. Pick one, give yourself 45 minutes, whiteboard it, talk it out loud (record yourself if possible), then compare against a reference answer. The AI-specific ones marked ⌃ are the highest-yield for the roles you're targeting.</p>
+
+    <h3 style="margin-top: 10px;">Classic HLD warm-ups (weeks 1–4)</h3>
+    <ol class="questions">
+      <li>Design a URL shortener (bit.ly). Handle 100B URLs.</li>
+      <li>Design a distributed rate limiter using Redis. Support sliding window &amp; token bucket.</li>
+      <li>Design a news feed system (Twitter/X style).</li>
+      <li>Design a payment processor with strict idempotency.</li>
+      <li>Design a typeahead/autocomplete service.</li>
+      <li>Design a notification system (email + push + SMS, retries, dedup).</li>
+      <li>Design a metrics/monitoring system like Datadog at small scale.</li>
+      <li>Design a distributed cache (write-through, invalidation, consistency).</li>
+      <li>Design a job scheduler like cron-at-scale.</li>
+      <li>Design a chat system with read receipts &amp; presence.</li>
+    </ol>
+
+    <h3 style="margin-top: 28px;">AI-focused designs (weeks 5–8) <span style="color:var(--accent); font-size:12px; font-family:'IBM Plex Mono',monospace; letter-spacing:0.2em;">⌃ HIGH YIELD</span></h3>
+    <ol class="questions">
+      <li>Design an LLM inference serving layer for an open-source 70B model. Target 1000 concurrent users, p95 TTFT &lt; 1s.</li>
+      <li>Design a RAG system over 10M enterprise documents. Handle daily updates.</li>
+      <li>Design a semantic cache in front of the OpenAI API. Target 30% cost reduction.</li>
+      <li>Design an agentic workflow orchestrator (Temporal-style) for LLM agents with tool use.</li>
+      <li>Design an LLM evaluation &amp; observability platform (i.e. Lookover). Cover tracing, evals, alerts.</li>
+      <li>Design a multi-tenant vector search service with per-tenant isolation and quotas.</li>
+      <li>Design a fine-tuning pipeline: data prep → training job → eval → deploy.</li>
+      <li>Design a prompt management system with versioning, A/B testing, and rollback.</li>
+      <li>Design an image-generation service (Midjourney-lite). Handle queues, priority tiers, NSFW filtering.</li>
+      <li>Design an AI-powered code review bot that scales to 1000 repos.</li>
+      <li>Design a real-time voice assistant with sub-500ms round-trip latency.</li>
+      <li>Design a GPU cluster autoscaler that balances cost vs latency for fluctuating traffic.</li>
+      <li>Design a guardrails system that sits between users &amp; an LLM. PII redaction, jailbreak detection, output filtering.</li>
+      <li>Design an LLM gateway/proxy with rate limiting, key rotation, and cost tracking across providers.</li>
+      <li>Design an EU AI Act compliance evidence-collection pipeline (hi there, Lookover).</li>
+      <li>Design an embeddings refresh system — detect drift, re-embed, migrate indexes without downtime.</li>
+      <li>Design a distributed training job scheduler for multi-node LLM fine-tunes.</li>
+      <li>Design an LLM-as-a-service API platform (OpenRouter/Fireworks style).</li>
+      <li>Design an AI workflow testing framework — deterministic replay of LLM interactions.</li>
+      <li>Design a model registry with lineage, evals, and staged promotion (staging → canary → prod).</li>
+    </ol>
+
+    <div class="ai-angle" style="margin-top: 28px;">
+      <strong>⌃ How to structure every answer</strong>
+      (1) Clarify: scale, latency, cost budget, deterministic vs probabilistic. (2) Functional &amp; non-functional requirements. (3) Back-of-envelope math. (4) High-level diagram — data plane + control plane. (5) Deep-dive one or two components. (6) Discuss trade-offs and failure modes. (7) How you'd monitor &amp; evaluate it. Always end with <em>"what would you want me to go deeper on?"</em>
+    </div>
+  </section>
+
+  <!-- FINAL NOTES -->
+  <section>
+    <div class="section-label">Closing / Meta</div>
+    <h2>Three rules that'll separate you</h2>
+    <div class="split">
+      <div class="panel">
+        <h4>1 — Always quantify</h4>
+        <ul>
+          <li>"~1000 QPS" not "high traffic"</li>
+          <li>"p95 latency &lt; 200ms" not "fast"</li>
+          <li>"$2/1k tokens input, $6/1k output" not "expensive"</li>
+          <li>"KV cache ≈ 2 × num_layers × hidden_size × seq_len × bytes" → know approximate memory for 7B / 70B</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h4>2 — Name trade-offs explicitly</h4>
+        <ul>
+          <li>"Using semantic cache — trades freshness for cost &amp; latency"</li>
+          <li>"Prefill/decode disaggregation — more complex but better throughput"</li>
+          <li>"KEDA scale-to-zero — saves cost but adds cold start"</li>
+          <li>"Hybrid search — better recall but higher latency and cost"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ai-angle" style="margin-top: 24px;">
+      <strong>3 — Ground it in your actual work</strong>
+      You're building Lookover and an AI compliance agency. When the interviewer asks a design question, pull from real experience: "At Lookover, I handle this with…", "For the DodoPayments orchestrator, we used idempotency keys because…". Specificity &gt; generic textbook answers, every single time. Your production experience is your edge over textbook-primed candidates.
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  HLD PREP · AI SYSTEMS TRACK <span class="line"></span> v1.0 <span class="line"></span> COMPILED APR 2026 <span class="line"></span> FOR SID
+</footer>
+
+</body>
+</html>
