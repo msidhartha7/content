@@ -5,6 +5,7 @@ const searchFilter = document.querySelector("[data-search-filter]");
 const searchResults = document.querySelector("[data-search-results]");
 const fullscreenButton = document.querySelector("[data-frame-fullscreen]");
 const iframeTarget = document.querySelector(".legacy-frame");
+const searchUrl = document.body.dataset.searchUrl;
 
 if (toggle && sidebar) {
   toggle.addEventListener("click", () => {
@@ -65,7 +66,7 @@ if (searchInput && searchResults) {
       : '<div class="panel"><p class="brand-copy">No matching notes yet.</p></div>';
   };
 
-  fetch("/search.json")
+  fetch(searchUrl)
     .then((response) => response.json())
     .then((payload) => {
       records = payload;

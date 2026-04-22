@@ -33,7 +33,7 @@ permalink: /
   <section class="panel panel-wide">
     <div class="panel-header">
       <h2 class="panel-title">Pinned Notes</h2>
-      <a class="panel-link" href="/all-notes/">Browse all</a>
+      <a class="panel-link" href="{{ '/all-notes/' | url }}">Browse all</a>
     </div>
     {% if pinnedNotes | length %}
       {% set items = pinnedNotes %}
@@ -46,7 +46,7 @@ permalink: /
   <section class="panel panel-narrow journal-theme">
     <div class="panel-header">
       <h2 class="panel-title">{{ workspace.journalLabel }}</h2>
-      <a class="panel-link" href="/journal/">Open archive</a>
+      <a class="panel-link" href="{{ '/journal/' | url }}">Open archive</a>
     </div>
     {% set items = journalItems %}
     {% include "partials/note-list.njk" %}
@@ -66,7 +66,7 @@ permalink: /
     </div>
     <div class="note-list">
       {% for topic in collections.topicBuckets %}
-        <a class="note-card" href="/topics/{{ topic.slug }}/">
+        <a class="note-card" href="{{ ('/topics/' ~ topic.slug ~ '/') | url }}">
           <div class="note-card-copy">
             <div class="note-card-header">
               <span class="note-kind">{{ topic.label }}</span>

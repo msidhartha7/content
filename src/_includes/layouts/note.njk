@@ -15,7 +15,7 @@ layout: layouts/workspace.njk
           Full screen
         </button>
       </div>
-      <iframe class="legacy-frame" src="{{ iframeSrc }}" title="{{ title }}"></iframe>
+      <iframe class="legacy-frame" src="{{ iframeSrc | url }}" title="{{ title }}"></iframe>
     </div>
   {% else %}
     <div class="document-body">

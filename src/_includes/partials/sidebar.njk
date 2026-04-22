@@ -1,20 +1,20 @@
 <aside class="workspace-sidebar" id="workspaceSidebar" data-sidebar>
   <div class="sidebar-brand">
-    <a href="/" class="brand-link">{{ site.title }}</a>
+    <a href="{{ '/' | url }}" class="brand-link">{{ site.title }}</a>
     <p class="brand-copy">{{ site.description }}</p>
   </div>
 
   <nav class="sidebar-nav">
-    <a href="/" class="sidebar-link{% if page.url == '/' %} is-active{% endif %}">Home</a>
-    <a href="/all-notes/" class="sidebar-link{% if page.url == '/all-notes/' %} is-active{% endif %}">All Notes</a>
-    <a href="/journal/" class="sidebar-link{% if page.url == '/journal/' or '/journal/' in page.url %} is-active{% endif %}">Journal</a>
+    <a href="{{ '/' | url }}" class="sidebar-link{% if page.url == '/' %} is-active{% endif %}">Home</a>
+    <a href="{{ '/all-notes/' | url }}" class="sidebar-link{% if page.url == '/all-notes/' %} is-active{% endif %}">All Notes</a>
+    <a href="{{ '/journal/' | url }}" class="sidebar-link{% if page.url == '/journal/' or '/journal/' in page.url %} is-active{% endif %}">Journal</a>
   </nav>
 
   <section class="sidebar-section">
     <p class="sidebar-label">Topics</p>
     <div class="sidebar-topic-list">
       {% for topic in collections.topicBuckets %}
-        <a href="/topics/{{ topic.slug }}/" class="sidebar-link{% if page.url == '/topics/' ~ topic.slug ~ '/' %} is-active{% endif %}">
+        <a href="{{ ('/topics/' ~ topic.slug ~ '/') | url }}" class="sidebar-link{% if page.url == '/topics/' ~ topic.slug ~ '/' %} is-active{% endif %}">
           <span>{{ topic.label }}</span>
           <span class="sidebar-count">{{ topic.notes | length }}</span>
         </a>

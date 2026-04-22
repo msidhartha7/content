@@ -1,6 +1,6 @@
 <div class="note-list">
   {% for item in items %}
-    <a class="note-card" href="{{ item.url }}">
+    <a class="note-card" href="{{ item.url | url }}">
       <div class="note-card-copy">
         <div class="note-card-header">
           <span class="note-kind">

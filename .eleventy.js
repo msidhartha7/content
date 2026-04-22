@@ -1,5 +1,5 @@
 import { buildSearchIndex } from "./lib/search-index.js";
-import { groupTopics, normalizeJournalEntry, normalizeNote, sortByPinnedThenDate } from "./lib/content.js";
+import { groupTopics, normalizeJournalEntry, normalizeNote, SITE_BASE_PATH, sortByPinnedThenDate } from "./lib/content.js";
 
 function formatDate(value) {
   const date = value instanceof Date ? value : new Date(value);
@@ -65,6 +65,7 @@ export default function (eleventyConfig) {
   });
 
   return {
+    pathPrefix: SITE_BASE_PATH,
     dir: {
       input: ".",
       includes: "src/_includes",

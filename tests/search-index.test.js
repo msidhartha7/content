@@ -29,7 +29,8 @@ test("buildSearchIndex emits lightweight records for notes and journal entries",
     summary: "LangGraph",
     topic: "ai-regulation",
     tags: ["ai-act"],
-    url: "/notes/ai-regulation/article-9/"
+    url: "/content/notes/ai-regulation/article-9/"
   });
   assert.equal(records[1].kind, "journal");
+  assert.equal(records[1].url, "/content/journal/2026-04-13/");
 });
