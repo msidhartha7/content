@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { groupTopics, normalizeJournalEntry, normalizeNote } from "../lib/content.js";
+import { groupTopics, normalizeJournalEntry, normalizeNote, normalizeProjectEntry } from "../lib/content.js";
 
 test("normalizeNote derives slug, url, and searchable metadata", () => {
   const note = normalizeNote({
@@ -38,6 +38,21 @@ test("normalizeJournalEntry keeps journal separated from notes", () => {
 
   assert.equal(entry.url, "/journal/2026-04-13/");
   assert.equal(entry.type, "journal");
+});
+
+test("normalizeProjectEntry derives a project url and title from markdown content", () => {
+  const project = normalizeProjectEntry({
+    slug: "echo-court-project-plan",
+    data: {},
+    rawContent: `# EchoCourt\n\nA verifiable legal research platform.\n\n## Details\nMore text.`
+  });
+
+  assert.equal(project.kind, "project");
+  assert.equal(project.topic, "projects");
+  assert.equal(project.topicLabel, "Projects");
+  assert.equal(project.title, "EchoCourt");
+  assert.equal(project.summary, "A verifiable legal research platform.");
+  assert.equal(project.url, "/projects/echo-court-project-plan/");
 });
 
 test("groupTopics orders pinned notes first within a topic", () => {

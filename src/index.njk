@@ -6,6 +6,7 @@ permalink: /
 {% set pinnedNotes = collections.notes | pinnedOnly %}
 {% set recentNotes = collections.notes | recent(6) %}
 {% set journalItems = collections.journal | recent(4) %}
+{% set projectItems = collections.projects | recent(4) %}
 <section class="hero-panel">
   <p class="hero-kicker">Workspace First</p>
   <h1>Sidhartha's notes, organized like a calm operating system.</h1>
@@ -20,6 +21,7 @@ permalink: /
     <input class="search-input" type="search" placeholder="{{ workspace.searchPlaceholder }}" data-search-input>
     <select class="search-select" data-search-filter>
       <option value="all">All content</option>
+      <option value="projects">{{ workspace.projectLabel }}</option>
       {% for topic in collections.topicBuckets %}
         <option value="{{ topic.slug }}">{{ topic.label }}</option>
       {% endfor %}
@@ -58,6 +60,19 @@ permalink: /
     </div>
     {% set items = recentNotes %}
     {% include "partials/note-list.njk" %}
+  </section>
+
+  <section class="panel panel-narrow">
+    <div class="panel-header">
+      <h2 class="panel-title">{{ workspace.projectLabel }}</h2>
+      <a class="panel-link" href="{{ '/projects/' | url }}">Open archive</a>
+    </div>
+    {% if projectItems | length %}
+      {% set items = projectItems %}
+      {% include "partials/note-list.njk" %}
+    {% else %}
+      <p class="brand-copy">Project writeups in `projects/` will surface here automatically.</p>
+    {% endif %}
   </section>
 
   <section class="panel panel-narrow">

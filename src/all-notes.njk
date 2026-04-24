@@ -14,6 +14,7 @@ permalink: /all-notes/
     <input class="search-input" type="search" placeholder="{{ workspace.searchPlaceholder }}" data-search-input>
     <select class="search-select" data-search-filter>
       <option value="all">All content</option>
+      <option value="projects">{{ workspace.projectLabel }}</option>
       {% for topic in collections.topicBuckets %}
         <option value="{{ topic.slug }}">{{ topic.label }}</option>
       {% endfor %}

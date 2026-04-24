@@ -7,6 +7,7 @@
   <nav class="sidebar-nav">
     <a href="{{ '/' | url }}" class="sidebar-link{% if page.url == '/' %} is-active{% endif %}">Home</a>
     <a href="{{ '/all-notes/' | url }}" class="sidebar-link{% if page.url == '/all-notes/' %} is-active{% endif %}">All Notes</a>
+    <a href="{{ '/projects/' | url }}" class="sidebar-link{% if page.url == '/projects/' or '/projects/' in page.url %} is-active{% endif %}">{{ workspace.projectLabel }}</a>
     <a href="{{ '/journal/' | url }}" class="sidebar-link{% if page.url == '/journal/' or '/journal/' in page.url %} is-active{% endif %}">Journal</a>
   </nav>
 

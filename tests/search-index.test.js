@@ -20,6 +20,16 @@ test("buildSearchIndex emits lightweight records for notes and journal entries",
         date: "2026-04-13",
         url: "/journal/2026-04-13/"
       }
+    ],
+    projects: [
+      {
+        title: "EchoCourt",
+        summary: "Legal research platform",
+        topic: "projects",
+        topicLabel: "Projects",
+        tags: ["legal-ai"],
+        url: "/projects/echocourt/"
+      }
     ]
   });
 
@@ -33,4 +43,13 @@ test("buildSearchIndex emits lightweight records for notes and journal entries",
   });
   assert.equal(records[1].kind, "journal");
   assert.equal(records[1].url, "/content/journal/2026-04-13/");
+  assert.deepEqual(records[2], {
+    kind: "project",
+    title: "EchoCourt",
+    summary: "Legal research platform",
+    topic: "projects",
+    topicLabel: "Projects",
+    tags: ["legal-ai"],
+    url: "/content/projects/echocourt/"
+  });
 });

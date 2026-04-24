@@ -1,5 +1,14 @@
+import { readFileSync } from "node:fs";
 import { buildSearchIndex } from "./lib/search-index.js";
-import { groupTopics, normalizeJournalEntry, normalizeNote, SITE_BASE_PATH, sortByPinnedThenDate } from "./lib/content.js";
+import { groupTopics, normalizeJournalEntry, normalizeNote, normalizeProjectEntry, SITE_BASE_PATH, sortByPinnedThenDate } from "./lib/content.js";
+
+function readSourceFile(item) {
+  return readFileSync(item.inputPath ?? item.page.inputPath, "utf8");
+}
+
+function getPublicItems(collectionApi, glob) {
+  return collectionApi.getFilteredByGlob(glob).filter((item) => item.data.public !== false);
+}
 
 function formatDate(value) {
   const date = value instanceof Date ? value : new Date(value);
@@ -20,6 +29,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("prep-plans");
   eleventyConfig.addPassthroughCopy("fundraising");
   eleventyConfig.addWatchTarget("./content/");
+  eleventyConfig.addWatchTarget("./projects/");
   eleventyConfig.addFilter("take", (items, count) => items.slice(0, count));
   eleventyConfig.addFilter("sortByPinnedThenDate", sortByPinnedThenDate);
   eleventyConfig.addFilter("pinnedOnly", (items) => sortByPinnedThenDate(items).filter((item) => item.pinned));
@@ -29,39 +39,47 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addCollection("notes", (collectionApi) =>
     sortByPinnedThenDate(
-      collectionApi
-        .getFilteredByGlob("content/notes/**/*.md")
-        .filter((item) => item.data.public !== false)
-        .map((item) => normalizeNote({ slug: item.page.fileSlug, data: item.data }))
+      getPublicItems(collectionApi, "content/notes/**/*.md").map((item) =>
+        normalizeNote({ slug: item.page.fileSlug, data: item.data })
+      )
     )
   );
 
   eleventyConfig.addCollection("journal", (collectionApi) =>
     sortByPinnedThenDate(
-      collectionApi
-        .getFilteredByGlob("content/journal/*.md")
-        .filter((item) => item.data.public !== false)
-        .map((item) => normalizeJournalEntry({ slug: item.page.fileSlug, data: item.data }))
+      getPublicItems(collectionApi, "content/journal/*.md").map((item) =>
+        normalizeJournalEntry({ slug: item.page.fileSlug, data: item.data })
+      )
+    )
+  );
+
+  eleventyConfig.addCollection("projects", (collectionApi) =>
+    sortByPinnedThenDate(
+      getPublicItems(collectionApi, "projects/**/*.md").map((item) =>
+        normalizeProjectEntry({ slug: item.page.fileSlug, data: item.data, rawContent: readSourceFile(item) })
+      )
     )
   );
 
   eleventyConfig.addCollection("topicBuckets", (collectionApi) =>
     groupTopics(
-      collectionApi
-        .getFilteredByGlob("content/notes/**/*.md")
-        .filter((item) => item.data.public !== false)
-        .map((item) => normalizeNote({ slug: item.page.fileSlug, data: item.data }))
+      getPublicItems(collectionApi, "content/notes/**/*.md").map((item) =>
+        normalizeNote({ slug: item.page.fileSlug, data: item.data })
+      )
     )
   );
 
   eleventyConfig.addCollection("searchRecords", (collectionApi) => {
-    const notes = collectionApi.getAllSorted().filter((item) => item.data.tags?.includes("notes")).map((item) =>
+    const notes = getPublicItems(collectionApi, "content/notes/**/*.md").map((item) =>
       normalizeNote({ slug: item.page.fileSlug, data: item.data })
     );
-    const journal = collectionApi.getAllSorted().filter((item) => item.data.tags?.includes("journal")).map((item) =>
+    const journal = getPublicItems(collectionApi, "content/journal/*.md").map((item) =>
       normalizeJournalEntry({ slug: item.page.fileSlug, data: item.data })
     );
-    return buildSearchIndex({ notes, journal });
+    const projects = getPublicItems(collectionApi, "projects/**/*.md").map((item) =>
+      normalizeProjectEntry({ slug: item.page.fileSlug, data: item.data, rawContent: readSourceFile(item) })
+    );
+    return buildSearchIndex({ notes, journal, projects });
   });
 
   return {

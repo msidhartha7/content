@@ -54,7 +54,7 @@ if (searchInput && searchResults) {
               <a class="note-card" href="${match.url}">
                 <div class="note-card-copy">
                   <div class="note-card-header">
-                    <span class="note-kind">${match.kind === "journal" ? "Startup Journal" : match.topic}</span>
+                    <span class="note-kind">${match.topicLabel ?? (match.kind === "journal" ? "Startup Journal" : match.topic)}</span>
                   </div>
                   <h3>${match.title}</h3>
                   ${match.summary ? `<p>${match.summary}</p>` : ""}
@@ -63,7 +63,7 @@ if (searchInput && searchResults) {
             `
           )
           .join("")
-      : '<div class="panel"><p class="brand-copy">No matching notes yet.</p></div>';
+      : '<div class="panel"><p class="brand-copy">No matching items yet.</p></div>';
   };
 
   fetch(searchUrl)

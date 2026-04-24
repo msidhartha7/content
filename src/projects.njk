@@ -1,0 +1,22 @@
+---
+layout: layouts/workspace.njk
+title: Projects
+permalink: /projects/
+---
+<section class="hero-panel">
+  <p class="hero-kicker">{{ workspace.projectLabel }}</p>
+  <h1>Active ideas, build plans, and project writeups.</h1>
+  <p>The files in the source `projects/` directory are indexed here automatically and published under the workspace shell.</p>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2 class="panel-title">{{ collections.projects | length }} project{% if collections.projects | length != 1 %}s{% endif %}</h2>
+  </div>
+  {% if collections.projects | length %}
+    {% set items = collections.projects %}
+    {% include "partials/note-list.njk" %}
+  {% else %}
+    <p class="brand-copy">Add markdown files under the `projects/` source directory and they will appear here.</p>
+  {% endif %}
+</section>
