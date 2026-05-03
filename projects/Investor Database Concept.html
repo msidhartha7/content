@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Living Database — Concept Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b10;
+    --bg2: #0d1117;
+    --surface: #111820;
+    --surface2: #1a2330;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8edf2;
+    --muted: #7a8fa6;
+    --faint: #3a4a5a;
+    --accent: #00c8ff;
+    --accent2: #0080aa;
+    --accent-glow: rgba(0,200,255,0.15);
+    --green: #00e5a0;
+    --amber: #ffb830;
+    --red: #ff4560;
+    --purple: #a855f7;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ALERT STRIP */
+  .alert-strip {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--accent);
+    color: #000;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 80px 48px 60px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .hero-watermark {
+    position: absolute;
+    top: -20px;
+    right: -40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(100px, 18vw, 260px);
+    color: rgba(0,200,255,0.04);
+    letter-spacing: -0.02em;
+    pointer-events: none;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 110px);
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(16px, 2vw, 22px);
+    color: var(--muted);
+    max-width: 640px;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 24px;
+    max-width: 720px;
+  }
+
+  .stat-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 20px 24px;
+    animation: fadeIn 0.6s ease both;
+  }
+
+  .stat-block:nth-child(2) { border-top-color: var(--green); animation-delay: 0.1s; }
+  .stat-block:nth-child(3) { border-top-color: var(--amber); animation-delay: 0.2s; }
+  .stat-block:nth-child(4) { border-top-color: var(--purple); animation-delay: 0.3s; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* MAIN CONTENT */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 48px 80px;
+  }
+
+  /* SECTION HEADERS */
+  .section {
+    margin-top: 72px;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--faint);
+    line-height: 1;
+    min-width: 48px;
+  }
+
+  .section-meta {
+    flex: 1;
+  }
+
+  .section-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid rgba(0,200,255,0.2);
+    padding: 3px 10px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.03em;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-style: italic;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .callout.amber { border-left-color: var(--amber); }
+  .callout.green { border-left-color: var(--green); }
+  .callout.red { border-left-color: var(--red); }
+  .callout.purple { border-left-color: var(--purple); }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 24px;
+    transition: border-color 0.2s, background 0.2s;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  .card:hover { background: var(--surface2); border-color: var(--border2); }
+  .card.green { border-left-color: var(--green); }
+  .card.amber { border-left-color: var(--amber); }
+  .card.purple { border-left-color: var(--purple); }
+  .card.red { border-left-color: var(--red); }
+
+  .card-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ORGANISM TABLE */
+  .org-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 13px;
+  }
+
+  .org-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .org-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  .org-table tr:hover td { background: var(--surface); }
+
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-right: 4px;
+  }
+
+  .tag-blue { background: rgba(0,200,255,0.1); color: var(--accent); border: 1px solid rgba(0,200,255,0.2); }
+  .tag-green { background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
+  .tag-amber { background: rgba(255,184,48,0.1); color: var(--amber); border: 1px solid rgba(255,184,48,0.2); }
+  .tag-purple { background: rgba(168,85,247,0.1); color: var(--purple); border: 1px solid rgba(168,85,247,0.2); }
+
+  /* PIPELINE */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+    position: relative;
+  }
+
+  .pipeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    bottom: 40px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--purple));
+    opacity: 0.4;
+  }
+
+  .pipe-step {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 16px 0;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  .pipe-step:nth-child(2) { animation-delay: 0.1s; }
+  .pipe-step:nth-child(3) { animation-delay: 0.2s; }
+  .pipe-step:nth-child(4) { animation-delay: 0.3s; }
+  .pipe-step:nth-child(5) { animation-delay: 0.4s; }
+
+  .pipe-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pipe-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    flex: 1;
+  }
+
+  .pipe-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .pipe-desc {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* DOMAIN EXAMPLES */
+  .domain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .domain-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .domain-item:hover {
+    background: var(--surface2);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .domain-emoji { font-size: 20px; margin-bottom: 8px; }
+
+  .domain-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .domain-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* MOAT SECTION */
+  .moat-block {
+    background: linear-gradient(135deg, rgba(0,200,255,0.05), rgba(168,85,247,0.05));
+    border: 1px solid rgba(0,200,255,0.15);
+    padding: 32px;
+    margin: 24px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .moat-block::before {
+    content: 'MOAT';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    color: rgba(0,200,255,0.04);
+    line-height: 1;
+  }
+
+  .moat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .moat-body {
+    font-size: 15px;
+    color: var(--text);
+    max-width: 600px;
+    line-height: 1.7;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--faint);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  p { margin-bottom: 16px; color: var(--muted); }
+  strong { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 48px 24px 40px; }
+    .container { padding: 0 24px 60px; }
+    .alert-strip { flex-direction: column; gap: 4px; text-align: center; }
+    .card-grid { grid-template-columns: 1fr; }
+    .domain-grid { grid-template-columns: 1fr 1fr; }
+    footer { padding: 24px; flex-direction: column; align-items: flex-start; }
+    .pipeline::before { display: none; }
+  }
+
+  @media print {
+    body { background: white; color: #111; }
+    .alert-strip { background: #111; color: white; position: static; }
+    .hero-watermark { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="alert-strip">
+  <span>Concept Brief · Living Database Engine</span>
+  <span>May 2026 · Confidential</span>
+</div>
+
+<section class="hero">
+  <div class="hero-watermark">ALIVE</div>
+  <div class="hero-label">Idea Summary · v1.0</div>
+  <h1>The <span>Living</span><br>Database</h1>
+  <p class="hero-sub">A domain-agnostic engine that treats any dataset as a living organism — continuously breathing, growing, evolving, and pruning itself from the open internet.</p>
+  <div class="stat-row">
+    <div class="stat-block">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Domain Types Supported</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Paid APIs Required</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Self-Evolving Engine</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">∅</div>
+      <div class="stat-label">Equivalent Exists Today</div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- SECTION 01 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-meta">
+        <div class="section-badge">The Problem</div>
+        <div class="section-title">Knowledge Decays. Nobody Fixes It.</div>
+      </div>
+    </div>
+
+    <p>Every structured dataset — investors, companies, drugs, space missions, geopolitical entities — begins decaying the moment it is created. The world moves. The data doesn't.</p>
+
+    <p>Existing solutions (Crunchbase, PitchBook, Apollo) are <strong>domain-locked, expensive, and closed</strong>. They work for one slice of the world and charge accordingly. No open, self-hostable, domain-agnostic equivalent exists.</p>
+
+    <div class="callout amber">
+      "Crunchbase only keeps investor data. What if we go for space tech advancements around the world? No single source owns that data. It lives scattered across arXiv, NASA releases, patent filings, university labs, and forums. Nobody is maintaining a living, structured database of that."
+    </div>
+
+    <div class="card-grid">
+      <div class="card red">
+        <div class="card-icon">📉</div>
+        <div class="card-title">Static Datasets Decay</div>
+        <div class="card-body">People change roles. Funds close. Missions launch. Discoveries happen. Any snapshot is obsolete within weeks.</div>
+      </div>
+      <div class="card amber">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">Existing Solutions Are Locked</div>
+        <div class="card-body">Crunchbase, PitchBook, and Apollo are proprietary, expensive, and cover only their chosen domain. You cannot self-host, extend, or redirect them.</div>
+      </div>
+      <div class="card purple">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">The Knowledge Lives Everywhere</div>
+        <div class="card-body">For most domains, the freshest data is scattered across the open internet — unstructured, unindexed, and unowned.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 02 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-meta">
+        <div class="section-badge">The Idea</div>
+        <div class="section-title">A Dataset That Behaves Like an Organism</div>
+      </div>
+    </div>
+
+    <p>The Living Database treats any dataset not as a static table, but as a <strong>living organism</strong> with four biological behaviours running continuously:</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🫁</div>
+        <div class="card-title">Breathes</div>
+        <div class="card-body">Continuously pulls fresh signals from the internet — search results, crawled pages, RSS feeds, public filings.</div>
+      </div>
+      <div class="card green">
+        <div class="card-icon">🌱</div>
+        <div class="card-title">Grows</div>
+        <div class="card-body">Discovers and adds new records that belong in the dataset — entities the original snapshot missed entirely.</div>
+      </div>
+      <div class="card amber">
+        <div class="card-icon">🔄</div>
+        <div class="card-title">Evolves</div>
+        <div class="card-body">Updates existing records as the world changes — role shifts, new activity, revised facts, updated status.</div>
+      </div>
+      <div class="card purple">
+        <div class="card-icon">✂️</div>
+        <div class="card-title">Prunes</div>
+        <div class="card-body">Marks or removes records that no longer exist — closed funds, defunct companies, discontinued projects.</div>
+      </div>
+    </div>
+
+    <div class="callout green">
+      The key insight: the dataset defines its own shape. You give the engine <em>any</em> CSV or database table and it figures out what each record is, what's worth enriching, where to look, and how to write back — without being pre-programmed for a specific domain.
+    </div>
+  </div>
+
+  <!-- SECTION 03 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-meta">
+        <div class="section-badge">How It Works</div>
+        <div class="section-title">The Engine Architecture</div>
+      </div>
+    </div>
+
+    <p>The engine runs as a scheduled pipeline. Every cycle, it processes a batch of records through five stages — all locally, with a self-hosted LLM and free/open internet sources.</p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-num">01</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Schema Analyst Agent</div>
+          <div class="pipe-desc">Reads sample rows. Infers entity type (person, company, place, mission, drug…). Identifies which fields are enrichable vs stable. Generates a search strategy per field.</div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">02</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Search & Fetch Agent</div>
+          <div class="pipe-desc">Builds search queries per record. Hits Serper/Exa/DuckDuckGo. Crawls top results via Crawl4AI (fully local, handles JS-rendered pages). Pulls RSS and public filing sources.</div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">03</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Extraction Agent (Gemma 4 Local)</div>
+          <div class="pipe-desc">Local LLM reads raw crawled content. Extracts only fields relevant to this schema. Confidence-scores each extracted value. Flags ambiguous or conflicting data.</div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">04</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Merge Agent</div>
+          <div class="pipe-desc">Compares new vs existing values. Applies update rules: overwrite / append / flag for review. Logs full provenance — what changed, from where, when.</div>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">05</div>
+        <div class="pipe-content">
+          <div class="pipe-title">Growth Agent</div>
+          <div class="pipe-desc">While fetching data for existing records, identifies new entities that belong in the dataset. Proposes and stages new records for addition. The dataset grows beyond its original seed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 04 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-meta">
+        <div class="section-badge">Tech Stack</div>
+        <div class="section-title">What You Need to Build This</div>
+      </div>
+    </div>
+
+    <table class="org-table">
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Tool</th>
+          <th>Cost</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-blue">LLM</span></td>
+          <td><strong>Gemma 4 (local)</strong></td>
+          <td><span class="tag tag-green">Free</span></td>
+          <td>Schema inference, extraction, merge decisions</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Crawling</span></td>
+          <td><strong>Crawl4AI</strong></td>
+          <td><span class="tag tag-green">Free / OSS</span></td>
+          <td>JS-rendered page scraping, returns clean markdown</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Search</span></td>
+          <td><strong>Serper.dev / Exa / DDG</strong></td>
+          <td><span class="tag tag-amber">Free tier</span></td>
+          <td>Live web queries per record, per field</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Public Data</span></td>
+          <td><strong>SEC EDGAR, OpenCorporates, arXiv, RSS</strong></td>
+          <td><span class="tag tag-green">Free</span></td>
+          <td>Structured sources for specific domain types</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Orchestration</span></td>
+          <td><strong>LangGraph</strong></td>
+          <td><span class="tag tag-green">OSS</span></td>
+          <td>Agent pipeline, state management, retry logic</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Storage</span></td>
+          <td><strong>Supabase</strong></td>
+          <td><span class="tag tag-green">Free tier</span></td>
+          <td>Dataset storage, change logs, provenance tracking</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Scheduler</span></td>
+          <td><strong>Cron / Supabase Edge</strong></td>
+          <td><span class="tag tag-green">Free</span></td>
+          <td>Trigger daily refresh cycles per record tier</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 05 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-meta">
+        <div class="section-badge">The Opportunity</div>
+        <div class="section-title">Domains Nobody Has Structured Yet</div>
+      </div>
+    </div>
+
+    <p>The value isn't in re-doing investor data. It's in every domain where <strong>no Crunchbase exists</strong> — vast, valuable, structurally scattered knowledge that the world hasn't indexed.</p>
+
+    <div class="domain-grid">
+      <div class="domain-item">
+        <div class="domain-emoji">🚀</div>
+        <div class="domain-name">Space Tech</div>
+        <div class="domain-note">arXiv · NASA · SpaceNews</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-emoji">💊</div>
+        <div class="domain-name">Drug Discovery</div>
+        <div class="domain-note">PubMed · ClinicalTrials · FDA</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-emoji">🌍</div>
+        <div class="domain-name">Climate Tech</div>
+        <div class="domain-note">IRENA · Gov reports · Patents</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-emoji">⚗️</div>
+        <div class="domain-name">Semiconductor R&D</div>
+        <div class="domain-note">IEEE · Patent filings · Fab news</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-emoji">🏛️</div>
+        <div class="domain-name">Policy & Regulation</div>
+        <div class="domain-note">Gov gazettes · EUR-Lex · Congress</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-emoji">🧬</div>
+        <div class="domain-name">Biotech Research</div>
+        <div class="domain-note">PubMed · WHO · Lab pages</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-emoji">⚔️</div>
+        <div class="domain-name">Geopolitics</div>
+        <div class="domain-note">Reuters · UN · Think tanks</div>
+      </div>
+      <div class="domain-item">
+        <div class="domain-emoji">🏺</div>
+        <div class="domain-name">Archaeology</div>
+        <div class="domain-note">Journals · Museum databases</div>
+      </div>
+    </div>
+
+    <div class="callout purple">
+      Each of these domains has the same problem: massive, real, valuable knowledge scattered across the open internet with <em>no single structured, living source</em>. That's the gap.
+    </div>
+  </div>
+
+  <!-- SECTION 06 — MOAT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-meta">
+        <div class="section-badge">Why This Matters</div>
+        <div class="section-title">The Dataset Is the Product. The Engine Is the Moat.</div>
+      </div>
+    </div>
+
+    <div class="moat-block">
+      <div class="moat-title">This Doesn't Exist Yet.</div>
+      <div class="moat-body">
+        Crunchbase is a billion-dollar company built on keeping one domain alive with humans and scrapers. You're building the open, AI-native version of that infrastructure — for any domain, self-hosted, at near-zero marginal cost.<br><br>
+        The longer the engine runs on a domain, the richer and more accurate that dataset becomes. <strong>That compounding knowledge is the moat.</strong> Nobody can replicate years of continuous enrichment overnight.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🏗️</div>
+        <div class="card-title">Infrastructure Play</div>
+        <div class="card-body">Sell the engine as self-hosted infrastructure. Any team with a dataset and a domain can run their own living database.</div>
+      </div>
+      <div class="card green">
+        <div class="card-icon">📦</div>
+        <div class="card-title">Data Product Play</div>
+        <div class="card-body">Pick one high-value unstructured domain. Run the engine for 6 months. Sell access to the living dataset itself.</div>
+      </div>
+      <div class="card purple">
+        <div class="card-icon">🔌</div>
+        <div class="card-title">API Layer Play</div>
+        <div class="card-body">Expose living datasets as queryable APIs. Developers and analysts pay per query or per seat to access always-fresh structured knowledge.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">Living Database · Concept v1</div>
+  <div class="footer-meta">Generated May 2026 · Internal Brief · Confidential</div>
+</footer>
+
+</body>
+</html>

@@ -2,10 +2,24 @@
 layout: layouts/workspace.njk
 ---
 <article class="document">
-  <div class="document-header">
+  <header class="document-header">
     <p class="document-eyebrow">{{ workspace.projectLabel }}</p>
-  </div>
-  <div class="document-body">
-    {{ content | safe }}
-  </div>
+    <h1>{{ title }}</h1>
+    {% if summary %}<p class="document-summary">{{ summary }}</p>{% endif %}
+    {% include "partials/metadata.njk" %}
+  </header>
+  {% if iframeSrc %}
+    <div class="legacy-frame-shell">
+      <div class="legacy-frame-toolbar">
+        <button class="legacy-frame-button" type="button" data-frame-fullscreen data-frame-target="legacy-project-frame">
+          Full screen
+        </button>
+      </div>
+      <iframe class="legacy-frame" src="{{ iframeSrc | url }}" title="{{ title }}"></iframe>
+    </div>
+  {% else %}
+    <div class="document-body">
+      {{ content | safe }}
+    </div>
+  {% endif %}
 </article>

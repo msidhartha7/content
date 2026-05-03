@@ -10,6 +10,13 @@ function getPublicItems(collectionApi, glob) {
   return collectionApi.getFilteredByGlob(glob).filter((item) => item.data.public !== false);
 }
 
+function getPublicProjectItems(collectionApi) {
+  return [
+    ...getPublicItems(collectionApi, "projects/**/*.md"),
+    ...getPublicItems(collectionApi, "projects/**/*.html")
+  ];
+}
+
 function formatDate(value) {
   const date = value instanceof Date ? value : new Date(value);
   return new Intl.DateTimeFormat("en-US", {
@@ -28,6 +35,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("portfolio");
   eleventyConfig.addPassthroughCopy("prep-plans");
   eleventyConfig.addPassthroughCopy("fundraising");
+  eleventyConfig.addPassthroughCopy("projects/**/*.html");
   eleventyConfig.addWatchTarget("./content/");
   eleventyConfig.addWatchTarget("./projects/");
   eleventyConfig.addFilter("take", (items, count) => items.slice(0, count));
@@ -55,8 +63,13 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addCollection("projects", (collectionApi) =>
     sortByPinnedThenDate(
-      getPublicItems(collectionApi, "projects/**/*.md").map((item) =>
-        normalizeProjectEntry({ slug: item.page.fileSlug, data: item.data, rawContent: readSourceFile(item) })
+      getPublicProjectItems(collectionApi).map((item) =>
+        normalizeProjectEntry({
+          slug: item.page.fileSlug,
+          data: item.data,
+          inputPath: item.page.inputPath,
+          rawContent: readSourceFile(item)
+        })
       )
     )
   );
@@ -76,8 +89,13 @@ export default function (eleventyConfig) {
     const journal = getPublicItems(collectionApi, "content/journal/*.md").map((item) =>
       normalizeJournalEntry({ slug: item.page.fileSlug, data: item.data })
     );
-    const projects = getPublicItems(collectionApi, "projects/**/*.md").map((item) =>
-      normalizeProjectEntry({ slug: item.page.fileSlug, data: item.data, rawContent: readSourceFile(item) })
+    const projects = getPublicProjectItems(collectionApi).map((item) =>
+      normalizeProjectEntry({
+        slug: item.page.fileSlug,
+        data: item.data,
+        inputPath: item.page.inputPath,
+        rawContent: readSourceFile(item)
+      })
     );
     return buildSearchIndex({ notes, journal, projects });
   });

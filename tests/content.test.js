@@ -55,6 +55,30 @@ test("normalizeProjectEntry derives a project url and title from markdown conten
   assert.equal(project.url, "/projects/echo-court-project-plan/");
 });
 
+test("normalizeProjectEntry derives iframe metadata from html project sources", () => {
+  const project = normalizeProjectEntry({
+    slug: "Investor Database Concept",
+    data: {},
+    inputPath: "/Users/sidhartha/projects/content/projects/Investor Database Concept.html",
+    rawContent: `<!DOCTYPE html>
+<html>
+<head>
+  <title>The Living Database - Concept Summary</title>
+</head>
+<body>
+  <h1>The Living Database</h1>
+  <p>A domain-agnostic engine that keeps datasets fresh from the open internet.</p>
+</body>
+</html>`
+  });
+
+  assert.equal(project.title, "The Living Database - Concept Summary");
+  assert.equal(project.summary, "A domain-agnostic engine that keeps datasets fresh from the open internet.");
+  assert.equal(project.legacyPath, "projects/Investor Database Concept.html");
+  assert.equal(project.iframeSrc, "/projects/Investor%20Database%20Concept.html");
+  assert.equal(project.url, "/projects/investor-database-concept/");
+});
+
 test("groupTopics orders pinned notes first within a topic", () => {
   const grouped = groupTopics([
     { title: "B", topic: "marketing", pinned: false, date: "2026-04-10" },
